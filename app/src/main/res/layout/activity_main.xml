@@ -44,7 +44,7 @@
             android:id="@+id/textView5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Progress Graph"
+            android:text="Volume"
             android:textColor="#1B5E20"
             android:textStyle="normal|bold" />
 
