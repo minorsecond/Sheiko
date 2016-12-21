@@ -40,6 +40,9 @@ public class MainActivity extends AppCompatActivity {
         Date d5 = null;
         Date d6 = null;
 
+        // Create Date objects from the strings declared above.
+        // For the app, this will probably need to be done using a for loop.
+
         try {
             d1 = df.parse(date1);
             calendar.add(Calendar.DATE, 1);
@@ -78,6 +81,7 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        // Add the points to the line graph
         GraphView graph = (GraphView) findViewById(R.id.graph);
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
                 //new DataPoint(0, 1),

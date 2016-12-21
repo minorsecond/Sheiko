@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Sheiko</string>
+    <string-array name="sexes">
+        <item>Male</item>
+        <item>Female</item>
+    </string-array>
 </resources>
