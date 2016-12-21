@@ -13,6 +13,8 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.ParseException;
 import java.util.Date;
 
+//TODO: Purchase this icon: http://www.flaticon.com/free-icon/bench_249226#term=weightlifting&page=1&position=24
+
 public class MainActivity extends AppCompatActivity {
 
     @Override
