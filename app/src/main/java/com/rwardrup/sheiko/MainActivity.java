@@ -89,24 +89,25 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Add the points to the line graph - Not currently used
         GraphView graph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> totalWeightLifted = new LineGraphSeries<>(new DataPoint[]{
 
-                new DataPoint(d1, 25475),
-                new DataPoint(d2, 22330),
-                new DataPoint(d3, 28795),
-                new DataPoint(d4, 29977),
-                new DataPoint(d5, 22590),
-                new DataPoint(d6, 22550)
-        });
+        // Add the points to the line graph - Not currently used
+        //LineGraphSeries<DataPoint> totalWeightLifted = new LineGraphSeries<>(new DataPoint[]{
+
+        //      new DataPoint(d1, 25475),
+        //    new DataPoint(d2, 22330),
+        //      new DataPoint(d3, 28795),
+        //      new DataPoint(d4, 29977),
+        //      new DataPoint(d5, 22590),
+        //      new DataPoint(d6, 22550)
+        //});
 
         // Series style
-        totalWeightLifted.setTitle("Volume");
-        totalWeightLifted.setColor(Color.rgb(27, 94, 32));
-        totalWeightLifted.setDrawDataPoints(true);
-        totalWeightLifted.setDataPointsRadius(10);
-        totalWeightLifted.setThickness(8);
+        //totalWeightLifted.setTitle("Volume");
+        //totalWeightLifted.setColor(Color.rgb(255, 116, 52));
+        //totalWeightLifted.setDrawDataPoints(true);
+        //totalWeightLifted.setDataPointsRadius(10);
+        //totalWeightLifted.setThickness(8);
 
         LineGraphSeries<DataPoint> numberLifts = new LineGraphSeries<>(new DataPoint[]{
 
@@ -118,9 +119,9 @@ public class MainActivity extends AppCompatActivity {
                 new DataPoint(d6, 210)
         });
 
-        // Series style
+        // Series style for number of lifts
         numberLifts.setTitle("# Lifts");
-        numberLifts.setColor(Color.rgb(27, 94, 32));
+        numberLifts.setColor(Color.rgb(38, 138, 58));
         numberLifts.setDrawDataPoints(true);
         numberLifts.setDataPointsRadius(10);
         numberLifts.setThickness(8);
@@ -135,9 +136,9 @@ public class MainActivity extends AppCompatActivity {
                 new DataPoint(d6, 395)
         });
 
-        // Series style
+        // Series style for Average Weight Lifted
         averageWeightLifted.setTitle("AWL");
-        averageWeightLifted.setColor(Color.rgb(76, 175, 80));
+        averageWeightLifted.setColor(Color.rgb(0, 119, 211));
         averageWeightLifted.setDrawDataPoints(true);
         averageWeightLifted.setDataPointsRadius(10);
         averageWeightLifted.setThickness(8);
@@ -149,7 +150,7 @@ public class MainActivity extends AppCompatActivity {
         // Set the date label formatter
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(MainActivity.this));
         graph.getGridLabelRenderer().setNumHorizontalLabels(3);
-        graph.getGridLabelRenderer().setVerticalAxisTitleColor(Color.rgb(27, 94, 32));
+        graph.getGridLabelRenderer().setVerticalAxisTitleColor(Color.rgb(38, 138, 58));
 
         // Label the y-axis. TODO: let this be set by the user in the settings window.
         //graph.getGridLabelRenderer().setVerticalAxisTitle("Avg. Wt. Lifted");
@@ -169,10 +170,12 @@ public class MainActivity extends AppCompatActivity {
         GridLabelRenderer glr = graph.getGridLabelRenderer();
         glr.setPadding(8);
 
+        // Set vertical axis color
+        glr.setVerticalLabelsColor(Color.rgb(38, 138, 58));
         // Set second scale bounds
         graph.getSecondScale().setMinY(150);
         graph.getSecondScale().setMaxY(450);
-        glr.setVerticalLabelsSecondScaleColor(Color.rgb(76, 175, 80));
+        glr.setVerticalLabelsSecondScaleColor(Color.rgb(0, 119, 211));
         graph.getSecondScale().setVerticalAxisTitle("# Lifts");
 
         // as we use dates as labels, the human rounding to nice readable numbers
@@ -180,13 +183,13 @@ public class MainActivity extends AppCompatActivity {
         glr.setHumanRounding(false);
 
         // Set label font size
-        glr.setTextSize(28f);
+        glr.setTextSize(32f);
         glr.reloadStyles();
 
         // Enable legend
         graph.getLegendRenderer().setVisible(true);
         graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
-        graph.getLegendRenderer().setBackgroundColor(Color.argb(200, 232, 245, 233));
+        graph.getLegendRenderer().setBackgroundColor(Color.argb(50, 157, 157, 157));
 
         // set Title
         graph.setTitle("Program History");

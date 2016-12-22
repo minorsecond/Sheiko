@@ -30,9 +30,8 @@
             android:text="Sheiko PL"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="#E8F5E9"
-            android:textSize="34sp"
-            android:textStyle="normal|bold" />
+            android:textColor="@color/primary_text"
+            android:textSize="34sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -47,7 +46,7 @@
             android:layout_below="@+id/textView42"
             android:text="Select Program"
             android:textAlignment="viewStart"
-            android:textColor="#1B5E20"
+            android:textColor="@color/primary_text"
             android:textSize="18sp"
             android:textStyle="normal|bold" />
 
@@ -60,7 +59,7 @@
             android:layout_below="@+id/textView"
             android:layout_marginTop="13dp"
             android:text="Program"
-            android:textColor="#1B5E20" />
+            android:textColor="@color/primary_text" />
 
         <Spinner
             android:id="@+id/programSpinner"
@@ -81,7 +80,7 @@
             android:layout_below="@+id/programSpinner"
             android:layout_marginTop="38dp"
             android:text="Cycle"
-            android:textColor="#1B5E20" />
+            android:textColor="@color/primary_text" />
 
         <Spinner
             android:id="@+id/cycleSpinner"
@@ -103,7 +102,7 @@
             android:layout_height="wrap_content"
             android:text="Program Statistics"
             android:textAlignment="center"
-            android:textColor="#1B5E20"
+            android:textColor="@color/primary_text"
             android:textSize="18sp"
             android:textStyle="normal|bold" />
 
@@ -118,7 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Discipline"
-                android:textColor="#1B5E20"
+                android:textColor="@color/primary_text"
                 android:textSize="16sp" />
 
             <TextView
@@ -127,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Number of Lifts"
-                android:textColor="#1B5E20"
+                android:textColor="@color/primary_text"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -143,15 +142,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Squat:"
-                android:textColor="#2E7D32" />
+                android:textColor="@color/secondary_text" />
 
             <TextView
                 android:id="@+id/textView47"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:textColor="#2E7D32" />
+                android:text="450"
+                android:textColor="@color/secondary_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -165,15 +164,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Bench:"
-                android:textColor="#2E7D32" />
+                android:textColor="@color/secondary_text" />
 
             <TextView
                 android:id="@+id/textView49"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:textColor="#2E7D32" />
+                android:text="600"
+                android:textColor="@color/secondary_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -187,15 +186,15 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Deadlift:"
-                android:textColor="#2E7D32" />
+                android:textColor="@color/secondary_text" />
 
             <TextView
                 android:id="@+id/textView51"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:textColor="#2E7D32" />
+                android:text="400"
+                android:textColor="@color/secondary_text" />
         </LinearLayout>
 
         <LinearLayout
@@ -209,15 +208,17 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Total:"
-                android:textColor="#185E20" />
+                android:textColor="@color/secondary_text"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:id="@+id/textView53"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="TextView"
-                android:textColor="#185E20" />
+                android:text="1450"
+                android:textColor="@color/secondary_text"
+                android:textStyle="normal|bold" />
         </LinearLayout>
 
         <Space
@@ -239,7 +240,7 @@
                 android:layout_weight="1"
                 android:background="#4CAF50"
                 android:text="Set Lift Numbers"
-                android:textColor="#E8F5E9" />
+                android:textColor="@color/primary_text" />
 
             <Space
                 android:layout_width="25dp"
@@ -256,7 +257,7 @@
                 android:layout_weight="1"
                 android:background="#4CAF50"
                 android:text="Customize Program"
-                android:textColor="#E8F5E9" />
+                android:textColor="@color/primary_text" />
         </LinearLayout>
 
     </LinearLayout>

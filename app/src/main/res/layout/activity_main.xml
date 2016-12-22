@@ -23,14 +23,13 @@
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:background="#4CAF50"
+            android:background="@color/primary"
             android:gravity="center"
             android:text="Sheiko PL"
             android:textAlignment="center"
             android:textAllCaps="false"
-            android:textColor="#E8F5E9"
-            android:textSize="34sp"
-            android:textStyle="normal|bold" />
+            android:textColor="@color/primary_text"
+            android:textSize="34sp" />
 
         <Space
             android:layout_width="match_parent"
@@ -56,8 +55,9 @@
                 android:layout_height="wrap_content"
                 android:text="Athlete Stats"
                 android:textAlignment="center"
-                android:textColor="#4CAF50"
-                android:textSize="18sp" />
+                android:textColor="@color/primary_text"
+                android:textSize="18sp"
+                android:textStyle="normal|bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,8 +72,9 @@
                 android:layout_weight="1"
                 android:text="Total:"
                 android:textAlignment="viewStart"
-                android:textColor="#1B5E20"
-                android:textSize="16sp" />
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:id="@+id/textView34"
@@ -85,8 +86,9 @@
                 android:paddingBottom="0dp"
                 android:text="650 Kg."
                 android:textAlignment="viewStart"
-                android:textColor="#1B5E20"
-                android:textSize="16sp" />
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:textStyle="normal|bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -101,7 +103,7 @@
                 android:layout_weight="1"
                 android:text="Squat:"
                 android:textAlignment="viewStart"
-                android:textColor="#4CAF50"
+                android:textColor="@color/primary_text"
                 android:textSize="16sp" />
 
             <TextView
@@ -111,7 +113,7 @@
                 android:layout_weight="1"
                 android:text="205 Kg."
                 android:textAlignment="viewStart"
-                android:textColor="#4CAF50"
+                android:textColor="@color/primary_text"
                 android:textSize="16sp" />
 
         </LinearLayout>
@@ -128,7 +130,7 @@
                 android:layout_weight="1"
                 android:text="Bench:"
                 android:textAlignment="viewStart"
-                android:textColor="#4CAF50"
+                android:textColor="@color/primary_text"
                 android:textSize="16sp" />
 
             <TextView
@@ -138,7 +140,7 @@
                 android:layout_weight="1"
                 android:text="170 Kg."
                 android:textAlignment="viewStart"
-                android:textColor="#4CAF50"
+                android:textColor="@color/primary_text"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -153,7 +155,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="Deadlift:"
-                android:textColor="#4CAF50"
+                android:textColor="@color/primary_text"
                 android:textSize="16sp" />
 
             <TextView
@@ -162,7 +164,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="275 Kg."
-                android:textColor="#4CAF50"
+                android:textColor="@color/primary_text"
                 android:textSize="16sp" />
         </LinearLayout>
 
@@ -177,8 +179,9 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="Wilks' Score:"
-                android:textColor="#1B5E20"
-                android:textSize="16sp" />
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:textStyle="normal|bold" />
 
             <TextView
                 android:id="@+id/textView36"
@@ -186,8 +189,9 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="455"
-                android:textColor="#1B5E20"
-                android:textSize="16sp" />
+                android:textColor="@color/primary_text"
+                android:textSize="16sp"
+                android:textStyle="normal|bold" />
         </LinearLayout>
 
         <LinearLayout
@@ -221,10 +225,10 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1.54"
-                android:background="#4CAF50"
+                android:background="@color/primary"
                 android:elevation="0dp"
                 android:text="User Settings"
-                android:textColor="#E8F5E9" />
+                android:textColor="@color/primary_text" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -241,9 +245,9 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"
-                android:background="#4CAF50"
+                android:background="@color/primary"
                 android:text="Select Program"
-                android:textColor="#E8F5E9" />
+                android:textColor="@color/primary_text" />
 
         </LinearLayout>
 
@@ -258,9 +262,9 @@
             android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
-            android:background="#1B5E20"
+            android:background="@color/accent"
             android:text="Train"
-            android:textColor="#E8F5E9" />
+            android:textColor="@color/primary_text" />
 
     </LinearLayout>
 
