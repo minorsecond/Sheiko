@@ -10,83 +10,102 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.rwardrup.sheiko.selectProgram">
 
-    <TextView
-        android:id="@+id/textView"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Select Program"
-        android:textAlignment="center"
-        android:textColor="#1B5E20"
-        android:textSize="24sp"
-        android:textStyle="normal|bold" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="160dp"
-        android:text="Stats"
-        android:textAlignment="center"
-        android:textColor="#1B5E20"
-        android:textSize="18sp" />
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:background="#4CAF50"
+            android:gravity="center"
+            android:text="Sheiko PL"
+            android:textAlignment="center"
+            android:textAllCaps="false"
+            android:textColor="#E8F5E9"
+            android:textSize="34sp"
+            android:textStyle="normal|bold" />
 
-    <Spinner
-        android:id="@+id/cycleSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView14"
-        android:layout_marginTop="11dp"
-        android:entries="@array/cycles" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
 
-    <Spinner
-        android:id="@+id/programSpinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView13"
-        android:layout_marginTop="13dp"
-        android:entries="@array/programs" />
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView42"
+            android:text="Select Program"
+            android:textAlignment="viewStart"
+            android:textColor="#1B5E20"
+            android:textSize="18sp"
+            android:textStyle="normal|bold" />
 
-    <TextView
-        android:id="@+id/textView14"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/programSpinner"
-        android:layout_marginTop="38dp"
-        android:text="Cycle"
-        android:textColor="#1B5E20" />
+        <TextView
+            android:id="@+id/textView13"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView"
+            android:layout_marginTop="13dp"
+            android:text="Program"
+            android:textColor="#1B5E20" />
 
-    <TextView
-        android:id="@+id/textView13"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView"
-        android:layout_marginTop="13dp"
-        android:text="Program"
-        android:textColor="#1B5E20" />
+        <Spinner
+            android:id="@+id/programSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView13"
+            android:layout_marginTop="13dp"
+            android:entries="@array/programs" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/textView7"
-        android:layout_marginTop="33dp"
-        android:orientation="vertical"
-        android:weightSum="1">
+        <TextView
+            android:id="@+id/textView14"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/programSpinner"
+            android:layout_marginTop="38dp"
+            android:text="Cycle"
+            android:textColor="#1B5E20" />
+
+        <Spinner
+            android:id="@+id/cycleSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/textView14"
+            android:layout_marginTop="11dp"
+            android:entries="@array/cycles" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="45dp" />
+
+        <TextView
+            android:id="@+id/textView43"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Program Statistics"
+            android:textAlignment="center"
+            android:textColor="#1B5E20"
+            android:textSize="18sp"
+            android:textStyle="normal|bold" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -94,141 +113,152 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/textView22"
+                android:id="@+id/textView44"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="0.74"
+                android:layout_weight="1"
                 android:text="Discipline"
-                android:textAlignment="center"
-                android:textColor="#1B5E20" />
-
-            <TextView
-                android:id="@+id/textView23"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.79"
-                android:text="Volume"
-                android:textAlignment="center"
-                android:textColor="#1B5E20" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView29"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.01"
-                android:text="Squat"
-                android:textAlignment="textStart"
-                android:textColor="#1B5E20" />
-
-            <TextView
-                android:id="@+id/textView30"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.84"
-                android:text="2,700 Lbs."
-                android:textAlignment="textEnd"
-                android:textColor="#1B5E20" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView32"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.05"
-                android:text="Bench"
-                android:textAlignment="viewStart"
-                android:textColor="#1B5E20" />
-
-            <TextView
-                android:id="@+id/textView33"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.86"
-                android:text="1,580 Lbs."
-                android:textAlignment="textEnd"
-                android:textColor="#1B5E20" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView37"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.09"
-                android:text="Deadlift"
-                android:textAlignment="viewStart"
-                android:textColor="#1B5E20" />
-
-            <TextView
-                android:id="@+id/textView38"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="4,400 Lbs"
-                android:textAlignment="textEnd"
-                android:textColor="#1B5E20" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView40"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Total"
                 android:textColor="#1B5E20"
-                android:textStyle="normal|bold" />
+                android:textSize="16sp" />
 
             <TextView
-                android:id="@+id/textView41"
-                android:layout_width="wrap_content"
+                android:id="@+id/textView45"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="8,680 Lbs."
-                android:textAlignment="textEnd"
+                android:text="Number of Lifts"
                 android:textColor="#1B5E20"
-                android:textStyle="normal|bold" />
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView46"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Squat:"
+                android:textColor="#2E7D32" />
+
+            <TextView
+                android:id="@+id/textView47"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textColor="#2E7D32" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView48"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Bench:"
+                android:textColor="#2E7D32" />
+
+            <TextView
+                android:id="@+id/textView49"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textColor="#2E7D32" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView50"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Deadlift:"
+                android:textColor="#2E7D32" />
+
+            <TextView
+                android:id="@+id/textView51"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textColor="#2E7D32" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView52"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Total:"
+                android:textColor="#185E20" />
+
+            <TextView
+                android:id="@+id/textView53"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="TextView"
+                android:textColor="#185E20" />
+        </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="105dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/setLiftsButton"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_weight="1"
+                android:background="#4CAF50"
+                android:text="Set Lift Numbers"
+                android:textColor="#E8F5E9" />
+
+            <Space
+                android:layout_width="25dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1" />
+
+            <Button
+                android:id="@+id/createCustomProgram"
+                android:layout_width="180dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:layout_weight="1"
+                android:background="#4CAF50"
+                android:text="Customize Program"
+                android:textColor="#E8F5E9" />
         </LinearLayout>
 
     </LinearLayout>
-
-    <Button
-        android:id="@+id/setLiftsButton"
-        android:layout_width="300px"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:background="#C8E6C9"
-        android:text="Set Lift Numbers" />
-
-    <Button
-        android:id="@+id/createCustomProgram"
-        android:layout_width="300px"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="#C8E6C9"
-        android:text="Customize Program" />
 
 </RelativeLayout>

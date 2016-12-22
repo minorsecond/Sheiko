@@ -58,17 +58,6 @@
         android:textStyle="normal|bold" />
 
     <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginBottom="39dp"
-        android:text="Deadlift:"
-        android:textColor="#1B5E20" />
-
-    <TextView
         android:id="@+id/textView9"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -183,6 +172,16 @@
         android:layout_below="@+id/settingsTitle"
         android:layout_marginTop="19dp"
         android:text="Weight:"
+        android:textColor="#1B5E20" />
+
+    <TextView
+        android:id="@+id/textView11"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignEnd="@+id/userWeightLabel"
+        android:layout_alignRight="@+id/userWeightLabel"
+        android:layout_below="@+id/editText6"
+        android:text="Deadlift:"
         android:textColor="#1B5E20" />
 
 </RelativeLayout>

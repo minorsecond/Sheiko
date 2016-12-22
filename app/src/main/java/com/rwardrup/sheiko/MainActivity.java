@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.Button;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
@@ -135,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Series style
-        averageWeightLifted.setTitle("Average Wt. Lifted");
+        averageWeightLifted.setTitle("AWL");
         averageWeightLifted.setColor(Color.rgb(76, 175, 80));
         averageWeightLifted.setDrawDataPoints(true);
         averageWeightLifted.setDataPointsRadius(10);
@@ -151,7 +152,7 @@ public class MainActivity extends AppCompatActivity {
         graph.getGridLabelRenderer().setVerticalAxisTitleColor(Color.rgb(27, 94, 32));
 
         // Label the y-axis. TODO: let this be set by the user in the settings window.
-        graph.getGridLabelRenderer().setVerticalAxisTitle("Lbs.");
+        //graph.getGridLabelRenderer().setVerticalAxisTitle("Avg. Wt. Lifted");
 
         // set manual x bounds to have nice steps
         //graph.getViewport().setMinX(d1.getTime());
@@ -164,19 +165,23 @@ public class MainActivity extends AppCompatActivity {
         //graph.getViewport().setScalableY(true);
         //graph.getViewport().setScrollableY(true);
 
+        // Set padding for axis labels
+        GridLabelRenderer glr = graph.getGridLabelRenderer();
+        glr.setPadding(8);
+
         // Set second scale bounds
         graph.getSecondScale().setMinY(150);
         graph.getSecondScale().setMaxY(450);
-        graph.getGridLabelRenderer().setVerticalLabelsSecondScaleColor(Color.rgb(76, 175, 80));
-        graph.getGridLabelRenderer().setVerticalAxisTitle("# Lifts");
+        glr.setVerticalLabelsSecondScaleColor(Color.rgb(76, 175, 80));
+        graph.getSecondScale().setVerticalAxisTitle("# Lifts");
 
         // as we use dates as labels, the human rounding to nice readable numbers
         // is not necessary
-        graph.getGridLabelRenderer().setHumanRounding(false);
+        glr.setHumanRounding(false);
 
         // Set label font size
-        graph.getGridLabelRenderer().setTextSize(26f);
-        graph.getGridLabelRenderer().reloadStyles();
+        glr.setTextSize(28f);
+        glr.reloadStyles();
 
         // Enable legend
         graph.getLegendRenderer().setVisible(true);

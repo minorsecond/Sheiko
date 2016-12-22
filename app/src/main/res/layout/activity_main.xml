@@ -13,35 +13,189 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
         android:orientation="vertical"
         android:weightSum="1">
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:background="#4CAF50"
+            android:gravity="center"
             android:text="Sheiko PL"
             android:textAlignment="center"
-            android:textColor="#4CAF50"
-            android:textSize="24sp"
+            android:textAllCaps="false"
+            android:textColor="#E8F5E9"
+            android:textSize="34sp"
             android:textStyle="normal|bold" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="50dp" />
+            android:layout_height="15dp" />
 
         <com.jjoe64.graphview.GraphView
             android:id="@+id/graph"
             android:layout_width="match_parent"
-            android:layout_height="190dp" />
+            android:layout_height="192dp" />
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="100px"
-            android:layout_weight="0.94" />
+            android:layout_height="25dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView25"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Athlete Stats"
+                android:textAlignment="center"
+                android:textColor="#4CAF50"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="22dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView31"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:text="Total:"
+                android:textAlignment="viewStart"
+                android:textColor="#1B5E20"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textView34"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="0dp"
+                android:layout_weight="1"
+                android:elevation="0dp"
+                android:paddingBottom="0dp"
+                android:text="650 Kg."
+                android:textAlignment="viewStart"
+                android:textColor="#1B5E20"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView12"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:text="Squat:"
+                android:textAlignment="viewStart"
+                android:textColor="#4CAF50"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/squatTotal"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:text="205 Kg."
+                android:textAlignment="viewStart"
+                android:textColor="#4CAF50"
+                android:textSize="16sp" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:text="Bench:"
+                android:textAlignment="viewStart"
+                android:textColor="#4CAF50"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textView26"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:text="170 Kg."
+                android:textAlignment="viewStart"
+                android:textColor="#4CAF50"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView27"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:text="Deadlift:"
+                android:textColor="#4CAF50"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textView28"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:text="275 Kg."
+                android:textColor="#4CAF50"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/textView35"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:text="Wilks' Score:"
+                android:textColor="#1B5E20"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/textView36"
+                android:layout_width="match_parent"
+                android:layout_height="22dp"
+                android:layout_weight="1"
+                android:text="455"
+                android:textColor="#1B5E20"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+        </LinearLayout>
 
         <!--<View
             android:layout_width="match_parent"
@@ -69,7 +223,8 @@
                 android:layout_weight="1.54"
                 android:background="#4CAF50"
                 android:elevation="0dp"
-                android:text="User Settings" />
+                android:text="User Settings"
+                android:textColor="#E8F5E9" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -87,13 +242,14 @@
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"
                 android:background="#4CAF50"
-                android:text="Select Program" />
+                android:text="Select Program"
+                android:textColor="#E8F5E9" />
 
         </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="1dp" />
+            android:layout_height="15dp" />
 
         <Button
             android:id="@+id/TrainButton"
