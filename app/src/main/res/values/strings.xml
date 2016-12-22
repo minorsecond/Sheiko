@@ -4,4 +4,39 @@
         <item>Male</item>
         <item>Female</item>
     </string-array>
+
+    <string-array name="programs">
+        <item>29</item>
+        <item>30</item>
+        <item>31</item>
+        <item>32</item>
+        <item>37</item>
+        <item>39</item>
+        <item>40</item>
+        <item>CMS-MS Prep (1)</item>
+        <item>CMS-MS Prep (2)</item>
+        <item>CMS-MS Prep (3)</item>
+        <item>CMS-MS Prep (Comp)</item>
+        <item>MSIC Prep</item>
+        <item>MSIC Comp</item>
+        <item>Advanced Small Load (4 days) Cycle 1</item>
+        <item>Advanced Small Load (4 days) Cycle 2</item>
+        <item>Advanced Small Load (4 days) Cycle 3</item>
+        <item>Advanced Small Load (4 days) Comp Cycle</item>
+        <item>Advanced Medium Load (4 days) Cycle 1</item>
+        <item>Advanced Medium Load (4 days) Cycle 2</item>
+        <item>Advanced Medium Load (4 days) Cycle 3</item>
+        <item>Advanced Medium Load (4 days) Comp Cycle</item>
+        <item>Advanced Large Load (4 days) Cycle 1</item>
+        <item>Advanced Large Load (4 days) Cycle 2</item>
+        <item>Advanced Large Load (4 days) Cycle 3</item>
+        <item>Advanced Large Load (4 days) Comp Cycle</item>
+    </string-array>
+
+    <string-array name="cycles"> <!--TODO: Don't hard-code these since they aren't all the same -->
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>Comp</item>
+    </string-array>
 </resources>

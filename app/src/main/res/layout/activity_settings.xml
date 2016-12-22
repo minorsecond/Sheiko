@@ -28,7 +28,8 @@
         android:layout_alignStart="@+id/lbsRadiobutton"
         android:layout_below="@+id/lbsRadiobutton"
         android:layout_marginTop="20dp"
-        android:text="Kg." />
+        android:text="Kg."
+        android:textColor="#1B5E20" />
 
     <RadioButton
         android:id="@+id/lbsRadiobutton"
@@ -37,35 +38,8 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_alignTop="@+id/userWeightLabel"
-        android:text="Lbs." />
-
-    <TextView
-        android:id="@+id/userWeightLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/settingsTitle"
-        android:layout_marginTop="19dp"
-        android:text="Weight:" />
-
-    <TextView
-        android:id="@+id/genderLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/kgsRadioButton"
-        android:text="Gender:" />
-
-    <Spinner
-        android:id="@+id/genderSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/kgsRadioButton"
-        android:layout_toEndOf="@+id/genderLabel"
-        android:layout_toRightOf="@+id/genderLabel"
-        android:entries="@array/sexes" />
+        android:text="Lbs."
+        android:textColor="#1B5E20" />
 
     <TextView
         android:id="@+id/textView8"
@@ -91,7 +65,8 @@
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_marginBottom="39dp"
-        android:text="Deadlift:" />
+        android:text="Deadlift:"
+        android:textColor="#1B5E20" />
 
     <TextView
         android:id="@+id/textView9"
@@ -101,7 +76,8 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/textView8"
         android:layout_marginTop="26dp"
-        android:text="Squat: " />
+        android:text="Squat: "
+        android:textColor="#1B5E20" />
 
     <TextView
         android:id="@+id/textView10"
@@ -111,7 +87,8 @@
         android:layout_alignParentStart="true"
         android:layout_below="@+id/squatMax"
         android:layout_marginTop="21dp"
-        android:text="Bench: " />
+        android:text="Bench: "
+        android:textColor="#1B5E20" />
 
     <EditText
         android:id="@+id/weightInput"
@@ -138,6 +115,7 @@
         android:layout_toRightOf="@+id/textView11"
         android:ems="10"
         android:inputType="number"
+        android:textColor="#1B5E20"
         android:textSize="10sp" />
 
     <EditText
@@ -150,6 +128,7 @@
         android:layout_alignStart="@+id/dlMax"
         android:ems="10"
         android:inputType="number"
+        android:textColor="#1B5E20"
         android:textSize="10sp" />
 
     <EditText
@@ -162,16 +141,48 @@
         android:layout_alignStart="@+id/editText6"
         android:ems="10"
         android:inputType="number"
+        android:textColor="#1B5E20"
         android:textSize="10sp" />
 
     <Button
         android:id="@+id/saveSettings"
-        android:layout_width="wrap_content"
+        android:layout_width="300px"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:background="#C8E6C9"
         android:text="Save" />
+
+    <TextView
+        android:id="@+id/genderLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/genderSpinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignTop="@+id/genderSpinner"
+        android:text="Sex:"
+        android:textColor="#1B5E20" />
+
+    <Spinner
+        android:id="@+id/genderSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/weightInput"
+        android:layout_alignStart="@+id/weightInput"
+        android:layout_alignTop="@+id/kgsRadioButton"
+        android:entries="@array/sexes" />
+
+    <TextView
+        android:id="@+id/userWeightLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/settingsTitle"
+        android:layout_marginTop="19dp"
+        android:text="Weight:"
+        android:textColor="#1B5E20" />
 
 </RelativeLayout>

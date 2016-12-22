@@ -10,43 +10,28 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.rwardrup.sheiko.MainActivity">
 
-    <Button
-        android:id="@+id/TrainButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignParentStart="true"
-        android:background="#4caf50"
-        android:text="Train" />
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
         android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:layout_centerHorizontal="true"
+        android:orientation="vertical"
+        android:weightSum="1">
 
         <TextView
             android:id="@+id/textView4"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Home"
+            android:text="Sheiko PL"
             android:textAlignment="center"
-            android:textColor="#1B5E20"
+            android:textColor="#4CAF50"
             android:textSize="24sp"
             android:textStyle="normal|bold" />
 
-        <TextView
-            android:id="@+id/textView5"
+        <Space
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Volume"
-            android:textColor="#1B5E20"
-            android:textStyle="normal|bold" />
+            android:layout_height="50dp" />
 
         <com.jjoe64.graphview.GraphView
             android:id="@+id/graph"
@@ -55,37 +40,36 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="90dp" />
+            android:layout_height="100px"
+            android:layout_weight="0.94" />
 
         <!--<View
             android:layout_width="match_parent"
             android:layout_height="2dp"
             android:background="@android:color/darker_gray"/> -->
 
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="51dp"
             android:layout_above="@+id/TrainButton"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView2"
             android:layout_marginTop="37dp"
+            android:layout_weight="0.02"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/settingsButton"
-                android:layout_width="wrap_content"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/selectProgramButton"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_weight="2.10"
-                android:background="#C8E6C9"
-                android:text="Settings" />
+                android:layout_weight="1.54"
+                android:background="#4CAF50"
+                android:elevation="0dp"
+                android:text="User Settings" />
 
             <Space
                 android:layout_width="wrap_content"
@@ -94,7 +78,7 @@
 
             <Button
                 android:id="@+id/selectProgramButton"
-                android:layout_width="wrap_content"
+                android:layout_width="125dp"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/TrainButton"
                 android:layout_alignParentEnd="true"
@@ -102,10 +86,26 @@
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="1"
-                android:background="#C8E6C9"
+                android:background="#4CAF50"
                 android:text="Select Program" />
 
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="1dp" />
+
+        <Button
+            android:id="@+id/TrainButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:background="#1B5E20"
+            android:text="Train"
+            android:textColor="#E8F5E9" />
+
     </LinearLayout>
 
 </RelativeLayout>
