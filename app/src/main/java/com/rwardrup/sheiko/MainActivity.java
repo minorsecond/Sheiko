@@ -1,11 +1,17 @@
 package com.rwardrup.sheiko;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.Button;
 
 import com.jjoe64.graphview.GraphView;
+import com.jjoe64.graphview.GridLabelRenderer;
+import com.jjoe64.graphview.LegendRenderer;
 import com.jjoe64.graphview.helper.DateAsXAxisLabelFormatter;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -83,38 +89,129 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        // Add the points to the line graph
         GraphView graph = (GraphView) findViewById(R.id.graph);
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
-                //new DataPoint(0, 1),
-                //new DataPoint(1, 5),
-                //new DataPoint(2, 3),
-                //new DataPoint(3, 2),
-                //new DataPoint(4, 6)
 
-                new DataPoint(d1, 25475),
-                new DataPoint(d2, 22330),
-                new DataPoint(d3, 28795),
-                new DataPoint(d4, 29977),
-                new DataPoint(d5, 22590),
-                new DataPoint(d6, 22550)
+        // Add the points to the line graph - Not currently used
+        //LineGraphSeries<DataPoint> totalWeightLifted = new LineGraphSeries<>(new DataPoint[]{
+
+        //      new DataPoint(d1, 25475),
+        //    new DataPoint(d2, 22330),
+        //      new DataPoint(d3, 28795),
+        //      new DataPoint(d4, 29977),
+        //      new DataPoint(d5, 22590),
+        //      new DataPoint(d6, 22550)
+        //});
+
+        // Series style
+        //totalWeightLifted.setTitle("Volume");
+        //totalWeightLifted.setColor(Color.rgb(255, 116, 52));
+        //totalWeightLifted.setDrawDataPoints(true);
+        //totalWeightLifted.setDataPointsRadius(10);
+        //totalWeightLifted.setThickness(8);
+
+        LineGraphSeries<DataPoint> numberLifts = new LineGraphSeries<>(new DataPoint[]{
+
+                new DataPoint(d1, 250),
+                new DataPoint(d2, 220),
+                new DataPoint(d3, 275),
+                new DataPoint(d4, 325),
+                new DataPoint(d5, 230),
+                new DataPoint(d6, 210)
         });
-        graph.addSeries(series);
+
+        // Series style for number of lifts
+        numberLifts.setTitle("# Lifts");
+        numberLifts.setColor(Color.rgb(38, 138, 58));
+        numberLifts.setDrawDataPoints(true);
+        numberLifts.setDataPointsRadius(10);
+        numberLifts.setThickness(8);
+
+        LineGraphSeries<DataPoint> averageWeightLifted = new LineGraphSeries<>(new DataPoint[]{
+
+                new DataPoint(d1, 350),
+                new DataPoint(d2, 375),
+                new DataPoint(d3, 315),
+                new DataPoint(d4, 335),
+                new DataPoint(d5, 375),
+                new DataPoint(d6, 395)
+        });
+
+        // Series style for Average Weight Lifted
+        averageWeightLifted.setTitle("AWL");
+        averageWeightLifted.setColor(Color.rgb(0, 119, 211));
+        averageWeightLifted.setDrawDataPoints(true);
+        averageWeightLifted.setDataPointsRadius(10);
+        averageWeightLifted.setThickness(8);
+
+        //graph.addSeries(totalWeightLifted);
+        graph.addSeries(numberLifts);
+        graph.getSecondScale().addSeries(averageWeightLifted);
 
         // Set the date label formatter
         graph.getGridLabelRenderer().setLabelFormatter(new DateAsXAxisLabelFormatter(MainActivity.this));
         graph.getGridLabelRenderer().setNumHorizontalLabels(3);
+        graph.getGridLabelRenderer().setVerticalAxisTitleColor(Color.rgb(38, 138, 58));
 
         // Label the y-axis. TODO: let this be set by the user in the settings window.
-        graph.getGridLabelRenderer().setVerticalAxisTitle("Total Lbs.");
+        //graph.getGridLabelRenderer().setVerticalAxisTitle("Avg. Wt. Lifted");
 
         // set manual x bounds to have nice steps
         //graph.getViewport().setMinX(d1.getTime());
-        //graph.getViewport().setMaxX(d3.getTime());
-        graph.getViewport().setXAxisBoundsManual(true);
+        //graph.getViewport().setMaxX(d6.getTime());
+        //graph.getViewport().setXAxisBoundsManual(true);
+
+        // User scrollable x axis
+        graph.getViewport().setScalable(true);
+        graph.getViewport().setScrollable(true);
+        //graph.getViewport().setScalableY(true);
+        //graph.getViewport().setScrollableY(true);
+
+        // Set padding for axis labels
+        GridLabelRenderer glr = graph.getGridLabelRenderer();
+        glr.setPadding(8);
+
+        // Set vertical axis color
+        glr.setVerticalLabelsColor(Color.rgb(38, 138, 58));
+        // Set second scale bounds
+        graph.getSecondScale().setMinY(150);
+        graph.getSecondScale().setMaxY(450);
+        glr.setVerticalLabelsSecondScaleColor(Color.rgb(0, 119, 211));
+        graph.getSecondScale().setVerticalAxisTitle("# Lifts");
 
         // as we use dates as labels, the human rounding to nice readable numbers
         // is not necessary
-        graph.getGridLabelRenderer().setHumanRounding(false);
+        glr.setHumanRounding(false);
+
+        // Set label font size
+        glr.setTextSize(32f);
+        glr.reloadStyles();
+
+        // Enable legend
+        graph.getLegendRenderer().setVisible(true);
+        graph.getLegendRenderer().setAlign(LegendRenderer.LegendAlign.TOP);
+        graph.getLegendRenderer().setBackgroundColor(Color.argb(50, 157, 157, 157));
+
+        // set Title
+        graph.setTitle("Program History");
+
+        // Handle button clicks that take user to another action.
+
+        //Settings button -> settings action
+        Button settingsButton = (Button) findViewById(R.id.settingsButton);
+        settingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, Settings.class));
+            }
+        });
+
+        // Select Program button -> select program action
+        Button selectProgramButton = (Button) findViewById(R.id.selectProgramButton);
+        selectProgramButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, selectProgram.class));
+            }
+        });
     }
 }
