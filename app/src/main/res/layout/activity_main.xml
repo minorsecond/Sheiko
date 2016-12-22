@@ -80,7 +80,7 @@
                 android:id="@+id/settingsButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_above="@+id/selectWorkoutButton"
+                android:layout_above="@+id/selectProgramButton"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_weight="2.10"
@@ -93,7 +93,7 @@
                 android:layout_weight="1.63" />
 
             <Button
-                android:id="@+id/selectWorkoutButton"
+                android:id="@+id/selectProgramButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_above="@+id/TrainButton"

@@ -131,5 +131,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Select Program button -> select program action
+        Button selectProgramButton = (Button) findViewById(R.id.selectProgramButton);
+        selectProgramButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, selectProgram.class));
+            }
+        });
     }
 }
