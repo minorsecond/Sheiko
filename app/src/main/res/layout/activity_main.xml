@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
@@ -19,17 +20,30 @@
         android:orientation="vertical"
         android:weightSum="1">
 
-        <TextView
-            android:id="@+id/textView4"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:background="@color/primary"
-            android:gravity="center"
-            android:text="Sheiko PL"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/primary_text"
-            android:textSize="34sp" />
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView5"
+                android:layout_width="56dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/logo" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_weight="1"
+                android:background="@color/primary"
+                android:gravity="center"
+                android:text="  Sheiko PL"
+                android:textAlignment="viewStart"
+                android:textColor="@color/icons"
+                android:textSize="20sp" />
+        </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
@@ -55,9 +69,7 @@
                 android:layout_height="wrap_content"
                 android:text="Athlete Stats"
                 android:textAlignment="center"
-                android:textColor="@color/primary_text"
-                android:textSize="18sp"
-                android:textStyle="normal|bold" />
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
         </LinearLayout>
 
         <LinearLayout
@@ -71,10 +83,7 @@
                 android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Total:"
-                android:textAlignment="viewStart"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp"
-                android:textStyle="normal|bold" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
 
             <TextView
                 android:id="@+id/textView34"
@@ -85,10 +94,7 @@
                 android:elevation="0dp"
                 android:paddingBottom="0dp"
                 android:text="650 Kg."
-                android:textAlignment="viewStart"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp"
-                android:textStyle="normal|bold" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
         </LinearLayout>
 
         <LinearLayout
@@ -102,9 +108,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="Squat:"
-                android:textAlignment="viewStart"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
             <TextView
                 android:id="@+id/squatTotal"
@@ -112,9 +116,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="205 Kg."
-                android:textAlignment="viewStart"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
         </LinearLayout>
 
@@ -129,9 +131,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="Bench:"
-                android:textAlignment="viewStart"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
             <TextView
                 android:id="@+id/textView26"
@@ -139,9 +139,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="170 Kg."
-                android:textAlignment="viewStart"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
         </LinearLayout>
 
         <LinearLayout
@@ -155,8 +153,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="Deadlift:"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
             <TextView
                 android:id="@+id/textView28"
@@ -164,8 +161,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="275 Kg."
-                android:textColor="@color/primary_text"
-                android:textSize="16sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
         </LinearLayout>
 
         <LinearLayout
@@ -179,9 +175,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="Wilks' Score:"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp"
-                android:textStyle="normal|bold" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
 
             <TextView
                 android:id="@+id/textView36"
@@ -189,9 +183,7 @@
                 android:layout_height="22dp"
                 android:layout_weight="1"
                 android:text="455"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp"
-                android:textStyle="normal|bold" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
         </LinearLayout>
 
         <LinearLayout
@@ -219,15 +211,13 @@
 
             <Button
                 android:id="@+id/settingsButton"
-                android:layout_width="125dp"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_above="@+id/selectProgramButton"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_weight="1.54"
-                android:background="@color/primary"
+                android:background="@drawable/settings"
                 android:elevation="0dp"
-                android:text="User Settings"
                 android:textColor="@color/primary_text" />
 
             <Space
@@ -237,16 +227,15 @@
 
             <Button
                 android:id="@+id/selectProgramButton"
-                android:layout_width="125dp"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_above="@+id/TrainButton"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentRight="true"
                 android:layout_alignParentStart="true"
-                android:layout_weight="1"
-                android:background="@color/primary"
-                android:text="Select Program"
+                android:layout_weight="0.04"
+                android:background="@drawable/select_program"
                 android:textColor="@color/primary_text" />
 
         </LinearLayout>
@@ -264,7 +253,7 @@
             android:layout_alignParentRight="true"
             android:background="@color/accent"
             android:text="Train"
-            android:textColor="@color/primary_text" />
+            android:textAppearance="@android:style/TextAppearance.Material.Widget.Button" />
 
     </LinearLayout>
 

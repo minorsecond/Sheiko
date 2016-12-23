@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_select_program"
     android:layout_width="match_parent"
@@ -18,20 +19,31 @@
         android:layout_alignParentTop="true"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/textView42"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
-            android:background="#4CAF50"
-            android:gravity="center"
-            android:text="Sheiko PL"
-            android:textAlignment="center"
-            android:textAllCaps="false"
-            android:textColor="@color/primary_text"
-            android:textSize="34sp" />
+            android:layout_height="wrap_content"
+            android:background="@color/primary"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="56dp"
+                android:layout_height="50dp"
+                app:srcCompat="@drawable/logo" />
+
+            <TextView
+                android:id="@+id/textView42"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="1"
+                android:background="#4CAF50"
+                android:gravity="center"
+                android:text="  Sheiko PL" />
+
+        </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
@@ -45,10 +57,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/textView42"
             android:text="Select Program"
-            android:textAlignment="viewStart"
-            android:textColor="@color/primary_text"
-            android:textSize="18sp"
-            android:textStyle="normal|bold" />
+            android:textAppearance="@android:style/TextAppearance.Material.Headline" />
 
         <TextView
             android:id="@+id/textView13"
@@ -59,7 +68,7 @@
             android:layout_below="@+id/textView"
             android:layout_marginTop="13dp"
             android:text="Program"
-            android:textColor="@color/primary_text" />
+            android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
 
         <Spinner
             android:id="@+id/programSpinner"
@@ -80,7 +89,7 @@
             android:layout_below="@+id/programSpinner"
             android:layout_marginTop="38dp"
             android:text="Cycle"
-            android:textColor="@color/primary_text" />
+            android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
 
         <Spinner
             android:id="@+id/cycleSpinner"
@@ -101,10 +110,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Program Statistics"
-            android:textAlignment="center"
-            android:textColor="@color/primary_text"
-            android:textSize="18sp"
-            android:textStyle="normal|bold" />
+            android:textAppearance="@android:style/TextAppearance.Material.Headline" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -117,8 +123,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Discipline"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
 
             <TextView
                 android:id="@+id/textView45"
@@ -126,8 +131,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Number of Lifts"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp" />
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
 
         </LinearLayout>
 
@@ -142,7 +146,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Squat:"
-                android:textColor="@color/secondary_text" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
             <TextView
                 android:id="@+id/textView47"
@@ -150,7 +154,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="450"
-                android:textColor="@color/secondary_text" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
         </LinearLayout>
 
         <LinearLayout
@@ -164,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Bench:"
-                android:textColor="@color/secondary_text" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
             <TextView
                 android:id="@+id/textView49"
@@ -172,7 +176,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="600"
-                android:textColor="@color/secondary_text" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
         </LinearLayout>
 
         <LinearLayout
@@ -186,7 +190,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Deadlift:"
-                android:textColor="@color/secondary_text" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
 
             <TextView
                 android:id="@+id/textView51"
@@ -194,7 +198,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="400"
-                android:textColor="@color/secondary_text" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body1" />
         </LinearLayout>
 
         <LinearLayout
@@ -208,8 +212,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="Total:"
-                android:textColor="@color/secondary_text"
-                android:textStyle="normal|bold" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
 
             <TextView
                 android:id="@+id/textView53"
@@ -217,8 +220,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="1450"
-                android:textColor="@color/secondary_text"
-                android:textStyle="normal|bold" />
+                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
         </LinearLayout>
 
         <Space
@@ -232,14 +234,12 @@
 
             <Button
                 android:id="@+id/setLiftsButton"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:layout_weight="1"
-                android:background="#4CAF50"
-                android:text="Set Lift Numbers"
+                android:background="@drawable/edit_user"
                 android:textColor="@color/primary_text" />
 
             <Space
@@ -249,14 +249,12 @@
 
             <Button
                 android:id="@+id/createCustomProgram"
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentEnd="true"
                 android:layout_alignParentRight="true"
-                android:layout_weight="1"
-                android:background="#4CAF50"
-                android:text="Customize Program"
+                android:background="@drawable/create_program"
                 android:textColor="@color/primary_text" />
         </LinearLayout>
 
