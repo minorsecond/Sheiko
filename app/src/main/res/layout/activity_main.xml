@@ -40,7 +40,7 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@color/primary"
-                android:gravity="fill"
+                android:gravity="center"
                 android:text="@string/sheiko_pl"
                 android:textAlignment="viewStart"
                 android:textColor="@color/icons"
@@ -209,7 +209,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="37dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <Button
                 android:id="@+id/settingsButton"
@@ -220,8 +221,9 @@
                 android:textColor="@color/primary_text" />
 
             <Space
-                android:layout_width="275dp"
-                android:layout_height="wrap_content" />
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1.01" />
 
             <Button
                 android:id="@+id/selectProgramButton"
