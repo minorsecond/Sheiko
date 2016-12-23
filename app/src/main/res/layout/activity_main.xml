@@ -14,7 +14,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
@@ -205,10 +204,18 @@
             android:layout_height="2dp"
             android:background="@android:color/darker_gray"/> -->
 
+        <View
+            android:id="@+id/restTimerDivider"
+            android:layout_width="fill_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="27dp"
+            android:alpha="0.12"
+            android:background="@android:color/black" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="37dp"
+            android:layout_marginTop="27dp"
             android:orientation="horizontal"
             android:weightSum="1">
 

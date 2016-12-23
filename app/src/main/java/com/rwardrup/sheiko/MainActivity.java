@@ -213,5 +213,14 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, selectProgram.class));
             }
         });
+
+        // Train button -> Train action
+        Button startTrainingButton = (Button) findViewById(R.id.TrainButton);
+        startTrainingButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, train.class));
+            }
+        });
     }
 }
