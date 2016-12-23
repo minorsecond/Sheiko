@@ -1,5 +1,7 @@
 <resources>
     <string name="app_name">Sheiko</string>
+    <string name="sheiko_pl">Sheiko PL</string>
+    <string name="trainButtonText">Train</string>
     <string-array name="sexes">
         <item>Male</item>
         <item>Female</item>
