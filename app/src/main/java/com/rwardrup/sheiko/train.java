@@ -39,7 +39,7 @@ public class train extends AppCompatActivity {
 
                     Log.d("resumed timer", "value: " + millisLeftOnTimer);
                 } else {
-                    breakTimerOutput.setTextSize(31);
+                    breakTimerOutput.setTextSize(36);
                     int timerDuration = 180000;  // This will be set by user in final code
                     mCountDownTimer = createTimer(timerDuration);
                 }
@@ -53,7 +53,7 @@ public class train extends AppCompatActivity {
             public void onClick(View v) {
                 timerIsPaused = false;
                 mCountDownTimer.cancel();
-                breakTimerOutput.setTextSize(31);
+                breakTimerOutput.setTextSize(36);
                 breakTimerOutput.setText("180");
             }
         });

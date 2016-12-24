@@ -14,7 +14,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical">
@@ -103,7 +102,31 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="45dp" />
+            android:layout_height="1dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <View
+                android:id="@+id/graphStatsDivider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="27dp"
+                android:alpha="0.12"
+                android:background="@android:color/black" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <TextView
             android:id="@+id/textView43"
@@ -223,13 +246,29 @@
                 android:textAppearance="@android:style/TextAppearance.Material.Body2" />
         </LinearLayout>
 
-        <Space
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="105dp" />
+            android:layout_height="0dp"
+            android:layout_gravity="bottom|center"
+            android:layout_weight="1"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/ActionButtonDivider"
+            android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="5dp"
+                android:alpha="0.12"
+                android:background="@android:color/black" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center"
+            android:gravity="bottom|center"
             android:orientation="horizontal">
 
             <Button
@@ -244,7 +283,7 @@
 
             <Space
                 android:layout_width="25dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <Button
@@ -256,6 +295,8 @@
                 android:layout_alignParentRight="true"
                 android:background="@drawable/create_program"
                 android:textColor="@color/primary_text" />
+        </LinearLayout>
+
         </LinearLayout>
 
     </LinearLayout>

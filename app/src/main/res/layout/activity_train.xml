@@ -48,72 +48,75 @@
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="435dp" />
-
-        <View
-            android:id="@+id/restTimerDivider"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:alpha="0.12"
-            android:background="@android:color/black" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/rest_timer"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+            android:layout_height="0dp" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/startBreakTimer"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@drawable/play"
-                android:fontFamily="sans-serif-medium"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
-
-            <Button
-                android:id="@+id/pauseBreakButton"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@drawable/pause" />
-
-            <Button
-                android:id="@+id/stopBreakButton"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@drawable/stop" />
+            <View
+                android:id="@+id/restTimerDivider"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="20dp"
+                android:alpha="0.12"
+                android:background="@android:color/black" />
 
             <TextView
-                android:id="@+id/breakTimerOutput"
+                android:id="@+id/textView6"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:text="180"
-                android:textAlignment="center"
-                android:textAppearance="@android:style/TextAppearance.Material.Display1"
-                android:textColor="@color/primary_text"
-                android:textSize="31sp"
-                tools:gravity="fill_vertical|center_horizontal" />
-
-            <Space
-                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:text="@string/rest_timer"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/startBreakTimer"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/play"
+                    android:fontFamily="sans-serif-medium"
+                    android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+                <Button
+                    android:id="@+id/pauseBreakButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/pause" />
+
+                <Button
+                    android:id="@+id/stopBreakButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/stop" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <TextView
+                    android:id="@+id/breakTimerOutput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="5dp"
+                    android:layout_weight="1"
+                    android:text="180"
+                    android:textAlignment="gravity"
+                    android:textAppearance="@android:style/TextAppearance.Material.Display1"
+                    android:textColor="@color/primary_text"
+                    android:textSize="36sp"
+                    tools:gravity="center_vertical" />
+
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

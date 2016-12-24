@@ -52,12 +52,46 @@
 
         <com.jjoe64.graphview.GraphView
             android:id="@+id/graph"
+            android:layout_width="wrap_content"
+            android:layout_height="165dp" />
+
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="192dp" />
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <View
+                android:id="@+id/graphStatsDivider"
+                android:layout_width="250dp"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="15dp"
+                android:alpha="0.12"
+                android:background="@android:color/black" />
+
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
 
         <Space
             android:layout_width="match_parent"
-            android:layout_height="25dp" />
+            android:layout_height="2dp" />
+
+        <LinearLayout
+            android:id="@+id/statsLayout"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:orientation="vertical">
+
+
+        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -178,7 +212,7 @@
             <TextView
                 android:id="@+id/textView35"
                 android:layout_width="match_parent"
-                android:layout_height="22dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="Wilks' Score:"
                 android:textAppearance="@android:style/TextAppearance.Material.Body2" />
@@ -186,17 +220,10 @@
             <TextView
                 android:id="@+id/textView36"
                 android:layout_width="match_parent"
-                android:layout_height="22dp"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
                 android:text="455"
                 android:textAppearance="@android:style/TextAppearance.Material.Body2" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
         </LinearLayout>
 
         <!--<View
@@ -204,55 +231,63 @@
             android:layout_height="2dp"
             android:background="@android:color/darker_gray"/> -->
 
-        <View
-            android:id="@+id/restTimerDivider"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="27dp"
-            android:alpha="0.12"
-            android:background="@android:color/black" />
-
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="27dp"
-            android:orientation="horizontal"
-            android:weightSum="1">
+            android:layout_height="0dp"
+            android:layout_gravity="bottom|center"
+            android:layout_weight="1"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/settingsButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/settings"
-                android:elevation="0dp"
-                android:textColor="@color/primary_text" />
+            <View
+                android:id="@+id/restTimerDivider"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:alpha="0.12"
+                android:background="@android:color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/settingsButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/settings"
+                    android:elevation="0dp"
+                    android:textColor="@color/primary_text" />
+
+                <Space
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.01" />
+
+                <Button
+                    android:id="@+id/selectProgramButton"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:background="@drawable/select_program"
+                    android:textColor="@color/primary_text" />
+
+            </LinearLayout>
 
             <Space
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1.01" />
+                android:layout_width="match_parent"
+                android:layout_height="10dp" />
 
             <Button
-                android:id="@+id/selectProgramButton"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:background="@drawable/select_program"
-                android:textColor="@color/primary_text" />
+                android:id="@+id/TrainButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/primary_dark"
+                android:text="@string/trainButtonText"
+                android:textAppearance="@android:style/TextAppearance.Material.Widget.Button"
+                android:textColor="@color/icons"
+                tools:ignore="NewApi" />
 
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="15dp" />
-
-        <Button
-            android:id="@+id/TrainButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/accent"
-            android:text="@string/trainButtonText"
-            android:textAppearance="@android:style/TextAppearance.Material.Widget.Button"
-            tools:ignore="NewApi" />
 
     </LinearLayout>
 
