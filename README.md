@@ -1,4 +1,4 @@
-[![Build Status](http://ci.imspatial.me/job/Sheiko%20PL/badge/icon)](http://ci.imspatial.me/job/Sheiko%20PL/)
+[![Build Status](http://ci.imspatial.me/buildStatus/icon?job=Sheiko PL)](http://ci.imspatial.me/job/Sheiko%20PL/)
 
 # Sheiko
 Android Sheiko workout program
