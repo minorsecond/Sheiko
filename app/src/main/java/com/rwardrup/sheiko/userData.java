@@ -12,7 +12,7 @@ public final class userData {
 
     public static class UserParameters implements BaseColumns {
         public static final String TABLE_NAME = "userParameters";
-        public static final String COLUMN_NAME = "units";
+        public static final String USER_UNITS = "units";
         public static final String BODY_WEIGHT = "body_weight";
         public static final String SEX = "sex";
 
@@ -20,7 +20,7 @@ public final class userData {
         public static final String CREATE_TABLE = "CREATE TABLE IF NOT EXISTS " +
                 TABLE_NAME + " (" +
                 _ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                COLUMN_NAME + " TEXT, " +
+                USER_UNITS + " TEXT, " +
                 BODY_WEIGHT + " TEXT, " +
                 SEX + " INTEGER" + ") ";
     }
