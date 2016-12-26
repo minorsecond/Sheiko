@@ -39,9 +39,8 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@color/primary"
-                android:gravity="center"
+                android:gravity="left|center"
                 android:text="@string/sheiko_pl"
-                android:textAlignment="viewStart"
                 android:textColor="@color/icons"
                 android:textSize="20sp" />
         </LinearLayout>
@@ -256,7 +255,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/settings"
-                    android:elevation="0dp"
+                    android:elevation="2dp"
                     android:textColor="@color/primary_text" />
 
                 <Space
@@ -269,6 +268,7 @@
                     android:layout_width="50dp"
                     android:layout_height="50dp"
                     android:background="@drawable/select_program"
+                    android:elevation="2dp"
                     android:textColor="@color/primary_text" />
 
             </LinearLayout>
@@ -282,6 +282,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/primary_dark"
+                android:elevation="2dp"
                 android:text="@string/trainButtonText"
                 android:textAppearance="@android:style/TextAppearance.Material.Widget.Button"
                 android:textColor="@color/icons"
