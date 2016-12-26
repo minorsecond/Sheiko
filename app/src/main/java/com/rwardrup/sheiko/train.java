@@ -1,5 +1,6 @@
 package com.rwardrup.sheiko;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -29,6 +30,10 @@ public class train extends AppCompatActivity {
         pauseBreakTimerButton = (Button) findViewById(R.id.pauseBreakButton);
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
 
+        // Set the timer duration in seconds
+        final int timerDurationSeconds = 10;
+        breakTimerOutput.setText(Integer.toString(timerDurationSeconds));
+
         // break timer start
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
 
@@ -40,7 +45,7 @@ public class train extends AppCompatActivity {
                     Log.d("resumed timer", "value: " + millisLeftOnTimer);
                 } else {
                     breakTimerOutput.setTextSize(36);
-                    int timerDuration = 180000;  // This will be set by user in final code
+                    int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
                     mCountDownTimer = createTimer(timerDuration);
                 }
             }
@@ -87,8 +92,25 @@ public class train extends AppCompatActivity {
             public void onFinish() {
                 breakTimerOutput.setTextSize(24);
                 breakTimerOutput.setText(" Break Over");
+                playAlertSound(1);
             }
         }.start();
     }
 
+    public void playAlertSound(int sound) {
+        // Plays sound when timer reaches end.
+
+        MediaPlayer mp = MediaPlayer.create(getBaseContext(), R.raw.timer_end_beep);
+        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+            @Override
+            public void onCompletion(MediaPlayer mp) {
+                mp.release();
+            }
+        });
+
+        // timer alert looping and volume
+        mp.setLooping(false);
+        mp.setVolume(1.0f, 1.0f);
+        mp.start();
+    }
 }
