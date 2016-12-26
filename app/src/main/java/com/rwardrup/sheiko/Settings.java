@@ -2,6 +2,7 @@ package com.rwardrup.sheiko;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.databinding.DataBindingUtil;
@@ -16,6 +17,8 @@ import com.rwardrup.sheiko.databinding.ActivitySettingsBinding;
 public class Settings extends AppCompatActivity {
 
     //public ActivitySettingsBinding activitySettingsBinding;
+    public String unit;
+    public String bodyweight;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +26,8 @@ public class Settings extends AppCompatActivity {
 
         final ActivitySettingsBinding activitySettingsBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_settings);
+
+        readFromUserParamDb(activitySettingsBinding);  // Load database
 
         // Save to the DB when user clicks the save button.
         activitySettingsBinding.saveSettings.setOnClickListener(new View.OnClickListener() {
@@ -38,21 +43,59 @@ public class Settings extends AppCompatActivity {
     private void saveToUserParamDb(ActivitySettingsBinding binding) {
         SQLiteDatabase UserParamDb = new userParametersHelper(this).getWritableDatabase();
         ContentValues values = new ContentValues();
+        unit = "kilograms";  // Default to Kg.
+
+        // Get unit value. If the lbs radio button isn't checked, the value is left default (kg)
+        if (binding.lbsRadiobutton.isChecked()) {
+            unit = "pounds";
+        }
 
         // This table should really only have one row, so delete all previous rows before saving
         // new user settings.
-        UserParamDb.execSQL("DELETE FROM " + userData.UserParameters.TABLE_NAME);
+        //UserParamDb.execSQL("DELETE FROM " + userData.UserParameters.TABLE_NAME);
 
-        // Get the entered data
+        // Commit the data to the UserParameters table
         Log.d("Weight input: ", "value: " + binding.weightInput.getText().toString());
+        values.put(userData.UserParameters.USER_UNITS, unit);
         values.put(userData.UserParameters.BODY_WEIGHT, binding.weightInput.getText().toString());
         values.put(userData.UserParameters.SEX, binding.genderSpinner.getSelectedItem().toString());
 
         // Get a row ID and print it
         long newRowId = UserParamDb.insert(userData.UserParameters.TABLE_NAME, null, values);
-        Toast.makeText(this, "The new Row Id is " + newRowId, Toast.LENGTH_LONG).show();
+        Toast.makeText(this, "Your settings have been saved", Toast.LENGTH_LONG).show();
 
         Log.d("SQL CMD: ", "String: " + values);
+    }
+
+    // Read from user Parameters DB
+    private void readFromUserParamDb(ActivitySettingsBinding binding) {
+        SQLiteDatabase database = new userParametersHelper(this).getReadableDatabase();
+
+        // Get the last user parameter entry
+        String[] columns = {
+                "units",
+                "body_weight",
+                "sex"
+        };
+
+        Cursor cursor = database.query(userData.UserParameters.TABLE_NAME, columns, null, null, null, null, null);
+
+        Log.d("CursorCount", "The total cursor count is " + cursor.getColumnCount());
+
+        // Get values from DB cursor
+        if (cursor.moveToLast()) {
+            unit = cursor.getString(cursor.getColumnIndex(userData.UserParameters.USER_UNITS));
+            bodyweight = cursor.getString(cursor.getColumnIndex(userData.UserParameters.BODY_WEIGHT));
+        }
+        cursor.close();
+
+        // Write the DB values to text entry fields
+        Log.d("UnitFromDB:", "Unit found in DB: " + unit);
+        binding.weightInput.setText(bodyweight);
+        if (unit == "pounds") {
+            binding.kgsRadioButton.setChecked(false);
+            binding.kgsRadioButton.setChecked(true);
+        }
     }
 
     // Create user parameter DB
