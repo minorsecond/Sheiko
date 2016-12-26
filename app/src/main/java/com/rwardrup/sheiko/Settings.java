@@ -19,6 +19,7 @@ public class Settings extends AppCompatActivity {
     //public ActivitySettingsBinding activitySettingsBinding;
     public String unit;
     public String bodyweight;
+    public String sex;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +49,8 @@ public class Settings extends AppCompatActivity {
         // Get unit value. If the lbs radio button isn't checked, the value is left default (kg)
         if (binding.lbsRadiobutton.isChecked()) {
             unit = "pounds";
+        } else {
+            unit = "kilograms";
         }
 
         // This table should really only have one row, so delete all previous rows before saving
@@ -86,15 +89,25 @@ public class Settings extends AppCompatActivity {
         if (cursor.moveToLast()) {
             unit = cursor.getString(cursor.getColumnIndex(userData.UserParameters.USER_UNITS));
             bodyweight = cursor.getString(cursor.getColumnIndex(userData.UserParameters.BODY_WEIGHT));
+            sex = cursor.getString(cursor.getColumnIndex(userData.UserParameters.SEX));
         }
         cursor.close();
 
         // Write the DB values to text entry fields
         Log.d("UnitFromDB:", "Unit found in DB: " + unit);
         binding.weightInput.setText(bodyweight);
-        if (unit == "pounds") {
+        if (unit.equals("pounds")) {
             binding.kgsRadioButton.setChecked(false);
+            binding.lbsRadiobutton.setChecked(true);
+        } else {
             binding.kgsRadioButton.setChecked(true);
+            binding.lbsRadiobutton.setChecked(false);
+        }
+
+        if (sex.equals("Female")) {
+            binding.genderSpinner.setSelection(1);
+        } else {
+            binding.genderSpinner.setSelection(0);
         }
     }
 
