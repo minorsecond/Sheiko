@@ -60,7 +60,7 @@ public class train extends AppCompatActivity {
                     timerIsPaused = false;
                     mCountDownTimer.cancel();
                     breakTimerOutput.setTextSize(36);
-                    breakTimerOutput.setText("180");
+                    breakTimerOutput.setText(Integer.toString(timerDurationSeconds));
                 }
             }
         });
@@ -71,12 +71,13 @@ public class train extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 timerIsPaused = true;
-                mCountDownTimer.cancel();  // TODO: Fix this
+                mCountDownTimer.cancel();
                 Log.d("millis left on pause", "value: " + millisLeftOnTimer);
             }
         });
     }
 
+    // TODO: Use minutes and seconds format, and do a count up vs. count down.
     private CountDownTimer createTimer(long timerDuration) {
 
         Log.d("new timer duration:", "value: " + timerDuration);
@@ -92,12 +93,12 @@ public class train extends AppCompatActivity {
             public void onFinish() {
                 breakTimerOutput.setTextSize(24);
                 breakTimerOutput.setText(" Break Over");
-                playAlertSound(1);
+                playAlertSound();  // TODO: Fix the delay before playing beep.
             }
         }.start();
     }
 
-    public void playAlertSound(int sound) {
+    public void playAlertSound() {
         // Plays sound when timer reaches end.
 
         MediaPlayer mp = MediaPlayer.create(getBaseContext(), R.raw.timer_end_beep);
