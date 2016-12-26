@@ -51,10 +51,12 @@ public class train extends AppCompatActivity {
 
             @Override
             public void onClick(View v) {
-                timerIsPaused = false;
-                mCountDownTimer.cancel();
-                breakTimerOutput.setTextSize(36);
-                breakTimerOutput.setText("180");
+                if (millisLeftOnTimer > 0) {
+                    timerIsPaused = false;
+                    mCountDownTimer.cancel();
+                    breakTimerOutput.setTextSize(36);
+                    breakTimerOutput.setText("180");
+                }
             }
         });
 
