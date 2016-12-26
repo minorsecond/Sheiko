@@ -39,11 +39,10 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@color/primary"
-                android:gravity="center"
-                android:text="@string/sheiko_pl"
-                android:textAlignment="textStart"
+                android:gravity="left|center"
+                android:text="@string/app_name"
                 android:textColor="@color/icons"
-                android:textSize="20sp" />
+                android:textSize="32sp" />
         </LinearLayout>
 
         <Space

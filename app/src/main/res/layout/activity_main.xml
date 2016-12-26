@@ -42,7 +42,7 @@
                 android:gravity="left|center"
                 android:text="@string/sheiko_pl"
                 android:textColor="@color/icons"
-                android:textSize="20sp" />
+                android:textSize="32sp" />
         </LinearLayout>
 
         <Space

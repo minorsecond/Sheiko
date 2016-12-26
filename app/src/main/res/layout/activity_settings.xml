@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_settings"
     android:layout_width="match_parent"
@@ -10,177 +11,341 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context="com.rwardrup.sheiko.Settings">
 
-    <TextView
-        android:id="@+id/settingsTitle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="User Settings"
-        android:textAlignment="center"
-        android:textColor="@color/primary_text"
-        android:textSize="24sp"
-        android:textStyle="normal|bold" />
-
-    <RadioButton
-        android:id="@+id/kgsRadioButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/lbsRadiobutton"
-        android:layout_alignStart="@+id/lbsRadiobutton"
-        android:layout_below="@+id/lbsRadiobutton"
-        android:layout_marginTop="20dp"
-        android:text="Kg."
-        android:textColor="#1B5E20" />
-
-    <RadioButton
-        android:id="@+id/lbsRadiobutton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:layout_alignTop="@+id/userWeightLabel"
-        android:text="Lbs."
-        android:textColor="#1B5E20" />
-
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentRight="true"
+        android:layout_height="match_parent"
         android:layout_alignParentStart="true"
-        android:layout_below="@+id/kgsRadioButton"
-        android:layout_marginTop="149dp"
-        android:text="Lift Numbers"
-        android:textAlignment="center"
-        android:textColor="@color/primary_text"
-        android:textSize="18sp"
-        android:textStyle="normal|bold" />
+        android:layout_alignParentTop="true"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/textView9"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/textView8"
-        android:layout_marginTop="26dp"
-        android:text="Squat: "
-        android:textColor="@color/secondary_text" />
+        <LinearLayout
+            android:id="@+id/titleBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/primary"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/textView10"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/squatMax"
-        android:layout_marginTop="21dp"
-        android:text="Bench: "
-        android:textColor="@color/secondary_text" />
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="56dp"
+                android:layout_height="56dp"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/logo" />
 
-    <EditText
-        android:id="@+id/weightInput"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/userWeightLabel"
-        android:layout_alignBottom="@+id/userWeightLabel"
-        android:layout_toEndOf="@+id/textView11"
-        android:layout_toRightOf="@+id/textView11"
-        android:ems="10"
-        android:inputType="number"
-        android:maxLength="3"
-        android:textSize="10sp" />
+            <TextView
+                android:id="@+id/textView42"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_weight="1"
+                android:background="#4CAF50"
+                android:gravity="left|center"
+                android:text="@string/app_name"
+                android:textColor="@color/icons"
+                android:textSize="32sp" />
 
-    <EditText
-        android:id="@+id/editText6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView10"
-        android:layout_alignBottom="@+id/textView10"
-        android:layout_marginLeft="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_toEndOf="@+id/textView11"
-        android:layout_toRightOf="@+id/textView11"
-        android:ems="10"
-        android:inputType="number"
-        android:textColor="#1B5E20"
-        android:textSize="10sp" />
+        </LinearLayout>
 
-    <EditText
-        android:id="@+id/squatMax"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView9"
-        android:layout_alignBottom="@+id/textView9"
-        android:layout_alignLeft="@+id/dlMax"
-        android:layout_alignStart="@+id/dlMax"
-        android:ems="10"
-        android:inputType="number"
-        android:textColor="#1B5E20"
-        android:textSize="10sp" />
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="5dp" />
 
-    <EditText
-        android:id="@+id/dlMax"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView11"
-        android:layout_alignBottom="@+id/textView11"
-        android:layout_alignLeft="@+id/editText6"
-        android:layout_alignStart="@+id/editText6"
-        android:ems="10"
-        android:inputType="number"
-        android:textColor="#1B5E20"
-        android:textSize="10sp" />
+        <TextView
+            android:id="@+id/settingsTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="User Settings"
+            android:textAlignment="center"
+            android:textColor="@color/primary_text"
+            android:textSize="24sp"
+            android:textStyle="normal|bold" />
 
-    <Button
-        android:id="@+id/saveSettings"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentRight="true"
-        android:background="@drawable/save" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/genderLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/genderSpinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_alignTop="@+id/genderSpinner"
-        android:text="Sex:"
-        android:textColor="@color/secondary_text" />
+            <LinearLayout
+                android:id="@+id/userStatsINput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical">
 
-    <Spinner
-        android:id="@+id/genderSpinner"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/weightInput"
-        android:layout_alignStart="@+id/weightInput"
-        android:layout_alignTop="@+id/kgsRadioButton"
-        android:entries="@array/sexes" />
+                <LinearLayout
+                    android:id="@+id/weightInputRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
 
-    <TextView
-        android:id="@+id/userWeightLabel"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_below="@+id/settingsTitle"
-        android:layout_marginTop="19dp"
-        android:text="Weight:"
-        android:textColor="@color/secondary_text" />
+                    <TextView
+                        android:id="@+id/userWeightLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@+id/settingsTitle"
+                        android:layout_weight="1"
+                        android:text="Weight:"
+                        android:textColor="@color/secondary_text" />
 
-    <TextView
-        android:id="@+id/textView11"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/userWeightLabel"
-        android:layout_alignRight="@+id/userWeightLabel"
-        android:layout_below="@+id/editText6"
-        android:text="Deadlift:"
-        android:textColor="@color/secondary_text" />
+                    <EditText
+                        android:id="@+id/weightInput"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBaseline="@+id/userWeightLabel"
+                        android:layout_alignBottom="@+id/userWeightLabel"
+                        android:layout_toEndOf="@+id/textView11"
+                        android:layout_toRightOf="@+id/textView11"
+                        android:layout_weight="1"
+                        android:ems="10"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:textSize="10sp" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sexInputRow"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/genderLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/genderSpinner"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignTop="@+id/genderSpinner"
+                        android:layout_weight="1"
+                        android:text="Sex:"
+                        android:textColor="@color/secondary_text" />
+
+                    <Spinner
+                        android:id="@+id/genderSpinner"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignLeft="@+id/weightInput"
+                        android:layout_alignStart="@+id/weightInput"
+                        android:layout_alignTop="@+id/kgsRadioButton"
+                        android:layout_weight="1"
+                        android:entries="@array/sexes" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_weight="1"
+                android:checkedButton="@+id/lbsRadiobutton"
+                android:gravity="top">
+
+                <TextView
+                    android:id="@+id/unitLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Weight Unit" />
+
+                <RadioButton
+                    android:id="@+id/kgsRadioButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/lbsRadiobutton"
+                    android:layout_alignStart="@+id/lbsRadiobutton"
+                    android:layout_below="@+id/lbsRadiobutton"
+                    android:layout_marginTop="20dp"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Kg."
+                    android:textColor="@color/primary_text" />
+
+                <RadioButton
+                    android:id="@+id/lbsRadiobutton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignTop="@+id/userWeightLabel"
+                    android:layout_weight="1"
+                    android:checked="true"
+                    android:text="Lbs."
+                    android:textColor="@color/primary_text" />
+
+            </RadioGroup>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/userLiftNumbers"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentStart="true"
+                android:layout_below="@+id/kgsRadioButton"
+                android:text="Lift Numbers"
+                android:textAlignment="center"
+                android:textColor="@color/primary_text"
+                android:textSize="18sp"
+                android:textStyle="normal|bold" />
+
+            <LinearLayout
+                android:id="@+id/squatInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/textView8"
+                    android:layout_weight="1"
+                    android:text="Squat: "
+                    android:textColor="@color/secondary_text" />
+
+                <EditText
+                    android:id="@+id/squatMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/textView9"
+                    android:layout_alignBottom="@+id/textView9"
+                    android:layout_alignLeft="@+id/dlMax"
+                    android:layout_alignStart="@+id/dlMax"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textColor="#1B5E20"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/benchInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentStart="true"
+                    android:layout_below="@+id/squatMax"
+                    android:layout_weight="1"
+                    android:text="Bench: "
+                    android:textColor="@color/secondary_text" />
+
+                <EditText
+                    android:id="@+id/benchMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/textView10"
+                    android:layout_alignBottom="@+id/textView10"
+                    android:layout_marginLeft="12dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@+id/textView11"
+                    android:layout_toRightOf="@+id/textView11"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textColor="#1B5E20"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/deadliftInput"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/textView11"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@+id/userWeightLabel"
+                    android:layout_alignRight="@+id/userWeightLabel"
+                    android:layout_below="@+id/editText6"
+                    android:layout_weight="1"
+                    android:text="Deadlift:"
+                    android:textColor="@color/secondary_text" />
+
+                <EditText
+                    android:id="@+id/dlMax"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/textView11"
+                    android:layout_alignBottom="@+id/textView11"
+                    android:layout_alignLeft="@+id/editText6"
+                    android:layout_alignStart="@+id/editText6"
+                    android:layout_weight="1"
+                    android:ems="10"
+                    android:inputType="number"
+                    android:textColor="#1B5E20"
+                    android:textSize="10sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
+
+            <View
+                android:id="@+id/SettingsDivider2"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:alpha="0.12"
+                android:background="@android:color/black" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/saveSettings"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_alignParentRight="true"
+                    android:layout_gravity="bottom|right"
+                    android:background="@drawable/save"
+                    android:gravity="right" />
+            </LinearLayout>
+        </LinearLayout>
+
+    </LinearLayout>
 
 </RelativeLayout>
