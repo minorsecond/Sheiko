@@ -117,7 +117,7 @@
 
             <View
                 android:id="@+id/graphStatsDivider"
-                android:layout_width="match_parent"
+                android:layout_width="140dp"
                 android:layout_height="1dp"
                 android:layout_marginTop="27dp"
                 android:alpha="0.12"
@@ -139,10 +139,11 @@
             android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/programStats"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0"
+            android:layout_height="match_parent"
+            android:layout_weight=".7"
+            android:gravity="bottom|center"
             android:orientation="vertical">
 
             <TextView
@@ -266,9 +267,9 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/actionButtons"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_gravity="bottom|center"
             android:layout_weight="1"
             android:gravity="bottom|center"
             android:orientation="vertical">
