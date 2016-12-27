@@ -102,8 +102,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Athlete Stats"
-                android:textAlignment="center"
-                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+                android:textAppearance="@android:style/TextAppearance.Material.Headline" />
         </LinearLayout>
 
         <LinearLayout
