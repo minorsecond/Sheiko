@@ -38,10 +38,12 @@ public class train extends AppCompatActivity {
 
         // Break timer long-click set time
         breakTimerOutput.setOnLongClickListener(new OnLongClickListener() {
+
             @Override
             public boolean onLongClick(View v) {
-                customTimerlength = timerLengthInputAlert();
+                //customTimerlength = timerLengthInputAlert();
 
+                new RestDurationPicker().show(getFragmentManager(), "Session break length");
                 // Set the timer duration in seconds
                 if (customTimerlength != null) {
                     timerDurationSeconds = customTimerlength;
@@ -140,7 +142,7 @@ public class train extends AppCompatActivity {
         mp.start();
     }
 
-    // Timer length input alert
+    // Timer length input alert to allow user to customize break timer on the fly
     public Integer timerLengthInputAlert() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle("Change Timer Length");
