@@ -1,16 +1,22 @@
 package com.rwardrup.sheiko;
 
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class train extends AppCompatActivity {
-
+    public Integer customTimerlength = null;
+    public Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
     public boolean timerIsPaused;
     public long millisLeftOnTimer;
     Button startBreakTimerButton;
@@ -30,8 +36,27 @@ public class train extends AppCompatActivity {
         pauseBreakTimerButton = (Button) findViewById(R.id.pauseBreakButton);
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
 
-        // Set the timer duration in seconds
-        final int timerDurationSeconds = 10;
+        // Break timer long-click set time
+        breakTimerOutput.setOnLongClickListener(new OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                customTimerlength = timerLengthInputAlert();
+
+                // Set the timer duration in seconds
+                if (customTimerlength != null) {
+                    timerDurationSeconds = customTimerlength;
+                } else {
+                    timerDurationSeconds = 10;
+                }
+
+                // Assign the new custom timer duration to the timerduration variable
+                breakTimerOutput.setText(Integer.toString(timerDurationSeconds));
+                Log.d("NewTimer", "New Timer Duration: " + timerDurationSeconds);
+                return true;
+            }
+        });
+
+
         breakTimerOutput.setText(Integer.toString(timerDurationSeconds));
 
         // break timer start
@@ -113,5 +138,36 @@ public class train extends AppCompatActivity {
         mp.setLooping(false);
         mp.setVolume(1.0f, 1.0f);
         mp.start();
+    }
+
+    // Timer length input alert
+    public Integer timerLengthInputAlert() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Change Timer Length");
+
+        // Set up the input
+        final EditText input = new EditText(this);
+        // We expect an integer (n seconds)
+        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
+        builder.setView(input);
+
+        // Set up buttons
+        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                customTimerlength = Integer.parseInt(input.getText().toString());  // Get the value
+            }
+        });
+
+        // cancel button
+        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.cancel();
+            }
+        });
+
+        builder.show();
+        return customTimerlength;
     }
 }
