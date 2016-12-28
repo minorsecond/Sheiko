@@ -81,9 +81,11 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public void onClick(View v) {
-                timerIsPaused = true;
-                mCountDownTimer.cancel();
-                Log.d("millis left on pause", "value: " + millisLeftOnTimer);
+                if (millisLeftOnTimer > 0) {
+                    timerIsPaused = true;
+                    mCountDownTimer.cancel();
+                    Log.d("millis left on pause", "value: " + millisLeftOnTimer);
+                }
             }
         });
     }
