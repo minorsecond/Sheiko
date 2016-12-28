@@ -104,8 +104,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public void onFinish() {
-                breakTimerOutput.setTextSize(10);
-                breakTimerOutput.setText(" Break Over");
+                breakTimerOutput.setText(secondsToString(timerDurationSeconds));
                 playAlertSound();  // TODO: Fix the delay before playing beep.
             }
         }.start();
@@ -141,7 +140,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         Log.d("NewTimer", "New Timer Duration: " + secondsToString(timerDurationSeconds));
     }
 
-    // convert seconds to minutes and seconds
+    // convert seconds to minutes and seconds for display
     private String secondsToString(int pTime) {
         return String.format("%02d:%02d", pTime / 60, pTime % 60);
     }
