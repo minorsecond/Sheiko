@@ -95,6 +95,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
         Log.d("new timer duration:", "value: " + timerDuration);
         return new CountDownTimer(timerDuration, 1000) {
+
             @Override
             public void onTick(long millisUntilFinished) {
                 int progress = (int) (millisUntilFinished / 1000);
