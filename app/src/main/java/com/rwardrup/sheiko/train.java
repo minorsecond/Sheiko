@@ -25,6 +25,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Button pauseBreakTimerButton;
     TextView breakTimerOutput;
     CountDownTimer countdowntimer;
+    private String unit;
     private CountDownTimer mCountDownTimer;
 
     // Set font
@@ -32,7 +33,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     protected void attachBaseContext(Context newBase) {
         super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
