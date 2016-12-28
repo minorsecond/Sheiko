@@ -205,7 +205,7 @@
 
                     <TextView
                         android:id="@+id/textView3"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="Long-press to edit"
@@ -214,9 +214,9 @@
 
                     <TextView
                         android:id="@+id/breakTimerOutput"
-                        android:layout_width="match_parent"
+                        android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:text="180"
+                        android:text="05:00"
                         android:textAlignment="gravity"
                         android:textAppearance="@android:style/TextAppearance.Material.Display1"
                         android:textColor="@color/primary_text"

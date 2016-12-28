@@ -1,17 +1,13 @@
 package com.rwardrup.sheiko;
 
-import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.InputType;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
@@ -36,19 +32,18 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         pauseBreakTimerButton = (Button) findViewById(R.id.pauseBreakButton);
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
 
+        // Handle user long-clicking on the timer output text to change timer length on-the-fly
+        // This utilizes the onDurationSet method at the bottom of this class.
         breakTimerOutput.setOnLongClickListener(new OnLongClickListener() {
 
             @Override
             public boolean onLongClick(View v) {
-                //customTimerlength = timerLengthInputAlert();
-
                 new RestDurationPicker().show(getFragmentManager(), "Session break length");
                 return true;
             }
         });
 
-
-        breakTimerOutput.setText(Integer.toString(timerDurationSeconds));
+        breakTimerOutput.setText(secondsToString(timerDurationSeconds));
 
         // break timer start
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
@@ -76,7 +71,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                     timerIsPaused = false;
                     mCountDownTimer.cancel();
                     breakTimerOutput.setTextSize(36);
-                    breakTimerOutput.setText(Integer.toString(timerDurationSeconds));
+                    breakTimerOutput.setText(secondsToString(timerDurationSeconds));
                 }
             }
         });
@@ -101,13 +96,13 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             @Override
             public void onTick(long millisUntilFinished) {
                 int progress = (int) (millisUntilFinished / 1000);
-                breakTimerOutput.setText(Integer.toString(progress));
+                breakTimerOutput.setText(secondsToString(progress));
                 millisLeftOnTimer = millisUntilFinished;
             }
 
             @Override
             public void onFinish() {
-                breakTimerOutput.setTextSize(24);
+                breakTimerOutput.setTextSize(10);
                 breakTimerOutput.setText(" Break Over");
                 playAlertSound();  // TODO: Fix the delay before playing beep.
             }
@@ -131,48 +126,21 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         mp.start();
     }
 
-    // Timer length input alert to allow user to customize break timer on the fly
-    public Integer timerLengthInputAlert() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("Change Timer Length");
-
-        // Set up the input
-        final EditText input = new EditText(this);
-        // We expect an integer (n seconds)
-        input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_NORMAL);
-        builder.setView(input);
-
-        // Set up buttons
-        builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                customTimerlength = Integer.parseInt(input.getText().toString());  // Get the value
-            }
-        });
-
-        // cancel button
-        builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
-            }
-        });
-
-        builder.show();
-        return customTimerlength;
-    }
-
     // Break timer long-click set time
     @Override
     public void onDurationSet(long duration) {
         Integer i = (int) (long) duration;  // get integer i from duration (long)
-        customTimerlength = i / 1000; // convert millis to seconds
+        timerDurationSeconds = i / 1000; // convert millis to seconds
 
         // Set the timer duration in seconds
-        timerDurationSeconds = customTimerlength;
 
         // Assign the new custom timer duration to the timerduration variable
-        breakTimerOutput.setText(Integer.toString(timerDurationSeconds));
-        Log.d("NewTimer", "New Timer Duration: " + timerDurationSeconds);
+        breakTimerOutput.setText(secondsToString(timerDurationSeconds));
+        Log.d("NewTimer", "New Timer Duration: " + secondsToString(timerDurationSeconds));
+    }
+
+    // convert seconds to minutes and seconds
+    private String secondsToString(int pTime) {
+        return String.format("%02d:%02d", pTime / 60, pTime % 60);
     }
 }
