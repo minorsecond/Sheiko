@@ -1,12 +1,21 @@
 package com.rwardrup.sheiko;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.Button;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class selectProgram extends AppCompatActivity {
+
+    // Set font
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

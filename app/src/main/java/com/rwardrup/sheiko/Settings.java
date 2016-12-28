@@ -14,12 +14,20 @@ import android.widget.Toast;
 
 import com.rwardrup.sheiko.databinding.ActivitySettingsBinding;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 public class Settings extends AppCompatActivity {
 
     //public ActivitySettingsBinding activitySettingsBinding;
     public String unit;
     public String bodyweight;
     public String sex;
+
+    // Set font
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -1,5 +1,6 @@
 package com.rwardrup.sheiko;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
@@ -19,12 +20,21 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.ParseException;
 import java.util.Date;
 
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
+
 //TODO: Purchase this icon: http://www.flaticon.com/free-icon/bench_249226#term=weightlifting&page=1&position=24
 
 public class MainActivity extends AppCompatActivity {
 
+    // Set font
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

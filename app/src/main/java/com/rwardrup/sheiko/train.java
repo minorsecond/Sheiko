@@ -1,5 +1,6 @@
 package com.rwardrup.sheiko;
 
+import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
@@ -8,8 +9,11 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
-import android.widget.NumberPicker;
 import android.widget.TextView;
+
+import com.shawnlin.numberpicker.NumberPicker;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
     public Integer customTimerlength;
@@ -22,6 +26,13 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     TextView breakTimerOutput;
     CountDownTimer countdowntimer;
     private CountDownTimer mCountDownTimer;
+
+    // Set font
+    @Override
+    protected void attachBaseContext(Context newBase) {
+        super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
+    }
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

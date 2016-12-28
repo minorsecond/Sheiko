@@ -216,11 +216,15 @@
                                     android:text="Reps"
                                     android:textColor="@color/secondary_text" />
 
-                                <NumberPicker
+                                <com.shawnlin.numberpicker.NumberPicker
                                     android:id="@+id/repsPicker"
                                     android:layout_width="match_parent"
                                     android:layout_height="180dp"
-                                    android:background="@color/cardview_shadow_end_color" />
+                                    app:np_dividerColor="@color/primary_dark"
+                                    app:np_dividerThickness="1dp"
+                                    app:np_max="20"
+                                    app:np_min="0"
+                                    app:np_textSize="16sp" />
                             </LinearLayout>
 
                             <Space
@@ -244,11 +248,13 @@
                                     android:gravity="center"
                                     android:text="Weight" />
 
-                                <NumberPicker
+                                <com.shawnlin.numberpicker.NumberPicker
                                     android:id="@+id/weightPicker"
                                     android:layout_width="match_parent"
                                     android:layout_height="180dp"
-                                    android:background="@color/cardview_shadow_end_color" />
+                                    app:np_dividerColor="@color/primary_dark"
+                                    app:np_dividerThickness="1dp"
+                                    app:np_textSize="16sp" />
                             </LinearLayout>
 
                         </LinearLayout>
