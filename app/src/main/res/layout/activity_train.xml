@@ -142,11 +142,58 @@
 
                     <View
                         android:id="@+id/exerciseDivider"
-                        android:layout_width="fill_parent"
+                        android:layout_width="140dp"
                         android:layout_height="1dp"
-                        android:layout_gravity="top"
+                        android:layout_gravity="top|center_horizontal"
                         android:alpha="0.12"
                         android:background="@android:color/black" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp" />
+
+                    <LinearLayout
+                        android:id="@+id/setsAndWeights"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/setSelectionView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/previousSetButton"
+                                android:layout_width="0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@color/accent"
+                                android:text="Prev. Set"
+                                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1" />
+
+                            <Button
+                                android:id="@+id/nextSetButton"
+                                android:layout_width="0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@color/accent"
+                                android:text="Next Set"
+                                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/weightSelectionView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal"></LinearLayout>
+                    </LinearLayout>
 
 
                 </LinearLayout>
