@@ -14,8 +14,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class train extends AppCompatActivity {
-    public Integer customTimerlength = null;
+public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
+    public Integer customTimerlength;
     public Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
     public boolean timerIsPaused;
     public long millisLeftOnTimer;
@@ -36,7 +36,6 @@ public class train extends AppCompatActivity {
         pauseBreakTimerButton = (Button) findViewById(R.id.pauseBreakButton);
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
 
-        // Break timer long-click set time
         breakTimerOutput.setOnLongClickListener(new OnLongClickListener() {
 
             @Override
@@ -44,16 +43,6 @@ public class train extends AppCompatActivity {
                 //customTimerlength = timerLengthInputAlert();
 
                 new RestDurationPicker().show(getFragmentManager(), "Session break length");
-                // Set the timer duration in seconds
-                if (customTimerlength != null) {
-                    timerDurationSeconds = customTimerlength;
-                } else {
-                    timerDurationSeconds = 10;
-                }
-
-                // Assign the new custom timer duration to the timerduration variable
-                breakTimerOutput.setText(Integer.toString(timerDurationSeconds));
-                Log.d("NewTimer", "New Timer Duration: " + timerDurationSeconds);
                 return true;
             }
         });
@@ -171,5 +160,19 @@ public class train extends AppCompatActivity {
 
         builder.show();
         return customTimerlength;
+    }
+
+    // Break timer long-click set time
+    @Override
+    public void onDurationSet(long duration) {
+        Integer i = (int) (long) duration;  // get integer i from duration (long)
+        customTimerlength = i / 1000; // convert millis to seconds
+
+        // Set the timer duration in seconds
+        timerDurationSeconds = customTimerlength;
+
+        // Assign the new custom timer duration to the timerduration variable
+        breakTimerOutput.setText(Integer.toString(timerDurationSeconds));
+        Log.d("NewTimer", "New Timer Duration: " + timerDurationSeconds);
     }
 }

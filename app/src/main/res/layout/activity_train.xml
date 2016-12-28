@@ -104,7 +104,7 @@
                         <Button
                             android:id="@+id/benchSelectButton"
                             android:layout_width="65dp"
-                            android:layout_height="85dp"
+                            android:layout_height="75dp"
                             android:background="@drawable/bench_press"
                             android:gravity="center"
                             android:textSize="14sp" />
@@ -198,17 +198,31 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1" />
 
-                <TextView
-                    android:id="@+id/breakTimerOutput"
+                <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="5dp"
-                    android:layout_weight="1"
-                    android:textAlignment="gravity"
-                    android:textAppearance="@android:style/TextAppearance.Material.Display1"
-                    android:textColor="@color/primary_text"
-                    android:textSize="36sp"
-                    tools:gravity="center_vertical" />
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Long-press to edit"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/breakTimerOutput"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:text="180"
+                        android:textAlignment="gravity"
+                        android:textAppearance="@android:style/TextAppearance.Material.Display1"
+                        android:textColor="@color/primary_text"
+                        android:textSize="36sp"
+                        tools:gravity="center_horizontal|center" />
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

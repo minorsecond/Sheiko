@@ -1,16 +1,13 @@
 package com.rwardrup.sheiko;
 
-import android.widget.Toast;
-
 import mobi.upod.timedurationpicker.TimeDurationPicker;
 import mobi.upod.timedurationpicker.TimeDurationPickerDialogFragment;
-
 
 public class RestDurationPicker extends TimeDurationPickerDialogFragment {
 
     @Override
     protected long getInitialDuration() {
-        return 3 * 60 * 1000;  // Default to 3 minutes
+        return 0;  // Default to empty
     }
 
     @Override
@@ -20,6 +17,11 @@ public class RestDurationPicker extends TimeDurationPickerDialogFragment {
 
     @Override
     public void onDurationSet(TimeDurationPicker view, long duration) {
-        Toast.makeText(getContext(), "New break length set", Toast.LENGTH_LONG).show();
+        //When the duration is set by the user, notify the listener
+        ((train) getActivity()).onDurationSet(duration);
+    }
+
+    public interface DurationListener {
+        void onDurationSet(long duration);
     }
 }
