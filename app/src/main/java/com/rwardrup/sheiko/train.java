@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.Button;
+import android.widget.NumberPicker;
 import android.widget.TextView;
 
 public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
@@ -31,6 +32,9 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         stopBreakTimerButton = (Button) findViewById(R.id.stopBreakButton);
         pauseBreakTimerButton = (Button) findViewById(R.id.pauseBreakButton);
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
+
+        // Set the reps and weights
+        setRepsWeightPickers();
 
         // Handle user long-clicking on the timer output text to change timer length on-the-fly
         // This utilizes the onDurationSet method at the bottom of this class.
@@ -144,5 +148,35 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     // convert seconds to minutes and seconds for display
     private String secondsToString(int pTime) {
         return String.format("%02d:%02d", pTime / 60, pTime % 60);
+    }
+
+    // set reps and weight picker contents
+    private void setRepsWeightPickers() {
+
+        NumberPicker repPicker = (NumberPicker) findViewById(R.id.repsPicker);
+        NumberPicker weightPicker = (NumberPicker) findViewById(R.id.weightPicker);
+
+        // Disable keyboard
+        repPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+        weightPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
+
+        // Reps
+        repPicker.setMinValue(0);
+        repPicker.setMaxValue(20);
+
+        // Weight
+        weightPicker.setMinValue(0);
+        weightPicker.setMaxValue(480); //480 * 2.5 == 1200
+
+        // Format the weight picker numbers to increment by 2.5
+        NumberPicker.Formatter formatter = new NumberPicker.Formatter() {
+            @Override
+            public String format(int value) {
+                double temp = value * 2.5;
+                return "" + temp;
+            }
+        };
+
+        weightPicker.setFormatter(formatter);
     }
 }

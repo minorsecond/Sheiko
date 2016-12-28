@@ -54,7 +54,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="top"
                 android:layout_weight="1"
                 android:gravity="top"
@@ -68,7 +68,7 @@
                 <LinearLayout
                     android:id="@+id/mainLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="0dp"
+                    android:layout_height="match_parent"
                     android:layout_gravity="top"
                     android:layout_weight="1"
                     android:gravity="top"
@@ -91,7 +91,7 @@
                         <Button
                             android:id="@+id/squatSelectButton"
                             android:layout_width="56dp"
-                            android:layout_height="56dp"
+                            android:layout_height="50dp"
                             android:background="@drawable/squats"
                             android:gravity="center"
                             android:textColor="@color/secondary_text"
@@ -105,7 +105,7 @@
                         <Button
                             android:id="@+id/benchSelectButton"
                             android:layout_width="65dp"
-                            android:layout_height="75dp"
+                            android:layout_height="70dp"
                             android:background="@drawable/bench_press"
                             android:gravity="center"
                             android:textSize="14sp" />
@@ -117,8 +117,8 @@
 
                         <Button
                             android:id="@+id/deadliftButton"
-                            android:layout_width="56dp"
-                            android:layout_height="56dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:background="@drawable/deadlift"
                             android:gravity="center"
                             android:textColor="@color/secondary_text"
@@ -131,7 +131,7 @@
 
                         <Button
                             android:id="@+id/accessoriesButton"
-                            android:layout_width="56dp"
+                            android:layout_width="50dp"
                             android:layout_height="56dp"
                             android:background="@drawable/barbell"
                             android:gravity="center"
@@ -150,7 +150,7 @@
 
                     <Space
                         android:layout_width="match_parent"
-                        android:layout_height="5dp" />
+                        android:layout_height="10dp" />
 
                     <LinearLayout
                         android:id="@+id/setsAndWeights"
@@ -188,11 +188,70 @@
                                 android:textAppearance="@android:style/TextAppearance.Material.Button" />
                         </LinearLayout>
 
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
+
                         <LinearLayout
                             android:id="@+id/weightSelectionView"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal"></LinearLayout>
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/repsLayout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="?android:attr/windowBackground"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/repsPickerText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Reps"
+                                    android:textColor="@color/secondary_text" />
+
+                                <NumberPicker
+                                    android:id="@+id/repsPicker"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="180dp"
+                                    android:background="@color/cardview_shadow_end_color" />
+                            </LinearLayout>
+
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <LinearLayout
+                                android:id="@+id/weightLayout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="?android:attr/windowBackground"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/weightPickerText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Weight" />
+
+                                <NumberPicker
+                                    android:id="@+id/weightPicker"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="180dp"
+                                    android:background="@color/cardview_shadow_end_color" />
+                            </LinearLayout>
+
+                        </LinearLayout>
                     </LinearLayout>
 
 
