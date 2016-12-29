@@ -13,10 +13,11 @@ import android.widget.TextView;
 
 import com.shawnlin.numberpicker.NumberPicker;
 
+import java.util.Locale;
+
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
-    public Integer customTimerlength;
     public Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
     public boolean timerIsPaused;
     public long millisLeftOnTimer;
@@ -24,8 +25,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
     TextView breakTimerOutput;
-    CountDownTimer countdowntimer;
-    private String unit;
     private CountDownTimer mCountDownTimer;
 
     // Set font
@@ -158,7 +157,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
     // convert seconds to minutes and seconds for display
     private String secondsToString(int pTime) {
-        return String.format("%02d:%02d", pTime / 60, pTime % 60);
+        return String.format(Locale.US, "%02d:%02d", pTime / 60, pTime % 60);
     }
 
     // set reps and weight picker contents
@@ -192,7 +191,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             numbers[i] = String.valueOf((i + 1) * step);
         }
 
-        //weightPicker.setFormatter(formatter);
         weightPicker.setDisplayedValues(numbers);
 
         // TODO: Pull this start value from the DB of today's workout, per lift
