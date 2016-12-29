@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import java.util.Arrays;
 
@@ -41,6 +42,7 @@ public class selectProgram extends AppCompatActivity {
 
         final Spinner programSpinner = (Spinner) findViewById(R.id.programSpinner);
         final Spinner cycleSpinner = (Spinner) findViewById(R.id.cycleSpinner);
+        final TextView cycleTitleText = (TextView) findViewById(R.id.cycleSelectionTextTitle);
 
         programSpinner.setSelection(12);  // TODO get this value from db
         // Listen for changes in program spinner selection
@@ -57,6 +59,7 @@ public class selectProgram extends AppCompatActivity {
                 Log.d("ProgramSelectionChanged", "Program Selection: " + selectedProgram);
                 if (Arrays.asList(oldNumberedPrograms).contains(selectedProgram)) {
                     cycleSpinner.setEnabled(false);
+                    cycleTitleText.setEnabled(false);
                 } else {
                     cycleSpinner.setEnabled(true);
                 }
