@@ -39,9 +39,11 @@ public class selectProgram extends AppCompatActivity {
             }
         });
 
-        // Listen for changes in program spinner selection
         final Spinner programSpinner = (Spinner) findViewById(R.id.programSpinner);
         final Spinner cycleSpinner = (Spinner) findViewById(R.id.cycleSpinner);
+
+        programSpinner.setSelection(12);  // TODO get this value from db
+        // Listen for changes in program spinner selection
 
         programSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
