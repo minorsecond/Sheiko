@@ -39,82 +39,327 @@
                 android:layout_height="50dp"
                 android:layout_weight="1"
                 android:background="@color/primary"
-                android:gravity="center"
-                android:text="@string/sheiko_pl"
-                android:textAlignment="textStart"
+                android:gravity="left|center"
+                android:text="@string/app_name"
                 android:textColor="@color/icons"
-                android:textSize="20sp" />
+                android:textSize="32sp" />
         </LinearLayout>
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="435dp" />
-
-        <View
-            android:id="@+id/restTimerDivider"
-            android:layout_width="fill_parent"
-            android:layout_height="1dp"
-            android:layout_marginTop="20dp"
-            android:alpha="0.12"
-            android:background="@android:color/black" />
-
-        <Space
-            android:layout_width="match_parent"
-            android:layout_height="1dp" />
-
-        <TextView
-            android:id="@+id/textView6"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/rest_timer"
-            android:textAlignment="center"
-            android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom|center"
+            android:orientation="vertical">
 
-            <Button
-                android:id="@+id/startBreakTimer"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@drawable/play"
-                android:fontFamily="sans-serif-medium"
-                android:textAppearance="@android:style/TextAppearance.Material.Button" />
-
-            <Button
-                android:id="@+id/pauseBreakButton"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@drawable/pause" />
-
-            <Button
-                android:id="@+id/stopBreakButton"
-                android:layout_width="wrap_content"
-                android:layout_height="50dp"
-                android:layout_weight="1"
-                android:background="@drawable/stop" />
-
-            <TextView
-                android:id="@+id/breakTimerOutput"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_gravity="top"
                 android:layout_weight="1"
-                android:text="180"
-                android:textAlignment="center"
-                android:textAppearance="@android:style/TextAppearance.Material.Display1"
-                android:textColor="@color/primary_text"
-                android:textSize="31sp"
-                tools:gravity="fill_vertical|center_horizontal" />
+                android:gravity="top"
+                android:orientation="vertical"
+                tools:ignore="NestedWeights">
 
-            <Space
-                android:layout_width="wrap_content"
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
+                <LinearLayout
+                    android:id="@+id/mainLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="top"
+                    android:layout_weight="1"
+                    android:gravity="top"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/liftSelectionInstruction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="@string/select_lift"
+                        android:textColor="@color/primary_text" />
+
+                    <LinearLayout
+                        android:id="@+id/exerciseSelection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/squatSelectButton"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:background="@drawable/squats"
+                            android:gravity="center"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="14sp" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/benchSelectButton"
+                            android:layout_width="55dp"
+                            android:layout_height="65dp"
+                            android:background="@drawable/bench_press"
+                            android:gravity="center"
+                            android:textSize="14sp" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/deadliftButton"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:background="@drawable/deadlift"
+                            android:gravity="center"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="14sp" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/accessoriesButton"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/barbell"
+                            android:gravity="center"
+                            android:textColor="@color/secondary_text"
+                            android:textSize="14sp" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/exerciseDivider"
+                        android:layout_width="140dp"
+                        android:layout_height="1dp"
+                        android:layout_gravity="top|center_horizontal"
+                        android:alpha="0.12"
+                        android:background="@android:color/black" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" />
+
+                    <LinearLayout
+                        android:id="@+id/setsAndWeights"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/setSelectionView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Button
+                                android:id="@+id/previousSetButton"
+                                android:layout_width="0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@color/accent"
+                                android:elevation="1dp"
+                                android:text="Prev. Set"
+                                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+                            <TextView
+                                android:id="@+id/currentExerciseDisplay"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Squat"
+                                android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+                            <Button
+                                android:id="@+id/nextSetButton"
+                                android:layout_width="0dip"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:background="@color/accent"
+                                android:elevation="1dp"
+                                android:text="Next Set"
+                                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                        </LinearLayout>
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
+
+                        <LinearLayout
+                            android:id="@+id/weightSelectionView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/repsLayout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="?android:attr/windowBackground"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/repsPickerText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="Reps"
+                                    android:textColor="@color/secondary_text" />
+
+                                <com.shawnlin.numberpicker.NumberPicker
+                                    android:id="@+id/repsPicker"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="180dp"
+                                    android:layout_gravity="center"
+                                    app:np_dividerColor="@color/primary_dark"
+                                    app:np_dividerDistance="20dp"
+                                    app:np_dividerThickness="1dp"
+                                    app:np_max="20"
+                                    app:np_min="0"
+                                    app:np_textColor="@color/primary_dark"
+                                    app:np_textSize="18sp" />
+                            </LinearLayout>
+
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <LinearLayout
+                                android:id="@+id/weightLayout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="?android:attr/windowBackground"
+                                android:gravity="center_vertical"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/weightPickerText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Weight" />
+
+                                <com.shawnlin.numberpicker.NumberPicker
+                                    android:id="@+id/weightPicker"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="180dp"
+                                    android:layout_gravity="center"
+                                    app:np_dividerColor="@color/primary_dark"
+                                    app:np_dividerDistance="20dp"
+                                    app:np_dividerThickness="1dp"
+                                    app:np_textColor="@color/primary_dark"
+                                    app:np_textSize="18sp" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/restTimerDivider"
+                android:layout_width="fill_parent"
+                android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
+                android:layout_marginTop="20dp"
+                android:alpha="0.12"
+                android:background="@android:color/black" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1" />
+                android:text="@string/rest_timer"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+
+            <LinearLayout
+                android:id="@+id/timerSpacer"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <Button
+                    android:id="@+id/startBreakTimer"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/play"
+                    android:elevation="1dp"
+                    android:fontFamily="sans-serif-medium"
+                    android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+                <Button
+                    android:id="@+id/pauseBreakButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/pause" />
+
+                <Button
+                    android:id="@+id/stopBreakButton"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/stop" />
+
+                <Space
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Long-press to edit"
+                        android:textColor="@color/secondary_text"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/breakTimerOutput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:text="05:00"
+                        android:textAlignment="gravity"
+                        android:textAppearance="@android:style/TextAppearance.Material.Display1"
+                        android:textColor="@color/primary_text"
+                        android:textSize="36sp"
+                        tools:gravity="center_horizontal|center" />
+                </LinearLayout>
+
+            </LinearLayout>
         </LinearLayout>
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
 
     </LinearLayout>
 </RelativeLayout>

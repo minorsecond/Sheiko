@@ -18,13 +18,13 @@ import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
-    public Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
-    public boolean timerIsPaused;
-    public long millisLeftOnTimer;
+    private static long millisLeftOnTimer;
     Button startBreakTimerButton;
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
     TextView breakTimerOutput;
+    private Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
+    private boolean timerIsPaused;
     private CountDownTimer mCountDownTimer;
 
     // Set font
@@ -56,7 +56,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 return true;
             }
         });
-
         breakTimerOutput.setText(secondsToString(timerDurationSeconds));
 
         // break timer start
@@ -68,6 +67,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                     mCountDownTimer = createTimer(millisLeftOnTimer);  // resume paused timer
 
                     Log.d("resumed timer", "value: " + millisLeftOnTimer);
+                } else if (millisLeftOnTimer > 0) {  // Do nothing if there is still time left
                 } else {
                     breakTimerOutput.setTextSize(36);
                     int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
@@ -82,6 +82,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             @Override
             public void onClick(View v) {
                 if (millisLeftOnTimer > 0) {
+                    millisLeftOnTimer = 0;
                     timerIsPaused = false;
                     mCountDownTimer.cancel();
                     breakTimerOutput.setTextSize(36);
@@ -105,7 +106,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     }
 
     // TODO: Use minutes and seconds format, and do a count up vs. count down.
-    private CountDownTimer createTimer(long timerDuration) {
+    public CountDownTimer createTimer(long timerDuration) {
 
         Log.d("new timer duration:", "value: " + timerDuration);
         return new CountDownTimer(timerDuration, 1000) {
@@ -114,7 +115,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             public void onTick(long millisUntilFinished) {
                 int progress = (int) (millisUntilFinished / 1000);
                 breakTimerOutput.setText(secondsToString(progress));
-                millisLeftOnTimer = millisUntilFinished;
             }
 
             @Override
