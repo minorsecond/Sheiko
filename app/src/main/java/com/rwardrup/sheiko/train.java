@@ -35,7 +35,8 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
     // Timer stuff
     private Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
-    private boolean timerIsPaused;
+    private boolean timerIsPaused = false;
+    private boolean timerIsRunning = false;
     private CountDownTimer mCountDownTimer;
 
     // Set font
@@ -108,13 +109,18 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public void onClick(View v) {
-                if (timerIsPaused) {
+                if (timerIsPaused && !timerIsRunning) {
+                    Log.d("MillisLeftAfterPause", "Paused time left: " + millisLeftOnTimer);
                     mCountDownTimer = createTimer(millisLeftOnTimer);  // resume paused timer
+                    timerIsPaused = false;
+                    timerIsRunning = true;
 
                     Log.d("resumed timer", "value: " + millisLeftOnTimer);
-                } else if (millisLeftOnTimer < 1) {
+                } else if (!timerIsRunning) {
+                    timerIsPaused = false;
                     breakTimerOutput.setTextSize(36);
                     int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
+                    timerIsRunning = true;
                     mCountDownTimer = createTimer(timerDuration);
                 }
             }
@@ -125,9 +131,10 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public void onClick(View v) {
-                if (millisLeftOnTimer > 0) {
+                if (timerIsRunning) {
                     millisLeftOnTimer = 0;
                     timerIsPaused = false;
+                    timerIsRunning = false;
                     mCountDownTimer.cancel();
                     breakTimerOutput.setTextSize(36);
                     breakTimerOutput.setText(secondsToString(timerDurationSeconds));
@@ -140,8 +147,9 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public void onClick(View v) {
-                if (millisLeftOnTimer > 0) {
+                if (timerIsRunning) {
                     timerIsPaused = true;
+                    timerIsRunning = false;
                     mCountDownTimer.cancel();
                     Log.d("millis left on pause", "value: " + millisLeftOnTimer);
                 }
@@ -158,6 +166,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             @Override
             public void onTick(long millisUntilFinished) {
                 int progress = (int) (millisUntilFinished / 1000);
+                millisLeftOnTimer = millisUntilFinished;
                 breakTimerOutput.setText(secondsToString(progress));
             }
 
