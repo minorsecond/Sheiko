@@ -22,7 +22,18 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Button startBreakTimerButton;
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
+
+    // Activity buttons
+    Button squatSelectButton;
+    Button benchSelectButton;
+    Button deadliftSelectButton;
+    Button accessorySelectButton;
+
+    // Text output
     TextView breakTimerOutput;
+    TextView currentExercise;
+
+    // Timer stuff
     private Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
     private boolean timerIsPaused;
     private CountDownTimer mCountDownTimer;
@@ -41,10 +52,44 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         startBreakTimerButton = (Button) findViewById(R.id.startBreakTimer);
         stopBreakTimerButton = (Button) findViewById(R.id.stopBreakButton);
         pauseBreakTimerButton = (Button) findViewById(R.id.pauseBreakButton);
+        squatSelectButton = (Button) findViewById(R.id.squatSelectButton);
+        benchSelectButton = (Button) findViewById(R.id.benchSelectButton);
+        deadliftSelectButton = (Button) findViewById(R.id.deadliftButton);
+        accessorySelectButton = (Button) findViewById(R.id.accessoriesButton);
+
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
+        currentExercise = (TextView) findViewById(R.id.currentExerciseDisplay);
 
         // Set the reps and weights
         setRepsWeightPickers();
+
+        this.squatSelectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentExercise.setText("Squat");
+            }
+        });
+
+        this.benchSelectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentExercise.setText("Bench");
+            }
+        });
+
+        this.deadliftSelectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentExercise.setText("Deadlift");
+            }
+        });
+
+        this.accessorySelectButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                currentExercise.setText("Accessories");
+            }
+        });
 
         // Handle user long-clicking on the timer output text to change timer length on-the-fly
         // This utilizes the onDurationSet method at the bottom of this class.

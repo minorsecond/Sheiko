@@ -176,13 +176,13 @@
 
                             <TextView
                                 android:id="@+id/currentExerciseDisplay"
-                                android:layout_width="wrap_content"
+                                android:layout_width="0dp"
                                 android:layout_height="match_parent"
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
                                 android:text="Squat"
-                                android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
                             <Button
                                 android:id="@+id/nextSetButton"
