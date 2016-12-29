@@ -39,8 +39,8 @@
     <string name="rest_timer">Rest Timer</string>
     <string name="acc">Acc.</string>
     <string name="bench">Bench</string>
-    <string name="deadlift">DL</string>
-    <string name="accessories">accessories</string>
+    <string name="deadlift">Deadlift</string>
+    <string name="accessories">Accessories</string>
     <string name="select_lift">Select Lift</string>
     <string name="squat">Squat</string>
 </resources>
