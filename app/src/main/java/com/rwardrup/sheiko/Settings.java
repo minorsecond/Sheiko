@@ -36,7 +36,11 @@ public class Settings extends AppCompatActivity {
         final ActivitySettingsBinding activitySettingsBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_settings);
 
-        readFromUserParamDb(activitySettingsBinding);  // Load database
+        try {
+            readFromUserParamDb(activitySettingsBinding);  // Load database
+        } catch (java.lang.NullPointerException e) {
+            Log.d("DbReadError", "DB Read Error: " + e);  // First creation of database.
+        }
 
         // Save to the DB when user clicks the save button.
         activitySettingsBinding.saveSettings.setOnClickListener(new View.OnClickListener() {
