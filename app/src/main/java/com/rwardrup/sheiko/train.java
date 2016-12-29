@@ -66,28 +66,28 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         this.squatSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentExercise.setText("Squat");
+                currentExercise.setText(R.string.squat);
             }
         });
 
         this.benchSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentExercise.setText("Bench");
+                currentExercise.setText(R.string.bench);
             }
         });
 
         this.deadliftSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentExercise.setText("Deadlift");
+                currentExercise.setText(R.string.deadlift);
             }
         });
 
         this.accessorySelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                currentExercise.setText("Accessories");
+                currentExercise.setText(R.string.accessories);
             }
         });
 
@@ -112,8 +112,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                     mCountDownTimer = createTimer(millisLeftOnTimer);  // resume paused timer
 
                     Log.d("resumed timer", "value: " + millisLeftOnTimer);
-                } else if (millisLeftOnTimer > 0) {  // Do nothing if there is still time left
-                } else {
+                } else if (millisLeftOnTimer < 1) {
                     breakTimerOutput.setTextSize(36);
                     int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
                     mCountDownTimer = createTimer(timerDuration);

@@ -181,7 +181,7 @@
                                 android:layout_gravity="center"
                                 android:layout_weight="1"
                                 android:gravity="center"
-                                android:text="Squat"
+                                android:text="@string/squat"
                                 android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
                             <Button
