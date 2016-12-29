@@ -171,23 +171,31 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         repPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         weightPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
+        // Enable fading edges
+        repPicker.setVerticalFadingEdgeEnabled(true);
+        weightPicker.setVerticalFadingEdgeEnabled(true);
+
         // Reps
         repPicker.setMinValue(0);
         repPicker.setMaxValue(20);
+        repPicker.setValue(5);
 
         // Weight
         weightPicker.setMinValue(0);
-        weightPicker.setMaxValue(480); //480 * 2.5 == 1200
+        weightPicker.setMaxValue(240); //480 * 2.5 == 1200
 
-        // Format the weight picker numbers to increment by 2.5
-        NumberPicker.Formatter formatter = new NumberPicker.Formatter() {
-            @Override
-            public String format(int value) {
-                double temp = value * 2.5;
-                return "" + temp;
-            }
-        };
+        int length = 500;
+        int step = 5;
 
-        weightPicker.setFormatter(formatter);
+        String[] numbers = new String[length];
+        for (int i = 0; i < numbers.length; i++) {
+            numbers[i] = String.valueOf((i + 1) * step);
+        }
+
+        //weightPicker.setFormatter(formatter);
+        weightPicker.setDisplayedValues(numbers);
+
+        // TODO: Pull this start value from the DB of today's workout, per lift
+        weightPicker.setValue(50);
     }
 }

@@ -90,8 +90,8 @@
 
                         <Button
                             android:id="@+id/squatSelectButton"
-                            android:layout_width="56dp"
-                            android:layout_height="50dp"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:background="@drawable/squats"
                             android:gravity="center"
                             android:textColor="@color/secondary_text"
@@ -104,8 +104,8 @@
 
                         <Button
                             android:id="@+id/benchSelectButton"
-                            android:layout_width="65dp"
-                            android:layout_height="70dp"
+                            android:layout_width="55dp"
+                            android:layout_height="65dp"
                             android:background="@drawable/bench_press"
                             android:gravity="center"
                             android:textSize="14sp" />
@@ -117,8 +117,8 @@
 
                         <Button
                             android:id="@+id/deadliftButton"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
                             android:background="@drawable/deadlift"
                             android:gravity="center"
                             android:textColor="@color/secondary_text"
@@ -132,7 +132,7 @@
                         <Button
                             android:id="@+id/accessoriesButton"
                             android:layout_width="50dp"
-                            android:layout_height="56dp"
+                            android:layout_height="50dp"
                             android:background="@drawable/barbell"
                             android:gravity="center"
                             android:textColor="@color/secondary_text"
@@ -170,13 +170,19 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:background="@color/accent"
+                                android:elevation="1dp"
                                 android:text="Prev. Set"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button" />
 
-                            <Space
+                            <TextView
+                                android:id="@+id/currentExerciseDisplay"
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
-                                android:layout_weight="1" />
+                                android:layout_gravity="center"
+                                android:layout_weight="1"
+                                android:gravity="center"
+                                android:text="Squat"
+                                android:textAppearance="@android:style/TextAppearance.Material.Large" />
 
                             <Button
                                 android:id="@+id/nextSetButton"
@@ -184,6 +190,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:background="@color/accent"
+                                android:elevation="1dp"
                                 android:text="Next Set"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button" />
                         </LinearLayout>
@@ -210,21 +217,25 @@
 
                                 <TextView
                                     android:id="@+id/repsPickerText"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
                                     android:gravity="center"
                                     android:text="Reps"
                                     android:textColor="@color/secondary_text" />
 
                                 <com.shawnlin.numberpicker.NumberPicker
                                     android:id="@+id/repsPicker"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="180dp"
+                                    android:layout_gravity="center"
                                     app:np_dividerColor="@color/primary_dark"
+                                    app:np_dividerDistance="20dp"
                                     app:np_dividerThickness="1dp"
                                     app:np_max="20"
                                     app:np_min="0"
-                                    app:np_textSize="16sp" />
+                                    app:np_textColor="@color/primary_dark"
+                                    app:np_textSize="18sp" />
                             </LinearLayout>
 
                             <Space
@@ -250,11 +261,14 @@
 
                                 <com.shawnlin.numberpicker.NumberPicker
                                     android:id="@+id/weightPicker"
-                                    android:layout_width="match_parent"
+                                    android:layout_width="wrap_content"
                                     android:layout_height="180dp"
+                                    android:layout_gravity="center"
                                     app:np_dividerColor="@color/primary_dark"
+                                    app:np_dividerDistance="20dp"
                                     app:np_dividerThickness="1dp"
-                                    app:np_textSize="16sp" />
+                                    app:np_textColor="@color/primary_dark"
+                                    app:np_textSize="18sp" />
                             </LinearLayout>
 
                         </LinearLayout>
@@ -269,6 +283,7 @@
                 android:id="@+id/restTimerDivider"
                 android:layout_width="fill_parent"
                 android:layout_height="1dp"
+                android:layout_marginBottom="5dp"
                 android:layout_marginTop="20dp"
                 android:alpha="0.12"
                 android:background="@android:color/black" />
@@ -292,6 +307,7 @@
                     android:layout_width="60dp"
                     android:layout_height="60dp"
                     android:background="@drawable/play"
+                    android:elevation="1dp"
                     android:fontFamily="sans-serif-medium"
                     android:textAppearance="@android:style/TextAppearance.Material.Button" />
 
