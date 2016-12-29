@@ -62,6 +62,7 @@ public class selectProgram extends AppCompatActivity {
                     cycleTitleText.setEnabled(false);
                 } else {
                     cycleSpinner.setEnabled(true);
+                    cycleTitleText.setEnabled(true);
                 }
             }
 
