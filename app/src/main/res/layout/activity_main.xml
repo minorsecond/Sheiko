@@ -36,13 +36,15 @@
             <TextView
                 android:id="@+id/textView4"
                 android:layout_width="0dp"
-                android:layout_height="50dp"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/primary"
-                android:gravity="left|center"
+                android:fontFamily="sans-serif-medium"
+                android:gravity="left|center_vertical"
                 android:text="@string/sheiko_pl"
+                android:textAppearance="@android:style/TextAppearance.Material.Title"
                 android:textColor="@color/icons"
-                android:textSize="32sp" />
+                android:textSize="40sp" />
         </LinearLayout>
 
         <Space
