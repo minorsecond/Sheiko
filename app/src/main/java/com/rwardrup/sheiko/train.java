@@ -19,6 +19,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
     private static long millisLeftOnTimer;
+    private static Integer secondsLeftOnTimer;
     Button startBreakTimerButton;
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
@@ -102,7 +103,15 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 return true;
             }
         });
-        breakTimerOutput.setText(secondsToString(timerDurationSeconds));
+
+        // Set timer display TODO: Get this to keep incrementing dimer display off-activity
+        if (mCountDownTimer == null) {
+            breakTimerOutput.setText(secondsToString(timerDurationSeconds));
+        } else {
+            while (mCountDownTimer != null) {
+                breakTimerOutput.setText(secondsToString(secondsLeftOnTimer));
+            }
+        }
 
         // break timer start
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
@@ -166,7 +175,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             @Override
             public void onTick(long millisUntilFinished) {
                 int progress = (int) (millisUntilFinished / 1000);
-                millisLeftOnTimer = millisUntilFinished;
+                secondsLeftOnTimer = progress;
                 breakTimerOutput.setText(secondsToString(progress));
             }
 
