@@ -267,9 +267,10 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         super.onStop();
     }
 
-    @Override
+    //@Override
     public void onDestroy() {
-        stopService(new Intent(this, BreakTimer.class));
+        //unregisterReceiver(br);
+        //stopService(new Intent(this, BreakTimer.class));
         Log.i("BreakTimer", "Stopped service");
         super.onDestroy();
     }

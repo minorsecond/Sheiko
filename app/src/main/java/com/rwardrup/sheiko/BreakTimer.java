@@ -21,7 +21,7 @@ public class BreakTimer extends Service {
 
         Log.i(TAG, "Starting timer...");
 
-        cdt = new CountDownTimer(30000, 1000) {
+        cdt = new CountDownTimer(180000, 1000) {
             @Override
             public void onTick(long millisUntilFinished) {
 
