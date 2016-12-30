@@ -329,11 +329,9 @@
                     android:fontFamily="sans-serif-medium"
                     android:textAppearance="@android:style/TextAppearance.Material.Button" />
 
-                <Button
-                    android:id="@+id/pauseBreakButton"
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:background="@drawable/pause" />
+                <Space
+                    android:layout_width="15dp"
+                    android:layout_height="wrap_content" />
 
                 <Button
                     android:id="@+id/stopBreakButton"

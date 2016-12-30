@@ -7,21 +7,25 @@ import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.util.Log;
 
-public class BreakTimer extends Service {
+// TODO: get timer duration from TrainActivity and pass it to CountDownTimer
 
+public class BreakTimer extends Service {
     public static final String COUNTDOWN_BR = "com.rwardrup.sheiko.countdown_br";
     private final static String TAG = "BroadcastService";
     Intent bi = new Intent(COUNTDOWN_BR);
-
     CountDownTimer cdt = null;
+    private int timerDuration;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        Log.d("TimerDurationSet", "Timer duration is set to " + timerDuration);
+
         Log.i(TAG, "Starting timer...");
 
         cdt = new CountDownTimer(180000, 1000) {
+
             @Override
             public void onTick(long millisUntilFinished) {
 
@@ -57,6 +61,12 @@ public class BreakTimer extends Service {
         mp.start();
     }
 
+    public int getTimerDuration(Intent intent) {
+        timerDuration = intent.getExtras().getInt("timerDuration");
+        Log.d("TimerDurationReceived", "Timer duration received: " + timerDuration);
+        return 0;
+    }
+
     @Override
     public void onDestroy() {
 
@@ -67,6 +77,7 @@ public class BreakTimer extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        getTimerDuration(intent);
         return super.onStartCommand(intent, flags, startId);
     }
 

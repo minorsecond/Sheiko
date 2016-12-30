@@ -125,13 +125,15 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         // break timer start
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
 
+            Intent timerService = new Intent(train.this, BreakTimer.class);
+
             @Override
             public void onClick(View v) {
                 if (timerIsPaused && !timerIsRunning) {
                     Log.d("MillisLeftAfterPause", "Paused time left: " + millisLeftOnTimer);
 
                     // Set up service for timer
-                    startService(new Intent(train.this, BreakTimer.class));
+                    startService(timerService);
                     Log.i("TimerService", "Started timer service");
 
                     timerIsPaused = false;
@@ -141,11 +143,13 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 } else if (!timerIsRunning) {
                     timerIsPaused = false;
                     breakTimerOutput.setTextSize(36);
-                    int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
+                    int timerDuration = timerDurationSeconds * 10000;  // This will be set by user in final code
                     timerIsRunning = true;
 
                     // Set up service for timer
-                    startService(new Intent(train.this, BreakTimer.class));
+                    timerService.putExtra("timerDuration", timerDuration);
+                    Log.d("TimerDurationSent", "Timer duration sent: " + timerDurationSeconds * 1000);
+                    startService(timerService);
                     Log.i("TimerService", "Started timer service");
                 }
             }
@@ -164,21 +168,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                     stopService(new Intent(train.this, BreakTimer.class));
                     breakTimerOutput.setTextSize(36);
                     breakTimerOutput.setText(secondsToString(timerDurationSeconds));
-                }
-            }
-        });
-
-        // break timer pause
-        pauseBreakTimerButton.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                if (timerIsRunning) {
-                    timerIsPaused = true;
-                    timerIsRunning = false;
-                    // TODO: store paused time in preference
-                    unregisterReceiver(br);
-                    Log.d("millis left on pause", "value: " + millisLeftOnTimer);
                 }
             }
         });
