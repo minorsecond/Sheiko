@@ -20,22 +20,23 @@ import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
+    // Set up broadcast for sending timer duration to BreakTImer
+    public static final String BREAKTIMER_DURATION = "com.rwardrup.sheiko.timer_duration";
+    private final static String TAG = "BroadcastService";
     private static long millisLeftOnTimer;
     private static Integer secondsLeftOnTimer;
     Button startBreakTimerButton;
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
-
     // Activity buttons
     Button squatSelectButton;
-    Button benchSelectButton;
     Button deadliftSelectButton;
+    Button benchSelectButton;
     Button accessorySelectButton;
-
     // Text output
     TextView breakTimerOutput;
     TextView currentExercise;
-
+    Intent durationBroadcater = new Intent(BREAKTIMER_DURATION);
     // Timer stuff
     private Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
     private boolean timerIsPaused = false;
@@ -58,6 +59,9 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
+
+        // For passing the timer duration to the timer service
+        final Intent sendDuration = new Intent("getting_data");
 
         startBreakTimerButton = (Button) findViewById(R.id.startBreakTimer);
         stopBreakTimerButton = (Button) findViewById(R.id.stopBreakButton);
@@ -143,13 +147,13 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 } else if (!timerIsRunning) {
                     timerIsPaused = false;
                     breakTimerOutput.setTextSize(36);
-                    int timerDuration = timerDurationSeconds * 10000;  // This will be set by user in final code
+                    long timerDuration = timerDurationSeconds * 10000;  // This will be set by user in final code
                     timerIsRunning = true;
 
                     // Set up service for timer
-                    timerService.putExtra("timerDuration", timerDuration);
-                    Log.d("TimerDurationSent", "Timer duration sent: " + timerDurationSeconds * 1000);
                     startService(timerService);
+                    durationBroadcater.putExtra("timerDuration", timerDuration);
+                    sendBroadcast(durationBroadcater);
                     Log.i("TimerService", "Started timer service");
                 }
             }

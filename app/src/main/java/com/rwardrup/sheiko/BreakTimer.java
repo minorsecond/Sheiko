@@ -24,7 +24,7 @@ public class BreakTimer extends Service {
 
         Log.i(TAG, "Starting timer...");
 
-        cdt = new CountDownTimer(180000, 1000) {
+        cdt = new CountDownTimer(90000, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {
@@ -61,12 +61,6 @@ public class BreakTimer extends Service {
         mp.start();
     }
 
-    public int getTimerDuration(Intent intent) {
-        timerDuration = intent.getExtras().getInt("timerDuration");
-        Log.d("TimerDurationReceived", "Timer duration received: " + timerDuration);
-        return 0;
-    }
-
     @Override
     public void onDestroy() {
 
@@ -77,7 +71,6 @@ public class BreakTimer extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        getTimerDuration(intent);
         return super.onStartCommand(intent, flags, startId);
     }
 
