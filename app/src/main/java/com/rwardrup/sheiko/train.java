@@ -1,7 +1,9 @@
 package com.rwardrup.sheiko;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.media.MediaPlayer;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.v7.app.AppCompatActivity;
@@ -39,6 +41,12 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     private boolean timerIsPaused = false;
     private boolean timerIsRunning = false;
     private CountDownTimer mCountDownTimer;
+    private BroadcastReceiver br = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            updateGUI(intent);
+        }
+    };
 
     // Set font
     @Override
@@ -113,6 +121,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             }
         }
 
+        // break timer start / stop / pause
         // break timer start
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
 
@@ -120,7 +129,11 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             public void onClick(View v) {
                 if (timerIsPaused && !timerIsRunning) {
                     Log.d("MillisLeftAfterPause", "Paused time left: " + millisLeftOnTimer);
-                    mCountDownTimer = createTimer(millisLeftOnTimer);  // resume paused timer
+
+                    // Set up service for timer
+                    startService(new Intent(train.this, BreakTimer.class));
+                    Log.i("TimerService", "Started timer service");
+
                     timerIsPaused = false;
                     timerIsRunning = true;
 
@@ -130,7 +143,10 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                     breakTimerOutput.setTextSize(36);
                     int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
                     timerIsRunning = true;
-                    mCountDownTimer = createTimer(timerDuration);
+
+                    // Set up service for timer
+                    startService(new Intent(train.this, BreakTimer.class));
+                    Log.i("TimerService", "Started timer service");
                 }
             }
         });
@@ -144,7 +160,8 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                     millisLeftOnTimer = 0;
                     timerIsPaused = false;
                     timerIsRunning = false;
-                    mCountDownTimer.cancel();
+                    //mCountDownTimer.cancel();
+                    stopService(new Intent(train.this, BreakTimer.class));
                     breakTimerOutput.setTextSize(36);
                     breakTimerOutput.setText(secondsToString(timerDurationSeconds));
                 }
@@ -159,49 +176,12 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 if (timerIsRunning) {
                     timerIsPaused = true;
                     timerIsRunning = false;
-                    mCountDownTimer.cancel();
+                    // TODO: store paused time in preference
+                    unregisterReceiver(br);
                     Log.d("millis left on pause", "value: " + millisLeftOnTimer);
                 }
             }
         });
-    }
-
-    // TODO: Use minutes and seconds format, and do a count up vs. count down.
-    public CountDownTimer createTimer(long timerDuration) {
-
-        Log.d("new timer duration:", "value: " + timerDuration);
-        return new CountDownTimer(timerDuration, 1000) {
-
-            @Override
-            public void onTick(long millisUntilFinished) {
-                int progress = (int) (millisUntilFinished / 1000);
-                secondsLeftOnTimer = progress;
-                breakTimerOutput.setText(secondsToString(progress));
-            }
-
-            @Override
-            public void onFinish() {
-                breakTimerOutput.setText(secondsToString(timerDurationSeconds));
-                playAlertSound();  // TODO: Fix the delay before playing beep.
-            }
-        }.start();
-    }
-
-    public void playAlertSound() {
-        // Plays sound when timer reaches end.
-
-        MediaPlayer mp = MediaPlayer.create(getBaseContext(), R.raw.timer_end_beep);
-        mp.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
-            @Override
-            public void onCompletion(MediaPlayer mp) {
-                mp.release();
-            }
-        });
-
-        // timer alert looping and volume
-        mp.setLooping(false);
-        mp.setVolume(1.0f, 1.0f);
-        mp.start();
     }
 
     // Break timer long-click set time
@@ -257,5 +237,50 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
         // TODO: Pull this start value from the DB of today's workout, per lift
         weightPicker.setValue(50);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        registerReceiver(br, new IntentFilter(BreakTimer.COUNTDOWN_BR));
+        Log.i("BreakTimer", "Registered broacast receiver");
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            unregisterReceiver(br);
+        } catch (Exception e) {
+            Log.e("TimerError", "timer encountered: " + e);  // User probably closed during pause
+        }
+        Log.i("BreakTimer", "Unregistered broacast receiver");
+    }
+
+    @Override
+    public void onStop() {
+        try {
+            unregisterReceiver(br);
+        } catch (Exception e) {
+            // Receiver was probably already stopped in onPause()
+        }
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        stopService(new Intent(this, BreakTimer.class));
+        Log.i("BreakTimer", "Stopped service");
+        super.onDestroy();
+    }
+
+    private void updateGUI(Intent intent) {
+        if (intent.getExtras() != null) {
+            long millisUntilFinished = intent.getLongExtra("countdown", 0);
+            millisLeftOnTimer = millisUntilFinished;
+            secondsLeftOnTimer = (int) (long) millisUntilFinished / 1000;
+            breakTimerOutput.setText(secondsToString(secondsLeftOnTimer));
+            Log.i("BreakTimer", "Countdown seconds remaining: " + millisUntilFinished / 1000);
+        }
     }
 }

@@ -30,7 +30,12 @@
         <activity
             android:name=".selectProgram"
             android:label="@string/app_name" />
-        <activity android:name=".train"></activity>
+        <activity android:name=".train" />
+
+        <service
+            android:name=".BreakTimer"
+            android:enabled="true"
+            android:exported="false"></service>
     </application>
 
 </manifest>
