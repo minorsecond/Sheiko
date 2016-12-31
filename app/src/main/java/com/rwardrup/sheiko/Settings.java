@@ -43,6 +43,14 @@ public class Settings extends AppCompatActivity {
             Log.d("DbReadError", "DB Read Error: " + e);  // First creation of database.
         }
 
+        // Handle user clicking on the timer settings button
+        activitySettingsBinding.timerSettingsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new RestDurationPicker().show(getFragmentManager(), "Session break length");
+            }
+        });
+
         // Save to the DB when user clicks the save button.
         activitySettingsBinding.saveSettings.setOnClickListener(new View.OnClickListener() {
             @Override
