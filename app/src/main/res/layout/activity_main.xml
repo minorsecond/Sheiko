@@ -14,6 +14,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
         android:orientation="vertical">
 
         <LinearLayout
@@ -141,21 +143,23 @@
                             <TextView
                                 android:id="@+id/textView31"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="22dp"
                                 android:layout_weight="1"
                                 android:text="Total:"
-                                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
+                                android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                                android:textStyle="normal|bold" />
 
                             <TextView
-                                android:id="@+id/textView34"
+                                android:id="@+id/currentTotal"
                                 android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
+                                android:layout_height="22dp"
                                 android:layout_marginBottom="0dp"
                                 android:layout_weight="1"
                                 android:elevation="0dp"
                                 android:paddingBottom="0dp"
                                 android:text="650 Kg."
-                                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
+                                android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                                android:textStyle="normal|bold" />
                         </LinearLayout>
 
                         <LinearLayout
@@ -173,7 +177,7 @@
                                 tools:ignore="NewApi" />
 
                             <TextView
-                                android:id="@+id/squatTotal"
+                                android:id="@+id/squatMax"
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
@@ -198,7 +202,7 @@
                                 tools:ignore="NewApi" />
 
                             <TextView
-                                android:id="@+id/textView26"
+                                android:id="@+id/benchMax"
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
@@ -222,7 +226,7 @@
                                 tools:ignore="NewApi" />
 
                             <TextView
-                                android:id="@+id/textView28"
+                                android:id="@+id/deadliftMax"
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
@@ -241,15 +245,17 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="Wilks' Score:"
-                                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
+                                android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                                android:textStyle="normal|bold" />
 
                             <TextView
-                                android:id="@+id/textView36"
+                                android:id="@+id/userWilks"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:text="455"
-                                android:textAppearance="@android:style/TextAppearance.Material.Body2" />
+                                android:textAppearance="@android:style/TextAppearance.Material.Body1"
+                                android:textStyle="normal|bold" />
                         </LinearLayout>
                     </LinearLayout>
 

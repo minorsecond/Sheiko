@@ -2,13 +2,18 @@ package com.rwardrup.sheiko;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
@@ -26,6 +31,14 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class MainActivity extends AppCompatActivity {
 
+    // Lift max variables
+    private int squat_max;
+    private int bench_max;
+    private int deadlift_max;
+    private String unit;
+    private String bodyweight;
+    private String sex;
+
     // Set font
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -37,6 +50,41 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Lift max textviews
+        TextView squatMax = (TextView) findViewById(R.id.squatMax);
+        TextView benchMax = (TextView) findViewById(R.id.benchMax);
+        TextView deadliftMax = (TextView) findViewById(R.id.deadliftMax);
+        TextView userTotal = (TextView) findViewById(R.id.currentTotal);
+        TextView userWilks = (TextView) findViewById(R.id.userWilks);
+
+        try {
+            readFromUserParamDb();  // Load databases
+        } catch (NullPointerException e) {
+            Log.d("DbReadError", "User parameter DB read error: " + e);  // First creation of database.
+        }
+
+        try {
+            readFromUserMaxDb();  // Load databases
+
+            int totalWeight = squat_max + bench_max + deadlift_max;
+            Log.d("Calculation", "Calculated total: " + totalWeight);
+
+            squatMax.setText(String.valueOf(squat_max));
+            benchMax.setText(String.valueOf(bench_max));
+            deadliftMax.setText(String.valueOf(deadlift_max));
+            userTotal.setText(String.valueOf(totalWeight));
+            userWilks.setText("Not yet implemented");
+
+
+        } catch (NullPointerException e) {
+            Log.d("DbReadError", "User max DB read error: " + e);  // First creation of database.
+            squatMax.setText("Press the gear icon to set");
+            benchMax.setText("Press the gear icon to set");
+            deadliftMax.setText("Press the gear icon to set");
+            userTotal.setText("Press the gear icon to set");
+            userWilks.setText("Press the gear icon to set");
+        }
 
         // The graph on the main window. See www.android-graphview.org for more info
         Calendar calendar = Calendar.getInstance();
@@ -232,5 +280,112 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, train.class));
             }
         });
+    }
+
+    // Read from user Parameters DB
+    private void readFromUserParamDb() {
+        SQLiteDatabase database = new userParametersHelper(this).getReadableDatabase();
+
+        // Get the last user parameter entry
+        String[] columns = {
+                "units",
+                "body_weight",
+                "sex"
+        };
+
+        Cursor cursor = database.query(userData.UserParameters.TABLE_NAME, columns, null, null, null, null, null);
+
+        Log.d("CursorCount", "The total cursor count is " + cursor.getColumnCount());
+
+        // Get values from DB cursor
+        if (cursor.moveToLast()) {
+            unit = cursor.getString(cursor.getColumnIndex(userData.UserParameters.USER_UNITS));
+            bodyweight = cursor.getString(cursor.getColumnIndex(userData.UserParameters.BODY_WEIGHT));
+            sex = cursor.getString(cursor.getColumnIndex(userData.UserParameters.SEX));
+        }
+        cursor.close();
+
+        Log.d("Database", "Successfully read user parameters from DB.");
+    }
+
+    // Read from user User Max DB
+    private void readFromUserMaxDb() {
+        SQLiteDatabase database = new userMaxesHelper(this).getReadableDatabase();
+
+        int squat;
+        int bench;
+        int deadlift;
+
+        // Get the last user parameter entry
+        String[] columns = {
+                "units",
+                "squat_max",
+                "bench_max",
+                "deadlift_max",
+                "date",
+                "wilks"
+        };
+
+        Cursor cursor = database.query(userData.UserMaxes.TABLE_NAME, columns, null, null, null, null, null);
+        Log.d("CursorCount", "The total cursor count is " + cursor.getColumnCount());
+
+        // Get values from DB cursor
+        if (cursor.moveToLast()) {
+            squat_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.SQUAT_MAX)));
+            bench_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.BENCH_MAX)));
+            deadlift_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.DEADLIFT_MAX)));
+        }
+        cursor.close();
+
+        // Write the DB values to text entry fields
+
+        Log.d("Database", "Successfully read user maxes from DB.");
+    }
+
+    // Create user parameter DB
+    public class userParametersHelper extends SQLiteOpenHelper {
+
+        public static final String DATABASE_NAME = "testing_database";  // TODO: change this
+        private static final int DATABASE_VERSION = 1;
+
+        public userParametersHelper(Context context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase sqLiteDatabase) {
+            sqLiteDatabase.execSQL(userData.UserParameters.CREATE_TABLE);
+            sqLiteDatabase.execSQL(userData.UserMaxes.CREATE_TABLE);
+            Log.d("SQL", "Created userMaxes table");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + userData.UserParameters.TABLE_NAME);
+            onCreate(sqLiteDatabase);
+        }
+    }
+
+    // Create user maxes DB
+    public class userMaxesHelper extends SQLiteOpenHelper {
+
+        public static final String DATABASE_NAME = "testing_database";  // TODO: change this
+        private static final int DATABASE_VERSION = 1;
+
+        public userMaxesHelper(Context context) {
+            super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        }
+
+        @Override
+        public void onCreate(SQLiteDatabase sqLiteDatabase) {
+            sqLiteDatabase.execSQL(userData.UserMaxes.CREATE_TABLE);
+            Log.d("SQL", "Created userMaxes table");
+        }
+
+        @Override
+        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + userData.UserMaxes.TABLE_NAME);
+            onCreate(sqLiteDatabase);
+        }
     }
 }
