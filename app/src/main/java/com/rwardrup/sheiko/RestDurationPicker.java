@@ -2,6 +2,7 @@ package com.rwardrup.sheiko;
 
 import mobi.upod.timedurationpicker.TimeDurationPicker;
 import mobi.upod.timedurationpicker.TimeDurationPickerDialogFragment;
+// from https://github.com/svenwiegand/time-duration-picker
 
 public class RestDurationPicker extends TimeDurationPickerDialogFragment {
 
