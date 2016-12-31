@@ -22,7 +22,7 @@ public class BreakTimer extends Service {
         super.onCreate();
 
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        long timerDuration = sharedPref.getLong("timerDuration", -1);
+        final long timerDuration = sharedPref.getLong("timerDuration", -1);
 
         Log.d("TimerDurationSet", "Timer duration is set to " + timerDuration);
 
@@ -42,6 +42,9 @@ public class BreakTimer extends Service {
             public void onFinish() {
                 Log.i(TAG, "Timer finished");
                 playAlertSound();
+                bi.putExtra("countdown", timerDuration);  // Reset timer display
+                sendBroadcast(bi);
+                stopSelf();
             }
         };
 

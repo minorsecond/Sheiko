@@ -131,23 +131,8 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public void onClick(View v) {
-                if (timerIsPaused && !timerIsRunning) {
-                    Log.d("MillisLeftAfterPause", "Paused time left: " + millisLeftOnTimer);
-
-                    // Set up service for timer
-                    startService(timerService);
-                    Log.i("TimerService", "Started timer service");
-
-                    timerIsPaused = false;
-                    timerIsRunning = true;
-
-                    Log.d("resumed timer", "value: " + millisLeftOnTimer);
-                } else if (!timerIsRunning) {
-
-                    timerIsPaused = false;
                     breakTimerOutput.setTextSize(36);
                     int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
-                    timerIsRunning = true;
 
                     editor.putLong("timerDuration", Long.valueOf(timerDuration));
                     editor.apply();
@@ -156,7 +141,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                     startService(timerService);
                     Log.i("TimerService", "Started timer service");
                 }
-            }
         });
 
         // break timer stop
@@ -164,16 +148,12 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public void onClick(View v) {
-                if (timerIsRunning) {
                     millisLeftOnTimer = 0;
-                    timerIsPaused = false;
-                    timerIsRunning = false;
                     //mCountDownTimer.cancel();
                     stopService(new Intent(train.this, BreakTimer.class));
                     breakTimerOutput.setTextSize(36);
                     breakTimerOutput.setText(secondsToString(timerDurationSeconds));
                 }
-            }
         });
     }
 
@@ -263,7 +243,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     //@Override
     public void onDestroy() {
         //unregisterReceiver(br);
-        //stopService(new Intent(this, BreakTimer.class));
+        stopService(new Intent(this, BreakTimer.class));
         Log.i("BreakTimer", "Stopped service");
         super.onDestroy();
     }
