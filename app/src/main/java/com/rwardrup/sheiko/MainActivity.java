@@ -36,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
     private int bench_max;
     private int deadlift_max;
     private String unit;
+    private String unitAbbreviation;
     private String bodyweight;
     private String sex;
 
@@ -70,10 +71,20 @@ public class MainActivity extends AppCompatActivity {
             int totalWeight = squat_max + bench_max + deadlift_max;
             Log.d("Calculation", "Calculated total: " + totalWeight);
 
-            squatMax.setText(String.valueOf(squat_max));
-            benchMax.setText(String.valueOf(bench_max));
-            deadliftMax.setText(String.valueOf(deadlift_max));
-            userTotal.setText(String.valueOf(totalWeight));
+            // set unit abbreviation
+            if (unit.equals("kilograms")) {
+                unitAbbreviation = "kg.";
+            } else if (unit.equals("pounds")) {
+                unitAbbreviation = "lb.";
+            } else {
+                unitAbbreviation = "";
+            }
+
+            // TODO: properly set the strings
+            squatMax.setText(String.valueOf(squat_max) + " " + unitAbbreviation);
+            benchMax.setText(String.valueOf(bench_max) + " " + unitAbbreviation);
+            deadliftMax.setText(String.valueOf(deadlift_max) + " " + unitAbbreviation);
+            userTotal.setText(String.valueOf(totalWeight) + " " + unitAbbreviation);
             userWilks.setText("Not yet implemented");
 
 
@@ -306,6 +317,7 @@ public class MainActivity extends AppCompatActivity {
         cursor.close();
 
         Log.d("Database", "Successfully read user parameters from DB.");
+        Log.d("Database", "Units: " + unit);
     }
 
     // Read from user User Max DB
