@@ -147,8 +147,7 @@
                                 android:layout_alignStart="@+id/weightInput"
                                 android:layout_alignTop="@+id/kgsRadioButton"
                                 android:entries="@array/sexes"
-                                android:gravity="center_vertical"
-                                android:spinnerMode="dialog" />
+                                android:gravity="center_vertical" />
 
                         </LinearLayout>
 
@@ -331,6 +330,7 @@
                         android:id="@+id/AdditionalSettingsWidgets"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_weight="1"
                         android:orientation="horizontal">
 
                         <LinearLayout
@@ -411,6 +411,10 @@
 
                     </LinearLayout>
 
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" />
+
                     <View
                         android:id="@+id/SettingsDivider2"
                         android:layout_width="fill_parent"
@@ -418,25 +422,27 @@
                         android:alpha="0.12"
                         android:background="@android:color/black" />
 
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="bottom"
-                        android:orientation="horizontal">
+                </LinearLayout>
 
-                        <Space
-                            android:layout_width="0dp"
-                            android:layout_height="1dp"
-                            android:layout_weight="1" />
+                <LinearLayout
+                    android:id="@+id/saveButtonLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom"
+                    android:orientation="horizontal">
 
-                        <Button
-                            android:id="@+id/saveSettings"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:layout_gravity="bottom|end"
-                            android:background="@drawable/save"
-                            android:gravity="end" />
-                    </LinearLayout>
+                    <Space
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <Button
+                        android:id="@+id/saveSettings"
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="bottom|end"
+                        android:background="@drawable/save"
+                        android:gravity="bottom|end" />
                 </LinearLayout>
             </LinearLayout>
 
