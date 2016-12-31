@@ -6,22 +6,24 @@
         android:id="@+id/activity_settings"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingBottom="@dimen/activity_vertical_margin"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin"
+        android:paddingBottom="0dp"
+        android:paddingLeft="0dp"
+        android:paddingRight="0dp"
+        android:paddingTop="0dp"
         tools:context="com.rwardrup.sheiko.Settings">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:paddingBottom="10dp">
 
             <LinearLayout
                 android:id="@+id/titleBar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="55dp"
                 android:background="@color/primary"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -41,6 +43,7 @@
                     android:layout_weight="1"
                     android:background="#4CAF50"
                     android:gravity="left|center"
+                    android:paddingLeft="10dp"
                     android:text="@string/app_name"
                     android:textAppearance="@android:style/TextAppearance.Material.Title"
                     android:textColor="@color/icons"
@@ -48,344 +51,358 @@
 
             </LinearLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="5dp" />
-
-            <TextView
-                android:id="@+id/settingsTitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="User Settings"
-                android:textAppearance="@android:style/TextAppearance.Material.Large" />
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:paddingLeft="@dimen/activity_horizontal_margin"
+                android:paddingRight="@dimen/activity_horizontal_margin">
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="5dp" />
+
+                <TextView
+                    android:id="@+id/settingsTitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="User Settings"
+                    android:textAppearance="@android:style/TextAppearance.Material.Large" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
 
                 <LinearLayout
-                    android:id="@+id/userStatsINput"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="horizontal">
 
                     <LinearLayout
-                        android:id="@+id/weightInputRow"
+                        android:id="@+id/userStatsINput"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:orientation="vertical">
 
-                        <TextView
-                            android:id="@+id/userWeightLabel"
-                            android:layout_width="50dp"
+                        <LinearLayout
+                            android:id="@+id/weightInputRow"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_below="@+id/settingsTitle"
                             android:layout_weight="1"
-                            android:gravity="center_vertical"
-                            android:text="Weight:"
-                            android:textColor="@color/secondary_text" />
+                            android:orientation="horizontal">
 
-                        <EditText
-                            android:id="@+id/weightInput"
-                            android:layout_width="100dp"
+                            <TextView
+                                android:id="@+id/userWeightLabel"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_below="@+id/settingsTitle"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical"
+                                android:text="Weight:"
+                                android:textColor="@color/secondary_text" />
+
+                            <EditText
+                                android:id="@+id/weightInput"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBaseline="@+id/userWeightLabel"
+                                android:layout_alignBottom="@+id/userWeightLabel"
+                                android:layout_toEndOf="@+id/textView11"
+                                android:layout_toRightOf="@+id/textView11"
+                                android:ems="10"
+                                android:gravity="start"
+                                android:inputType="number"
+                                android:maxLength="3"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/sexInputRow"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignBaseline="@+id/userWeightLabel"
-                            android:layout_alignBottom="@+id/userWeightLabel"
-                            android:layout_toEndOf="@+id/textView11"
-                            android:layout_toRightOf="@+id/textView11"
-                            android:ems="10"
-                            android:gravity="start"
-                            android:inputType="number"
-                            android:maxLength="3"
-                            android:textSize="12sp" />
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/genderLabel"
+                                android:layout_width="50dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignBottom="@+id/genderSpinner"
+                                android:layout_alignParentLeft="true"
+                                android:layout_alignParentStart="true"
+                                android:layout_alignTop="@+id/genderSpinner"
+                                android:gravity="center_vertical"
+                                android:text="Sex:"
+                                android:textColor="@color/secondary_text" />
+
+                            <Spinner
+                                android:id="@+id/genderSpinner"
+                                android:layout_width="100dp"
+                                android:layout_height="wrap_content"
+                                android:layout_alignLeft="@+id/weightInput"
+                                android:layout_alignStart="@+id/weightInput"
+                                android:layout_alignTop="@+id/kgsRadioButton"
+                                android:entries="@array/sexes"
+                                android:gravity="center_vertical"
+                                android:spinnerMode="dialog" />
+
+                        </LinearLayout>
+
                     </LinearLayout>
 
-                    <LinearLayout
-                        android:id="@+id/sexInputRow"
-                        android:layout_width="wrap_content"
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+
+                    <RadioGroup
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="horizontal">
+                        android:checkedButton="@+id/lbsRadiobutton">
 
                         <TextView
-                            android:id="@+id/genderLabel"
-                            android:layout_width="50dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignBottom="@+id/genderSpinner"
-                            android:layout_alignParentLeft="true"
-                            android:layout_alignParentStart="true"
-                            android:layout_alignTop="@+id/genderSpinner"
-                            android:gravity="center_vertical"
-                            android:text="Sex:"
-                            android:textColor="@color/secondary_text" />
+                            android:id="@+id/unitLabel"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:gravity="top|center_horizontal"
+                            android:text="Weight Unit" />
 
-                        <Spinner
-                            android:id="@+id/genderSpinner"
-                            android:layout_width="100dp"
-                            android:layout_height="wrap_content"
-                            android:layout_alignLeft="@+id/weightInput"
-                            android:layout_alignStart="@+id/weightInput"
-                            android:layout_alignTop="@+id/kgsRadioButton"
-                            android:entries="@array/sexes"
-                            android:gravity="center_vertical"
-                            android:spinnerMode="dialog" />
+                        <RadioButton
+                            android:id="@+id/kgsRadioButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:gravity="top"
+                            android:text="Kg."
+                            android:textColor="@color/primary_text" />
 
-                    </LinearLayout>
+                        <RadioButton
+                            android:id="@+id/lbsRadiobutton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_alignParentEnd="false"
+                            android:layout_alignParentRight="false"
+                            android:layout_alignTop="@+id/userWeightLabel"
+                            android:layout_weight="1"
+                            android:checked="true"
+                            android:gravity="top"
+                            android:text="Lbs."
+                            android:textColor="@color/primary_text" />
+
+                    </RadioGroup>
 
                 </LinearLayout>
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
+                    android:layout_height="10dp" />
 
-                <RadioGroup
+                <LinearLayout
+                    android:id="@+id/userLiftNumbers"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1"
-                    android:checkedButton="@+id/lbsRadiobutton">
-
-                    <TextView
-                        android:id="@+id/unitLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:gravity="top|center_horizontal"
-                        android:text="Weight Unit" />
-
-                    <RadioButton
-                        android:id="@+id/kgsRadioButton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:gravity="top"
-                        android:text="Kg."
-                        android:textColor="@color/primary_text" />
-
-                    <RadioButton
-                        android:id="@+id/lbsRadiobutton"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentEnd="false"
-                        android:layout_alignParentRight="false"
-                        android:layout_alignTop="@+id/userWeightLabel"
-                        android:layout_weight="1"
-                        android:checked="true"
-                        android:gravity="top"
-                        android:text="Lbs."
-                        android:textColor="@color/primary_text" />
-
-                </RadioGroup>
-
-            </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="10dp" />
-
-            <LinearLayout
-                android:id="@+id/userLiftNumbers"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/textView8"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Lift Numbers"
-                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
-
-                <LinearLayout
-                    android:id="@+id/squatInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textView9"
-                        android:layout_width="65dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|start"
-                        android:text="Squat: "
-                        android:textColor="@color/secondary_text" />
-
-                    <EditText
-                        android:id="@+id/squatMax"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:gravity="center_vertical|start"
-                        android:inputType="number"
-                        android:textColor="#1B5E20"
-                        android:textSize="12sp" />
+                    android:orientation="vertical">
 
                     <Space
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_weight="1" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/benchInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/textView10"
-                        android:layout_width="65dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|start"
-                        android:text="Bench: "
-                        android:textColor="@color/secondary_text" />
-
-                    <EditText
-                        android:id="@+id/benchMax"
+                        android:id="@+id/textView8"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:gravity="center_vertical|start"
-                        android:inputType="number"
-                        android:textColor="#1B5E20"
-                        android:textSize="12sp" />
-
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/deadliftInput"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:id="@+id/textView11"
-                        android:layout_width="65dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:gravity="center_vertical|start"
-                        android:text="Deadlift:"
-                        android:textColor="@color/secondary_text" />
-
-                    <EditText
-                        android:id="@+id/dlMax"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:ems="10"
-                        android:gravity="center_vertical|start"
-                        android:inputType="number"
-                        android:textColor="#1B5E20"
-                        android:textSize="12sp" />
-
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-                </LinearLayout>
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:gravity="bottom|center"
-                android:orientation="vertical">
-
-                <TextView
-                    android:id="@+id/appSettingsLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="App Settings"
-                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
-
-                <TextView
-                    android:id="@+id/timerSettingsLabel"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="bottom"
-                    android:text="Rest Timer"
-                    android:textColor="@color/primary_text" />
-
-                <LinearLayout
-                    android:id="@+id/additionalSettingsLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="bottom"
-                    android:orientation="horizontal">
+                        android:gravity="center"
+                        android:text="Lift Numbers"
+                        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
                     <LinearLayout
-                        android:id="@+id/timerSettings"
+                        android:id="@+id/squatInput"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:gravity="bottom|start"
-                        android:orientation="vertical">
+                        android:orientation="horizontal">
 
-                        <Button
-                            android:id="@+id/button2"
-                            android:layout_width="50dp"
-                            android:layout_height="50dp"
-                            android:background="@drawable/timer" />
+                        <TextView
+                            android:id="@+id/textView9"
+                            android:layout_width="65dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:text="Squat: "
+                            android:textColor="@color/secondary_text" />
+
+                        <EditText
+                            android:id="@+id/squatMax"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:gravity="center_vertical|start"
+                            android:inputType="number"
+                            android:textColor="#1B5E20"
+                            android:textSize="12sp" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
 
                     </LinearLayout>
 
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
+                    <LinearLayout
+                        android:id="@+id/benchInput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView10"
+                            android:layout_width="65dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:text="Bench: "
+                            android:textColor="@color/secondary_text" />
+
+                        <EditText
+                            android:id="@+id/benchMax"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:gravity="center_vertical|start"
+                            android:inputType="number"
+                            android:textColor="#1B5E20"
+                            android:textSize="12sp" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/deadliftInput"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/textView11"
+                            android:layout_width="65dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center_vertical|start"
+                            android:text="Deadlift:"
+                            android:textColor="@color/secondary_text" />
+
+                        <EditText
+                            android:id="@+id/dlMax"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:ems="10"
+                            android:gravity="center_vertical|start"
+                            android:inputType="number"
+                            android:textColor="#1B5E20"
+                            android:textSize="12sp" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+                    </LinearLayout>
 
                 </LinearLayout>
 
-                <View
-                    android:id="@+id/SettingsDivider2"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:alpha="0.12"
-                    android:background="@android:color/black" />
-
                 <LinearLayout
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="bottom"
-                    android:orientation="horizontal">
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:gravity="bottom|center"
+                    android:orientation="vertical">
 
-                    <Space
-                        android:layout_width="0dp"
+                    <TextView
+                        android:id="@+id/appSettingsLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="App Settings"
+                        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+                    <TextView
+                        android:id="@+id/timerSettingsLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:text="Rest Timer"
+                        android:textColor="@color/primary_text" />
+
+                    <LinearLayout
+                        android:id="@+id/additionalSettingsLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="bottom"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:id="@+id/timerSettings"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom|start"
+                            android:orientation="vertical">
+
+                            <Button
+                                android:id="@+id/button2"
+                                android:layout_width="50dp"
+                                android:layout_height="50dp"
+                                android:background="@drawable/timer" />
+
+                        </LinearLayout>
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/SettingsDivider2"
+                        android:layout_width="fill_parent"
                         android:layout_height="1dp"
-                        android:layout_weight="1" />
+                        android:alpha="0.12"
+                        android:background="@android:color/black" />
 
-                    <Button
-                        android:id="@+id/saveSettings"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_gravity="bottom|end"
-                        android:background="@drawable/save"
-                        android:gravity="end" />
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:orientation="horizontal">
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/saveSettings"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="bottom|end"
+                            android:background="@drawable/save"
+                            android:gravity="end" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
