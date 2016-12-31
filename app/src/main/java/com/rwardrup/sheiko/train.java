@@ -39,7 +39,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     TextView currentExercise;
 
     // Timer stuff
-    private Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
+    private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean timerIsPaused = false;
     private boolean timerIsRunning = false;
     private BroadcastReceiver br = new BroadcastReceiver() {
@@ -62,7 +62,12 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
         // Shared prefs
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        final SharedPreferences.Editor editor = sharedPref.edit();
+
+        // Try to get the timer duration from shared preferences, defaulting to 1.5 minutes if it
+        // hasn't been set. Time is stored in milliseconds in sharedPreferences. The time is saved
+        // in the sharedPreferences file in RestDurationPicker.
+        timerDurationSeconds = (int) (long) (sharedPref.getLong("timerDuration", 180000) / 1000);
+        Log.d("TimerSettings", "Timer duration loaded: " + timerDurationSeconds);
 
         // For passing the timer duration to the timer service
         final Intent sendDuration = new Intent("getting_data");
@@ -134,9 +139,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                     breakTimerOutput.setTextSize(36);
                     int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
 
-                    editor.putLong("timerDuration", Long.valueOf(timerDuration));
-                    editor.apply();
-
                     // Set up service for timer
                     startService(timerService);
                     Log.i("TimerService", "Started timer service");
@@ -163,7 +165,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         Integer i = (int) (long) duration;  // get integer i from duration (long)
         timerDurationSeconds = i / 1000; // convert millis to seconds
 
-        // Set the timer duration in seconds
 
         // Assign the new custom timer duration to the timerduration variable
         breakTimerOutput.setText(secondsToString(timerDurationSeconds));
