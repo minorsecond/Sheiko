@@ -165,6 +165,17 @@
                     android:layout_width="match_parent"
                     android:layout_height="10dp" />
 
+                <View
+                    android:id="@+id/SettingsDivider1"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:alpha="0.12"
+                    android:background="@android:color/black" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
                 <LinearLayout
                     android:id="@+id/userLiftNumbers"
                     android:layout_width="match_parent"
@@ -172,11 +183,6 @@
                     android:layout_gravity="center_vertical"
                     android:layout_weight="1"
                     android:orientation="vertical">
-
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
 
                     <TextView
                         android:id="@+id/textView8"
@@ -286,6 +292,22 @@
 
                 </LinearLayout>
 
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" />
+
+                <View
+                    android:id="@+id/SettingsDivider3"
+                    android:layout_width="fill_parent"
+                    android:layout_height="1dp"
+                    android:alpha="0.12"
+                    android:background="@android:color/black" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="10dp" />
+
                 <LinearLayout
                     android:id="@+id/AdditionalSettings"
                     android:layout_width="match_parent"
@@ -333,26 +355,27 @@
                         </LinearLayout>
 
                         <Space
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
                         <LinearLayout
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/unitLabel"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:gravity="top|center_horizontal"
-                                android:text="Weight Unit" />
+                                android:text="Weight Unit"
+                                android:textColor="@color/primary_text" />
 
                             <RadioGroup
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:checkedButton="@+id/lbsRadiobutton">
