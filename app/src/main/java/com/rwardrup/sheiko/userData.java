@@ -41,8 +41,8 @@ public final class userData {
                 USER_UNITS + " TEXT, " +
                 SQUAT_MAX + " INTEGER, " +
                 BENCH_MAX + " INTEGER, " +
-                DEADLIFT_MAX + "INTEGER, " +
-                DATE + "INTEGER, " +  // Date will be stored as a long, for sorting
+                DEADLIFT_MAX + " INTEGER, " +
+                DATE + " INTEGER, " +  // Date will be stored as a long, for sorting
                 WILKS + " INTEGER" + ") ";
     }
 
@@ -68,7 +68,7 @@ public final class userData {
                 BENCH_TOTAL_WEIGHT + " INTEGER, " +
                 BENCH_TOTAL_VOLUME + " INTEGER, " +
                 DEADLIFT_TOTAL_WEIGHT + " INTEGER, " +
-                DEADLIFT_TOTAL_VOLUME + "INTEGER" + ") ";
+                DEADLIFT_TOTAL_VOLUME + " INTEGER" + ") ";
     }
 
     public static class SquatSessions implements BaseColumns {
