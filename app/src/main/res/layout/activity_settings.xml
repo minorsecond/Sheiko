@@ -107,13 +107,13 @@
 
                             <EditText
                                 android:id="@+id/weightInput"
-                                android:layout_width="100dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_alignBaseline="@+id/userWeightLabel"
                                 android:layout_alignBottom="@+id/userWeightLabel"
                                 android:layout_toEndOf="@+id/textView11"
                                 android:layout_toRightOf="@+id/textView11"
-                                android:ems="10"
+                                android:ems="3"
                                 android:gravity="start"
                                 android:inputType="number"
                                 android:maxLength="3"
@@ -209,12 +209,13 @@
 
                         <EditText
                             android:id="@+id/squatMax"
-                            android:layout_width="wrap_content"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:ems="10"
+                            android:ems="4"
                             android:gravity="center_vertical|start"
                             android:inputType="number"
+                            android:maxLength="4"
                             android:textColor="#1B5E20"
                             android:textSize="12sp" />
 
@@ -245,9 +246,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:ems="10"
+                            android:ems="4"
                             android:gravity="center_vertical|start"
                             android:inputType="number"
+                            android:maxLength="4"
                             android:textColor="#1B5E20"
                             android:textSize="12sp" />
 
@@ -278,9 +280,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:ems="10"
+                            android:ems="4"
                             android:gravity="center_vertical|start"
                             android:inputType="number"
+                            android:maxLength="4"
                             android:textColor="#1B5E20"
                             android:textSize="12sp" />
 
