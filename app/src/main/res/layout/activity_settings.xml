@@ -159,45 +159,6 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
-                    <RadioGroup
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:checkedButton="@+id/lbsRadiobutton">
-
-                        <TextView
-                            android:id="@+id/unitLabel"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:gravity="top|center_horizontal"
-                            android:text="Weight Unit" />
-
-                        <RadioButton
-                            android:id="@+id/kgsRadioButton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:gravity="top"
-                            android:text="Kg."
-                            android:textColor="@color/primary_text" />
-
-                        <RadioButton
-                            android:id="@+id/lbsRadiobutton"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_alignParentEnd="false"
-                            android:layout_alignParentRight="false"
-                            android:layout_alignTop="@+id/userWeightLabel"
-                            android:layout_weight="1"
-                            android:checked="true"
-                            android:gravity="top"
-                            android:text="Lbs."
-                            android:textColor="@color/primary_text" />
-
-                    </RadioGroup>
-
                 </LinearLayout>
 
                 <Space
@@ -326,6 +287,7 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/AdditionalSettings"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -333,47 +295,93 @@
                     android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/appSettingsLayout"
+                        android:id="@+id/appSettingsTitle"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
                         android:text="App Settings"
                         android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
-                    <TextView
-                        android:id="@+id/timerSettingsLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="bottom"
-                        android:text="Rest Timer"
-                        android:textColor="@color/primary_text" />
-
                     <LinearLayout
-                        android:id="@+id/additionalSettingsLayout"
+                        android:id="@+id/AdditionalSettingsWidgets"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:gravity="bottom"
                         android:orientation="horizontal">
 
                         <LinearLayout
-                            android:id="@+id/timerSettings"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="bottom|start"
                             android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/timerSettingsLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="bottom"
+                                android:text="Rest Timer"
+                                android:textColor="@color/primary_text" />
 
                             <Button
                                 android:id="@+id/timerSettingsButton"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
-                                android:background="@drawable/timer" />
+                                android:layout_weight="1"
+                                android:background="@drawable/timer"
+                                android:gravity="center" />
 
                         </LinearLayout>
 
                         <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
                             android:layout_weight="1" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/unitLabel"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:gravity="top|center_horizontal"
+                                android:text="Weight Unit" />
+
+                            <RadioGroup
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:checkedButton="@+id/lbsRadiobutton">
+
+                                <RadioButton
+                                    android:id="@+id/kgsRadioButton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:checked="true"
+                                    android:gravity="top"
+                                    android:text="Kg."
+                                    android:textColor="@color/primary_text" />
+
+                                <RadioButton
+                                    android:id="@+id/lbsRadiobutton"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_alignParentEnd="false"
+                                    android:layout_alignParentRight="false"
+                                    android:layout_alignTop="@+id/userWeightLabel"
+                                    android:layout_weight="1"
+                                    android:checked="true"
+                                    android:gravity="top"
+                                    android:text="Lbs."
+                                    android:textColor="@color/primary_text" />
+
+                            </RadioGroup>
+                        </LinearLayout>
 
                     </LinearLayout>
 
