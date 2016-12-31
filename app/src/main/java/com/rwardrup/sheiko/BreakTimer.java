@@ -2,9 +2,11 @@ package com.rwardrup.sheiko;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 
 // TODO: get timer duration from TrainActivity and pass it to CountDownTimer
@@ -14,17 +16,19 @@ public class BreakTimer extends Service {
     private final static String TAG = "BroadcastService";
     Intent bi = new Intent(COUNTDOWN_BR);
     CountDownTimer cdt = null;
-    private int timerDuration;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        long timerDuration = sharedPref.getLong("timerDuration", -1);
+
         Log.d("TimerDurationSet", "Timer duration is set to " + timerDuration);
 
         Log.i(TAG, "Starting timer...");
 
-        cdt = new CountDownTimer(90000, 1000) {
+        cdt = new CountDownTimer(timerDuration, 1000) {
 
             @Override
             public void onTick(long millisUntilFinished) {

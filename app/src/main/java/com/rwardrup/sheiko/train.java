@@ -4,8 +4,9 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.CountDownTimer;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -20,28 +21,27 @@ import java.util.Locale;
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
-    // Set up broadcast for sending timer duration to BreakTImer
-    public static final String BREAKTIMER_DURATION = "com.rwardrup.sheiko.timer_duration";
-    private final static String TAG = "BroadcastService";
+
     private static long millisLeftOnTimer;
     private static Integer secondsLeftOnTimer;
     Button startBreakTimerButton;
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
+
     // Activity buttons
     Button squatSelectButton;
     Button deadliftSelectButton;
     Button benchSelectButton;
     Button accessorySelectButton;
+
     // Text output
     TextView breakTimerOutput;
     TextView currentExercise;
-    Intent durationBroadcater = new Intent(BREAKTIMER_DURATION);
+
     // Timer stuff
     private Integer timerDurationSeconds = 180;  // 3 minutes is a good default value
     private boolean timerIsPaused = false;
     private boolean timerIsRunning = false;
-    private CountDownTimer mCountDownTimer;
     private BroadcastReceiver br = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -59,6 +59,10 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
+
+        // Shared prefs
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = sharedPref.edit();
 
         // For passing the timer duration to the timer service
         final Intent sendDuration = new Intent("getting_data");
@@ -117,13 +121,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         });
 
         // Set timer display TODO: Get this to keep incrementing dimer display off-activity
-        if (mCountDownTimer == null) {
-            breakTimerOutput.setText(secondsToString(timerDurationSeconds));
-        } else {
-            while (mCountDownTimer != null) {
-                breakTimerOutput.setText(secondsToString(secondsLeftOnTimer));
-            }
-        }
+        breakTimerOutput.setText(secondsToString(timerDurationSeconds));
 
         // break timer start / stop / pause
         // break timer start
@@ -145,15 +143,17 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
                     Log.d("resumed timer", "value: " + millisLeftOnTimer);
                 } else if (!timerIsRunning) {
+
                     timerIsPaused = false;
                     breakTimerOutput.setTextSize(36);
-                    long timerDuration = timerDurationSeconds * 10000;  // This will be set by user in final code
+                    int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
                     timerIsRunning = true;
+
+                    editor.putLong("timerDuration", Long.valueOf(timerDuration));
+                    editor.apply();
 
                     // Set up service for timer
                     startService(timerService);
-                    durationBroadcater.putExtra("timerDuration", timerDuration);
-                    sendBroadcast(durationBroadcater);
                     Log.i("TimerService", "Started timer service");
                 }
             }
