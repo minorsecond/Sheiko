@@ -54,8 +54,6 @@ public class Settings extends AppCompatActivity {
             Log.d("DbReadError", "User max DB read error: " + e);  // First creation of database.
         }
 
-
-
         // Handle user clicking on the timer settings button
         activitySettingsBinding.timerSettingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
