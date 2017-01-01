@@ -407,7 +407,7 @@
                             android:text="Auto-Timer"
                             android:textAppearance="@android:style/TextAppearance.Material.Small"
                             android:textColor="@color/secondary_text"
-                            android:textSize="10sp" />
+                            android:textSize="14sp" />
                     </LinearLayout>
 
                 </LinearLayout>
