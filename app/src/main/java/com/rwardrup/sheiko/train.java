@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
@@ -35,7 +36,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Button squatSelectButton;
     Button deadliftSelectButton;
     Button benchSelectButton;
-    Button accessorySelectButton;
+    Spinner accessorySpinner;
 
     // Text output
     TextView breakTimerOutput;
@@ -64,11 +65,11 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         setContentView(R.layout.activity_train);
 
         // TODO: Programmatically set the array of today's accessories based on the sqlite db row
-        String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
+        String[] todaysAccessories = new String[]{"", "French Press", "Pullups", "Abs", "Bent-Over Rows",
                 "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
 
         // Hide the accessory spinner text
-        Spinner accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
+        accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
         CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, todaysAccessories);
         accessorySpinner.setAdapter(accessorySpinnerAdapter);
@@ -118,6 +119,30 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 currentExercise.setText(R.string.deadlift);
             }
         });
+
+        this.accessorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            private boolean activityLoaded = false;
+
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                String selectedAccessory = arg0.getSelectedItem().toString();
+                Log.i("Selection", "Accessory was selected: " + selectedAccessory);
+
+                // If user has selected an accessory, update the current activity. This prevents
+                // The current activity from being set to the acessory on Activity load.
+                if (selectedAccessory.length() > 0 && activityLoaded) {
+                    currentExercise.setText(selectedAccessory);
+                } else {
+                    activityLoaded = true;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                //do nothing
+            }
+        });
+
 
         // TODO: Handle accesssory change -> updated current workout text
 
@@ -265,8 +290,10 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     }
 
     // Adapter for accessory spinner. Want to hide the display string and dynamically update it
-    // when the user changes workouts.
+    // when the user changes workouts. Hide the first entry which is an empty string that prevents
+    // the currentExercise from being displayed on load.
     private static class CustomAdapter<T> extends ArrayAdapter<String> {
+
         public CustomAdapter(Context context, int textViewResourceId, String[] objects) {
             super(context, textViewResourceId, objects);
         }
