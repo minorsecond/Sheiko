@@ -65,7 +65,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         setContentView(R.layout.activity_train);
 
         // TODO: Programmatically set the array of today's accessories based on the sqlite db row
-        String[] todaysAccessories = new String[]{"", "French Press", "Pullups", "Abs", "Bent-Over Rows",
+        String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
                 "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
 
         // Hide the accessory spinner text
