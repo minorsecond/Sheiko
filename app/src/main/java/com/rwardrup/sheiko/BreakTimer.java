@@ -64,7 +64,7 @@ public class BreakTimer extends Service {
 
         // timer alert looping and volume
         mp.setLooping(false);
-        mp.setVolume(1.0f, 1.0f);
+        //mp.setVolume(1.0f, 1.0f);
         mp.start();
     }
 

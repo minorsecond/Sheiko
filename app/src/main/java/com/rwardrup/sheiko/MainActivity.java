@@ -232,12 +232,10 @@ public class MainActivity extends AppCompatActivity {
         // User scrollable x axis
         graph.getViewport().setScalable(true);
         graph.getViewport().setScrollable(true);
-        //graph.getViewport().setScalableY(true);
-        //graph.getViewport().setScrollableY(true);
 
         // Set padding for axis labels
         GridLabelRenderer glr = graph.getGridLabelRenderer();
-        glr.setPadding(8);
+        glr.setPadding(12);
 
         // Set vertical axis color
         glr.setVerticalLabelsColor(Color.rgb(38, 138, 58));
@@ -252,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
         glr.setHumanRounding(false);
 
         // Set label font size
-        glr.setTextSize(32f);
+        glr.setTextSize(30f);
         glr.reloadStyles();
 
         // Enable legend
