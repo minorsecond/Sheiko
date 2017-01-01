@@ -105,7 +105,7 @@
                                 android:id="@+id/squatSelectButton"
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
-                                android:background="@drawable/squats"
+                                android:background="@drawable/squats_inactive"
                                 android:gravity="center"
                                 android:textColor="@color/secondary_text"
                                 android:textSize="14sp" />
@@ -132,7 +132,7 @@
                                 android:id="@+id/deadliftButton"
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
-                                android:background="@drawable/deadlift"
+                                android:background="@drawable/deadlift_inactive"
                                 android:gravity="center"
                                 android:textColor="@color/secondary_text"
                                 android:textSize="14sp" />
