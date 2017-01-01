@@ -41,6 +41,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Button benchSelectButton;
     Spinner accessorySpinner;
     Switch autoTimerSwitch;
+    Boolean autoTimerEnabled = false;  // TODO: get this from shared preferences
 
     // Text output
     TextView breakTimerOutput;
@@ -126,6 +127,24 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             }
         });
 
+        // Run the nextSet button alongside the autotimer listener.
+        this.nextSetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                // reset timer if user goes to next set before it reaches 0
+                if (autoTimerEnabled) {
+                    Intent timerService = new Intent(train.this, BreakTimer.class);
+                    if (millisLeftOnTimer > 0) {
+                        stopService(new Intent(train.this, BreakTimer.class));
+                        startService(timerService);
+                    } else {
+                        startService(timerService);
+                    }
+                }
+            }
+        });
+
         this.accessorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             private boolean activityLoaded = false;
 
@@ -154,20 +173,11 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 if (autoTimerSwitch.isChecked()) {
-                    nextSetButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                            // reset timer if user goes to next set before it reaches 0
-                            if (millisLeftOnTimer > 0) {
-                                stopService(new Intent(train.this, BreakTimer.class));
-                            }
-                            Intent timerService = new Intent(train.this, BreakTimer.class);
-                            startService(timerService);
-                        }
-                    });
+                    autoTimerEnabled = true;
+                    Log.i("Timer", "auto timer enabled");
                 } else {
-                    // do nothing
+                    autoTimerEnabled = false;
+                    Log.i("Timer", "auto timer disabled");
                 }
             }
         });
