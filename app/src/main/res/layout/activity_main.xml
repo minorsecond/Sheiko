@@ -143,6 +143,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
                             android:orientation="horizontal">
 
                             <TextView
@@ -150,6 +151,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
                                 android:text="Total:"
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1"
                                 android:textStyle="normal|bold" />
@@ -161,6 +163,7 @@
                                 android:layout_marginBottom="0dp"
                                 android:layout_weight="1"
                                 android:elevation="0dp"
+                                android:gravity="center_vertical"
                                 android:paddingBottom="0dp"
                                 android:text="650 Kg."
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1"
@@ -177,6 +180,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
                                 android:text="Squat:"
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1"
                                 tools:ignore="NewApi" />
@@ -186,6 +190,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
                                 android:text="205 Kg."
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1"
                                 tools:ignore="NewApi" />
@@ -202,6 +207,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
                                 android:text="Bench:"
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1"
                                 tools:ignore="NewApi" />
@@ -211,6 +217,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
                                 android:text="170 Kg."
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1"
                                 tools:ignore="NewApi" />
@@ -226,6 +233,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
                                 android:text="Deadlift:"
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1"
                                 tools:ignore="NewApi" />
@@ -235,6 +243,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="22dp"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
                                 android:text="275 Kg."
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1" />
                         </LinearLayout>
@@ -249,6 +258,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
                                 android:text="Wilks' Score:"
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1"
                                 android:textStyle="normal|bold" />
@@ -258,6 +268,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
+                                android:gravity="center_vertical"
                                 android:text="455"
                                 android:textAppearance="@android:style/TextAppearance.Material.Body1"
                                 android:textStyle="normal|bold" />
