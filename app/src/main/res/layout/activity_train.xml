@@ -141,11 +141,12 @@
                                 android:layout_weight="1" />
 
                             <Spinner
-                                android:id="@+id/acessorySpinner"
+                                android:id="@+id/accessorySpinner"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_gravity="center"
                                 android:background="@drawable/barbell"
+                                android:entries="@array/accessories"
                                 android:gravity="center" />
 
                         </LinearLayout>

@@ -11,7 +11,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.shawnlin.numberpicker.NumberPicker;
@@ -60,6 +63,16 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
+        // TODO: Programmatically set the array of today's accessories based on the sqlite db row
+        String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
+                "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
+
+        // Hide the accessory spinner text
+        Spinner accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
+        CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, todaysAccessories);
+        accessorySpinner.setAdapter(accessorySpinnerAdapter);
+
         // Shared prefs
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -78,7 +91,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         squatSelectButton = (Button) findViewById(R.id.squatSelectButton);
         benchSelectButton = (Button) findViewById(R.id.benchSelectButton);
         deadliftSelectButton = (Button) findViewById(R.id.deadliftButton);
-        accessorySelectButton = (Button) findViewById(R.id.accessoriesButton);
 
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
         currentExercise = (TextView) findViewById(R.id.currentExerciseDisplay);
@@ -107,12 +119,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             }
         });
 
-        this.accessorySelectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentExercise.setText(R.string.accessories);
-            }
-        });
+        // TODO: Handle accesssory change -> updated current workout text
 
         // Handle user long-clicking on the timer output text to change timer length on-the-fly
         // This utilizes the onDurationSet method at the bottom of this class.
@@ -254,6 +261,21 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             secondsLeftOnTimer = (int) (long) millisUntilFinished / 1000;
             breakTimerOutput.setText(secondsToString(secondsLeftOnTimer));
             Log.i("BreakTimer", "Countdown seconds remaining: " + millisUntilFinished / 1000);
+        }
+    }
+
+    // Adapter for accessory spinner. Want to hide the display string and dynamically update it
+    // when the user changes workouts.
+    private static class CustomAdapter<T> extends ArrayAdapter<String> {
+        public CustomAdapter(Context context, int textViewResourceId, String[] objects) {
+            super(context, textViewResourceId, objects);
+        }
+
+        public View getView(int position, View convertView, ViewGroup parent) {
+            View view = super.getView(position, convertView, parent);
+            TextView textView = (TextView) view.findViewById(android.R.id.text1);
+            textView.setText("");
+            return view;
         }
     }
 }
