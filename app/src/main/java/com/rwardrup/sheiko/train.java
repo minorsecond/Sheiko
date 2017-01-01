@@ -15,7 +15,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import com.shawnlin.numberpicker.NumberPicker;
@@ -31,12 +33,14 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Button startBreakTimerButton;
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
+    Button nextSetButton;
 
     // Activity buttons
     Button squatSelectButton;
     Button deadliftSelectButton;
     Button benchSelectButton;
     Spinner accessorySpinner;
+    Switch autoTimerSwitch;
 
     // Text output
     TextView breakTimerOutput;
@@ -92,6 +96,8 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         squatSelectButton = (Button) findViewById(R.id.squatSelectButton);
         benchSelectButton = (Button) findViewById(R.id.benchSelectButton);
         deadliftSelectButton = (Button) findViewById(R.id.deadliftButton);
+        autoTimerSwitch = (Switch) findViewById(R.id.autoTimerSwitch);
+        nextSetButton = (Button) findViewById(R.id.nextSetButton);
 
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
         currentExercise = (TextView) findViewById(R.id.currentExerciseDisplay);
@@ -143,6 +149,29 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             }
         });
 
+        // Autotimer switch
+        this.autoTimerSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (autoTimerSwitch.isChecked()) {
+                    nextSetButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+
+                            // reset timer if user goes to next set before it reaches 0
+                            if (millisLeftOnTimer > 0) {
+                                stopService(new Intent(train.this, BreakTimer.class));
+                            }
+                            Intent timerService = new Intent(train.this, BreakTimer.class);
+                            startService(timerService);
+                        }
+                    });
+                } else {
+                    // do nothing
+                }
+            }
+        });
+
 
         // TODO: Handle accesssory change -> updated current workout text
 
@@ -169,8 +198,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             @Override
             public void onClick(View v) {
                     breakTimerOutput.setTextSize(36);
-                    int timerDuration = timerDurationSeconds * 1000;  // This will be set by user in final code
-
                     // Set up service for timer
                     startService(timerService);
                     Log.i("TimerService", "Started timer service");
