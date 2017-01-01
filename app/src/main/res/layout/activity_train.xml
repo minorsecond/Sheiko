@@ -140,14 +140,13 @@
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1" />
 
-                            <Button
-                                android:id="@+id/accessoriesButton"
+                            <Spinner
+                                android:id="@+id/acessorySpinner"
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
+                                android:layout_gravity="center"
                                 android:background="@drawable/barbell"
-                                android:gravity="center"
-                                android:textColor="@color/secondary_text"
-                                android:textSize="14sp" />
+                                android:gravity="center" />
 
                         </LinearLayout>
 
