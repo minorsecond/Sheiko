@@ -410,6 +410,16 @@
                         android:layout_width="match_parent"
                         android:layout_height="10dp" />
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="bottom"
+                    android:layout_weight="1"
+                    android:gravity="bottom"
+                    android:orientation="vertical">
+
                     <View
                         android:id="@+id/SettingsDivider2"
                         android:layout_width="fill_parent"
@@ -417,29 +427,28 @@
                         android:alpha="0.12"
                         android:background="@android:color/black" />
 
+                    <LinearLayout
+                        android:id="@+id/saveButtonLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom"
+                        android:orientation="horizontal">
+
+                        <Space
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <Button
+                            android:id="@+id/saveSettings"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:layout_gravity="bottom|end"
+                            android:background="@drawable/save"
+                            android:gravity="bottom|end" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <LinearLayout
-                    android:id="@+id/saveButtonLayout"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="bottom"
-                    android:layout_weight="1"
-                    android:orientation="horizontal">
-
-                    <Space
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:layout_weight="1" />
-
-                    <Button
-                        android:id="@+id/saveSettings"
-                        android:layout_width="50dp"
-                        android:layout_height="50dp"
-                        android:layout_gravity="bottom|end"
-                        android:background="@drawable/save"
-                        android:gravity="bottom|end" />
-                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>
