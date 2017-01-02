@@ -326,6 +326,34 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         }
     }
 
+    private double wilksScore(String sex, double bodyWeight, double weightLifted) {
+        // Wilk's coefficients. Default to males as they will most likely be the primary user
+        double a = -216.0475144;
+        double b = 16.2606339;
+        double c = 0.002388645;
+        double d = -0.00113732;
+        double e = 0.00000701863;
+        double f = -0.00000001291;
+        // Calculate the wilk's score for whichever lift or total is given in weight
+        if (sex.equals("female")) {  // calculate wilks for females
+            a = 594.31747775582;
+            b = -27.23842536447;
+            c = 0.82112226871;
+            d = -0.00930733913;
+            e = 0.00004731582;
+            f = -0.00000009054;
+        }
+
+        // The wilk's coeficient:
+        double wilksCoefficient = 500 / (a + (b * bodyWeight) +
+                ((c * bodyWeight) * (c * bodyWeight)) +
+                (d * bodyWeight) * (d * bodyWeight) * (d * bodyWeight) +
+                (e * bodyWeight) * (e * bodyWeight) * (e * bodyWeight) * (e * bodyWeight) +
+                (f * bodyWeight) * (f * bodyWeight) * (f * bodyWeight) * (f * bodyWeight) * (f * bodyWeight));
+
+        return weightLifted * wilksCoefficient;
+    }
+
     // Adapter for accessory spinner. Want to hide the display string and dynamically update it
     // when the user changes workouts. Hide the first entry which is an empty string that prevents
     // the currentExercise from being displayed on load.
