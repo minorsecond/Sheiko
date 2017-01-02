@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.shawnlin.numberpicker.NumberPicker;
 
+import java.util.Arrays;
 import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -30,6 +31,13 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
     private static long millisLeftOnTimer;
     private static Integer secondsLeftOnTimer;
+    // For display and db retrieval
+    String currentProgram;
+    String currentCycle;
+    String currentCycleText;
+    String currentWeek;
+    String currentDay;
+    String currentWorkoutText;
     Spinner workoutSelectionSpinner;
     Button startBreakTimerButton;
     Button stopBreakTimerButton;
@@ -47,6 +55,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     // Text output
     TextView breakTimerOutput;
     TextView currentExercise;
+    TextView currentWorkout;
 
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
@@ -69,6 +78,8 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
+
+        final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
 
         // TODO: Programmatically set the array of today's accessories based on the sqlite db row
         String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
@@ -94,7 +105,21 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         // hasn't been set. Time is stored in milliseconds in sharedPreferences. The time is saved
         // in the sharedPreferences file in RestDurationPicker.
         timerDurationSeconds = (int) (long) (sharedPref.getLong("timerDuration", 180000) / 1000);
-        Log.d("TimerSettings", "Timer duration loaded: " + timerDurationSeconds);
+        currentProgram = sharedPref.getString("selectedProgram", "Advanced Medium Load");
+        currentCycle = sharedPref.getString("selectedCycle", "1");
+        currentWeek = sharedPref.getString("selectedWeek", "1");
+        currentDay = sharedPref.getString("selectedDay", "1");
+
+        if (Arrays.asList(oldNumberedPrograms).contains(currentProgram)) {
+            currentCycleText = "";
+        } else {
+            currentCycleText = " (" + currentCycle + ") ";
+        }
+
+
+        // Build the string for current workout display
+        currentWorkoutText = currentProgram + currentCycleText + " - " + "Week " +
+                currentWeek + " " + "Day " + currentDay;
 
         // For passing the timer duration to the timer service
         final Intent sendDuration = new Intent("getting_data");
@@ -110,6 +135,9 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
         currentExercise = (TextView) findViewById(R.id.currentExerciseDisplay);
+        currentWorkout = (TextView) findViewById(R.id.currentWorkoutDisplay);
+
+        currentWorkout.setText(currentWorkoutText);
 
         // Set the reps and weights
         setRepsWeightPickers();
