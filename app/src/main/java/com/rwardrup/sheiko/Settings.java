@@ -3,14 +3,19 @@ package com.rwardrup.sheiko;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.rwardrup.sheiko.databinding.ActivitySettingsBinding;
@@ -21,13 +26,20 @@ public class Settings extends AppCompatActivity {
 
     //public ActivitySettingsBinding activitySettingsBinding;
     public String unit;
-    public String bodyweight;
+    public Long bodyweight;
     public String sex;
+    public int sexId;
     public int squat_max;
     public int bench_max;
     public int deadlift_max;
     public int max_date;
     public int wilks;
+    public RadioButton lbsButton;
+    public RadioButton kgButton;
+    public EditText weightInput;
+    public Spinner sexSpinner;
+    public SharedPreferences sharedpref;
+    public SharedPreferences.Editor editor;
 
     // Set font
     @Override
@@ -39,11 +51,35 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        lbsButton = (RadioButton) findViewById(R.id.lbsRadiobutton);
+        kgButton = (RadioButton) findViewById(R.id.kgsRadioButton);
+        weightInput = (EditText) findViewById(R.id.weightInput);
+        sharedpref = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedpref.edit();
+
+        // Shared prefs
+
+        Log.i("ReadParameters", "Read the following user parameters: " + bodyweight + ", " +
+                sex + ", " +
+                unit);
+
         final ActivitySettingsBinding activitySettingsBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_settings);
 
         try {
-            readFromUserParamDb(activitySettingsBinding);  // Load databases
+            bodyweight = sharedpref.getLong("bodyweight", -1);
+            //sex = sharedpref.getString("sex", "unset");
+            //sexId = sharedpref.getInt("sexId", 1);
+            //unit = sharedpref.getString("unit", "lbs");
+            //weightInput.setText(bodyweight.toString());
+            //sexSpinner.setSelection(sexId);
+
+            if (unit.equals("lbs")) {
+                lbsButton.setChecked(true);
+            } else {
+                kgButton.setChecked(true);
+            }
+
         } catch (NullPointerException e) {
             Log.d("DbReadError", "User parameter DB read error: " + e);  // First creation of database.
         }
@@ -66,12 +102,32 @@ public class Settings extends AppCompatActivity {
         activitySettingsBinding.saveSettings.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(Settings.this, MainActivity.class));
-                saveToUserParamDb(activitySettingsBinding);
+                saveUserParameters(unit, editor);
+
+                if (activitySettingsBinding.lbsRadiobutton.isChecked()) {
+                    unit = "lbs";
+                } else {
+                    unit = "kg";
+                }
+
                 saveToUserMaxDb(activitySettingsBinding);
                 Log.d("Database", "Committed data to database");
+
+                startActivity(new Intent(Settings.this, MainActivity.class));
             }
         });
+    }
+
+    private void saveUserParameters(String unit, SharedPreferences.Editor editor) {
+
+        Log.i("WriteParameters", "Writing the following parameters: " + bodyweight + ", " +
+                sex + ", " + unit);
+
+        editor.putString("unit", unit);
+        editor.putLong("bodyweight", Long.parseLong(weightInput.getText().toString()));
+        editor.putString("sex", sexSpinner.getSelectedItem().toString());
+        editor.putInt("sexId", sexSpinner.getSelectedItemPosition());
+        editor.commit();
     }
 
     // Save user parameters to DB
@@ -97,47 +153,6 @@ public class Settings extends AppCompatActivity {
         long newRowId = UserParamDb.insert(userData.UserParameters.TABLE_NAME, null, values);
         Toast.makeText(this, "Your settings have been saved", Toast.LENGTH_LONG).show();
         Log.d("SQL: ", "String: " + values);
-    }
-
-    // Read from user Parameters DB
-    private void readFromUserParamDb(ActivitySettingsBinding binding) {
-        SQLiteDatabase database = new userParametersHelper(this).getReadableDatabase();
-
-        // Get the last user parameter entry
-        String[] columns = {
-                "units",
-                "body_weight",
-                "sex"
-        };
-
-        Cursor cursor = database.query(userData.UserParameters.TABLE_NAME, columns, null, null, null, null, null);
-
-        Log.d("CursorCount", "The total cursor count is " + cursor.getColumnCount());
-
-        // Get values from DB cursor
-        if (cursor.moveToLast()) {
-            unit = cursor.getString(cursor.getColumnIndex(userData.UserParameters.USER_UNITS));
-            bodyweight = cursor.getString(cursor.getColumnIndex(userData.UserParameters.BODY_WEIGHT));
-            sex = cursor.getString(cursor.getColumnIndex(userData.UserParameters.SEX));
-        }
-        cursor.close();
-
-        // Write the DB values to text entry fields
-        Log.d("Database", "Unit found in DB: " + unit);
-        binding.weightInput.setText(bodyweight);
-        if (unit.equals("pounds")) {
-            binding.kgsRadioButton.setChecked(false);
-            binding.lbsRadiobutton.setChecked(true);
-        } else {
-            binding.kgsRadioButton.setChecked(true);
-            binding.lbsRadiobutton.setChecked(false);
-        }
-
-        if (sex.equals("Female")) {
-            binding.genderSpinner.setSelection(1);
-        } else {
-            binding.genderSpinner.setSelection(0);
-        }
     }
 
     // Save user maxes to DB
