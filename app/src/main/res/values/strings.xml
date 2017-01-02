@@ -33,11 +33,18 @@
         <item>Comp</item>
     </string-array>
 
-    <string-array name="workouts">
-        <item>Advanced Medium Load (2) - Week 1, Day 1</item>
-        <item>Advanced Medium Load (2) - Week 1, Day 2</item>
-        <item>Advanced Medium Load (2) - Week 1, Day 3</item>
-        <item>Advanced Medium Load (2) - Week 1, Day 4</item>
+    <string-array name="weeks">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+    </string-array>
+
+    <string-array name="days">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
     </string-array>
 
     <string-array name="accessories">

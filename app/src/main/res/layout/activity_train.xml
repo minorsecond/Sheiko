@@ -58,6 +58,16 @@
             android:weightSum="1"
             tools:ignore="RtlHardcoded,UselessParent">
 
+            <TextView
+                android:id="@+id/currentWorkoutDisplay"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="Advanced Medium Load (2) - Week 1 Day 2"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textColor="@color/primary_text"
+                android:textSize="16sp" />
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
@@ -89,13 +99,6 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <Spinner
-                                android:id="@+id/currentWorkoutSelectorSpinner"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1"
-                                android:entries="@array/workouts"
-                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <Space

@@ -81,15 +81,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 "Advanced Medium Load (1) - W1 D4"
         };
 
-        // Set the format of the current workout spinner to res/layout/workout_selection_spinner.xml
-
-        workoutSelectionSpinner = (Spinner) this.findViewById(R.id.currentWorkoutSelectorSpinner);
-
-        ArrayAdapter<String> workoutSelectionAdapter = new ArrayAdapter<String>(this,
-                R.layout.workout_selection_spinner, workoutsForSelectionSpinner);
-
-        workoutSelectionSpinner.setAdapter(workoutSelectionAdapter);
-
         // Hide the accessory spinner text
         accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
         CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
