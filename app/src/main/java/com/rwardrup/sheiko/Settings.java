@@ -25,21 +25,21 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class Settings extends AppCompatActivity {
 
     //public ActivitySettingsBinding activitySettingsBinding;
-    public String unit;
-    public Long bodyweight;
-    public String sex;
-    public int sexId;
-    public int squat_max;
-    public int bench_max;
-    public int deadlift_max;
-    public int max_date;
-    public int wilks;
-    public RadioButton lbsButton;
-    public RadioButton kgButton;
-    public EditText weightInput;
-    public Spinner sexSpinner;
-    public SharedPreferences sharedpref;
-    public SharedPreferences.Editor editor;
+    private String unit;
+    private Long bodyweight;
+    private String sex;
+    private int sexId;
+    private int squat_max;
+    private int bench_max;
+    private int deadlift_max;
+    private int max_date;
+    private int wilks;
+    private RadioButton lbsButton;
+    private RadioButton kgButton;
+    private EditText weightInput;
+    private Spinner sexSpinner;
+    private SharedPreferences sharedpref;
+    private SharedPreferences.Editor editor;
 
     // Set font
     @Override
