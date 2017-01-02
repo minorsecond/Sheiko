@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             readFromUserMaxDb();  // Load databases
 
             int totalWeight = squat_max + bench_max + deadlift_max;
+            double wilksScore = wilksScore(sex, 74.8427, 464.9322);
             Log.d("Calculation", "Calculated total: " + totalWeight);
 
             // set unit abbreviation
@@ -85,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
             benchMax.setText(String.valueOf(bench_max) + " " + unitAbbreviation);
             deadliftMax.setText(String.valueOf(deadlift_max) + " " + unitAbbreviation);
             userTotal.setText(String.valueOf(totalWeight) + " " + unitAbbreviation);
-            userWilks.setText("Not yet implemented");
+            userWilks.setText(String.valueOf(wilksScore));
 
 
         } catch (NullPointerException e) {
@@ -371,13 +372,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // The wilk's coeficient:
-        double wilksCoefficient = 500 / (a + (b * bodyWeight) +
+        double wilksCoefficient = 500 / (a +
+                (b * bodyWeight) +
                 ((c * bodyWeight) * (c * bodyWeight)) +
                 (d * bodyWeight) * (d * bodyWeight) * (d * bodyWeight) +
                 (e * bodyWeight) * (e * bodyWeight) * (e * bodyWeight) * (e * bodyWeight) +
                 (f * bodyWeight) * (f * bodyWeight) * (f * bodyWeight) * (f * bodyWeight) * (f * bodyWeight));
 
         return weightLifted * wilksCoefficient;
+    }
+
+    private double unitConverter(double fromWeight, String fromUnit) {
+        double toWeight;
+        if (fromUnit.equals("lbs")) {
+            toWeight = fromWeight * 0.45359237;
+        } else {
+            toWeight = fromWeight * 2.2046;
+        }
+
+        return toWeight;
     }
 
     // Create user parameter DB
