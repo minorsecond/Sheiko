@@ -24,6 +24,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.ParseException;
 import java.util.Date;
+import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
@@ -87,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
             benchMax.setText(String.valueOf(bench_max) + " " + unitAbbreviation);
             deadliftMax.setText(String.valueOf(deadlift_max) + " " + unitAbbreviation);
             userTotal.setText(String.valueOf(totalWeight) + " " + unitAbbreviation);
-            userWilks.setText(String.valueOf(wilksScore));
+            userWilks.setText(String.format(Locale.US, "%.2f", wilksScore));
 
 
         } catch (NullPointerException e) {
