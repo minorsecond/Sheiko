@@ -30,6 +30,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
     private static long millisLeftOnTimer;
     private static Integer secondsLeftOnTimer;
+    Spinner workoutSelectionSpinner;
     Button startBreakTimerButton;
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
@@ -72,6 +73,22 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         // TODO: Programmatically set the array of today's accessories based on the sqlite db row
         String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
                 "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
+
+        String[] workoutsForSelectionSpinner = new String[]{
+                "Advanced Medium Load (1) - W1 D1",
+                "Advanced Medium Load (1) - W1 D2",
+                "Advanced Medium Load (1) - W1 D3",
+                "Advanced Medium Load (1) - W1 D4"
+        };
+
+        // Set the format of the current workout spinner to res/layout/workout_selection_spinner.xml
+
+        workoutSelectionSpinner = (Spinner) this.findViewById(R.id.currentWorkoutSelectorSpinner);
+
+        ArrayAdapter<String> workoutSelectionAdapter = new ArrayAdapter<String>(this,
+                R.layout.workout_selection_spinner, workoutsForSelectionSpinner);
+
+        workoutSelectionSpinner.setAdapter(workoutSelectionAdapter);
 
         // Hide the accessory spinner text
         accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);

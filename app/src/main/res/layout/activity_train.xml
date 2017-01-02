@@ -74,10 +74,6 @@
                     android:orientation="vertical"
                     tools:ignore="NestedWeights">
 
-                    <Space
-                        android:layout_width="match_parent"
-                        android:layout_height="10dp" />
-
                     <LinearLayout
                         android:id="@+id/mainLayout"
                         android:layout_width="match_parent"
@@ -86,6 +82,37 @@
                         android:layout_weight="1"
                         android:gravity="top"
                         android:orientation="vertical">
+
+                        <LinearLayout
+                            android:id="@+id/TrainMainHeaderLayout"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <Spinner
+                                android:id="@+id/currentWorkoutSelectorSpinner"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:entries="@array/workouts"
+                                android:textSize="12sp" />
+                        </LinearLayout>
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp" />
+
+                        <View
+                            android:id="@+id/exerciseDivider"
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_gravity="top|center_horizontal"
+                            android:alpha="0.12"
+                            android:background="@android:color/black" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp" />
 
                         <TextView
                             android:id="@+id/liftSelectionInstruction"
