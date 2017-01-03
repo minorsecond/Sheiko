@@ -363,7 +363,7 @@ public class MainActivity extends AppCompatActivity {
             b = -27.23842536447;
             c = 0.82112226871;
             d = -0.00930733913;
-            e = 0.00000701863;
+            e = 0.00004731582;
             f = -0.00000009054;
             Log.i("Wilks", "Calculating wilks for female");
         }
