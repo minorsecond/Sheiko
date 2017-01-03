@@ -69,7 +69,7 @@
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:text="User Settings"
-                    android:textAppearance="@android:style/TextAppearance.Material.Large" />
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium" />
 
                 <Space
                     android:layout_width="match_parent"
@@ -153,146 +153,130 @@
 
                     </LinearLayout>
 
-                    <Space
-                        android:layout_width="match_parent"
+                    <LinearLayout
+                        android:id="@+id/userLiftNumbers"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView8"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:text="Lift Numbers"
+                            android:textAppearance="@android:style/TextAppearance.Material.Medium" />
+
+                        <LinearLayout
+                            android:id="@+id/squatInput"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textView9"
+                                android:layout_width="65dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical|start"
+                                android:text="Squat: "
+                                android:textColor="@color/secondary_text" />
+
+                            <EditText
+                                android:id="@+id/squatMax"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ems="4"
+                                android:gravity="center_vertical|start"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:textColor="#1B5E20"
+                                android:textSize="12sp" />
+
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/benchInput"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textView10"
+                                android:layout_width="65dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical|start"
+                                android:text="Bench: "
+                                android:textColor="@color/secondary_text" />
+
+                            <EditText
+                                android:id="@+id/benchMax"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ems="4"
+                                android:gravity="center_vertical|start"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:textColor="#1B5E20"
+                                android:textSize="12sp" />
+
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:id="@+id/deadliftInput"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/textView11"
+                                android:layout_width="65dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="center_vertical|start"
+                                android:text="Deadlift:"
+                                android:textColor="@color/secondary_text" />
+
+                            <EditText
+                                android:id="@+id/dlMax"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:ems="4"
+                                android:gravity="center_vertical|start"
+                                android:inputType="number"
+                                android:maxLength="4"
+                                android:textColor="#1B5E20"
+                                android:textSize="12sp" />
+
+                            <Space
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
                 <Space
                     android:layout_width="match_parent"
                     android:layout_height="10dp" />
-
-                <View
-                    android:id="@+id/SettingsDivider1"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:alpha="0.12"
-                    android:background="@android:color/black" />
-
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="10dp" />
-
-                <LinearLayout
-                    android:id="@+id/userLiftNumbers"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical"
-                    android:layout_weight="1"
-                    android:orientation="vertical">
-
-                    <TextView
-                        android:id="@+id/textView8"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:text="Lift Numbers"
-                        android:textAppearance="@android:style/TextAppearance.Material.Medium" />
-
-                    <LinearLayout
-                        android:id="@+id/squatInput"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView9"
-                            android:layout_width="65dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="Squat: "
-                            android:textColor="@color/secondary_text" />
-
-                        <EditText
-                            android:id="@+id/squatMax"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ems="4"
-                            android:gravity="center_vertical|start"
-                            android:inputType="number"
-                            android:maxLength="4"
-                            android:textColor="#1B5E20"
-                            android:textSize="12sp" />
-
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/benchInput"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView10"
-                            android:layout_width="65dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="Bench: "
-                            android:textColor="@color/secondary_text" />
-
-                        <EditText
-                            android:id="@+id/benchMax"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ems="4"
-                            android:gravity="center_vertical|start"
-                            android:inputType="number"
-                            android:maxLength="4"
-                            android:textColor="#1B5E20"
-                            android:textSize="12sp" />
-
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-
-                    </LinearLayout>
-
-                    <LinearLayout
-                        android:id="@+id/deadliftInput"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/textView11"
-                            android:layout_width="65dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:gravity="center_vertical|start"
-                            android:text="Deadlift:"
-                            android:textColor="@color/secondary_text" />
-
-                        <EditText
-                            android:id="@+id/dlMax"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ems="4"
-                            android:gravity="center_vertical|start"
-                            android:inputType="number"
-                            android:maxLength="4"
-                            android:textColor="#1B5E20"
-                            android:textSize="12sp" />
-
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1" />
-                    </LinearLayout>
-
-                </LinearLayout>
 
                 <View
                     android:id="@+id/SettingsDivider3"
@@ -358,9 +342,8 @@
                             android:layout_weight="1" />
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1"
                             android:orientation="vertical">
 
                             <TextView
@@ -376,16 +359,22 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
-                                android:checkedButton="@+id/lbsRadiobutton">
+                                android:checkedButton="@+id/lbsRadiobutton"
+                                android:gravity="end">
+
+                                <Space
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1" />
 
                                 <RadioButton
                                     android:id="@+id/kgsRadioButton"
-                                    android:layout_width="wrap_content"
+                                    android:layout_width="match_parent"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1"
                                     android:checked="true"
                                     android:gravity="top"
-                                    android:text="Kg."
+                                    android:text="Metric"
                                     android:textColor="@color/primary_text" />
 
                                 <RadioButton
@@ -398,7 +387,7 @@
                                     android:layout_weight="1"
                                     android:checked="true"
                                     android:gravity="top"
-                                    android:text="Lbs."
+                                    android:text="Imperial"
                                     android:textColor="@color/primary_text" />
 
                             </RadioGroup>

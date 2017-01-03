@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -43,7 +44,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
     Button nextSetButton;
-
     // Activity buttons
     Button squatSelectButton;
     Button deadliftSelectButton;
@@ -51,12 +51,12 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Spinner accessorySpinner;
     Switch autoTimerSwitch;
     Boolean autoTimerEnabled = false;  // TODO: get this from shared preferences
-
     // Text output
     TextView breakTimerOutput;
     TextView currentExercise;
     TextView currentWorkout;
-
+    SeekBar alarmVolumeControl;
+    private SharedPreferences.Editor editor;
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean timerIsPaused = false;
@@ -67,6 +67,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             updateGUI(intent);
         }
     };
+    private int currentVolume;
 
     // Set font
     @Override
@@ -78,6 +79,31 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
+
+        // Shared prefs
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedPref.edit();
+
+        alarmVolumeControl = (SeekBar) findViewById(R.id.volumeController);
+
+        alarmVolumeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            public void onProgressChanged(SeekBar seekbar, int i, boolean b) {
+                currentVolume = alarmVolumeControl.getProgress();
+                editor.putInt("alarmVolume", currentVolume);
+                editor.commit();
+                Log.i("TimerVolume", "Timer volume changed to " + currentVolume);
+            }
+
+            @Override
+            public void onStartTrackingTouch(SeekBar seekbar) {
+
+            }
+
+            @Override
+            public void onStopTrackingTouch(SeekBar seekBar) {
+
+            }
+        });
 
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
 
@@ -97,9 +123,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, todaysAccessories);
         accessorySpinner.setAdapter(accessorySpinnerAdapter);
-
-        // Shared prefs
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Try to get the timer duration from shared preferences, defaulting to 1.5 minutes if it
         // hasn't been set. Time is stored in milliseconds in sharedPreferences. The time is saved

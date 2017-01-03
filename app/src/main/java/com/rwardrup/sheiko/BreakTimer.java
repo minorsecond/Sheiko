@@ -1,13 +1,16 @@
 package com.rwardrup.sheiko;
 
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 
 // TODO: get timer duration from TrainActivity and pass it to CountDownTimer
 
@@ -16,13 +19,23 @@ public class BreakTimer extends Service {
     private final static String TAG = "BroadcastService";
     Intent bi = new Intent(COUNTDOWN_BR);
     CountDownTimer cdt = null;
+    AudioManager audioManager;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        final long timerDuration = sharedPref.getLong("timerDuration", 180000);
+
+        // Get alarm duration. Defaults to 1.5 minutes
+        final long timerDuration = sharedPref.getLong("timerDuration", 90000);
+
+        // Get alarm volume
+        final int currentVolume = sharedPref.getInt("alarmVolume", 5);
+        audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0);
+        Log.i("TimerVolume", "Current timer volume: " + currentVolume);
 
         Log.d("TimerDurationSet", "Timer duration is set to " + timerDuration);
 
