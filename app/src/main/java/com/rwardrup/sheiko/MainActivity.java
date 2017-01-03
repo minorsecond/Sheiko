@@ -2,6 +2,7 @@ package com.rwardrup.sheiko;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -9,6 +10,7 @@ import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
 import android.icu.util.Calendar;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -38,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private int deadlift_max;
     private String unit;
     private String unitAbbreviation;
-    private String bodyweight;
+    private Double bodyweight;
     private String sex;
 
     // Set font
@@ -53,6 +55,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        SharedPreferences sharedpref = PreferenceManager.getDefaultSharedPreferences(this);
+
         // Lift max textviews
         TextView squatMax = (TextView) findViewById(R.id.squatMax);
         TextView benchMax = (TextView) findViewById(R.id.benchMax);
@@ -60,8 +64,17 @@ public class MainActivity extends AppCompatActivity {
         TextView userTotal = (TextView) findViewById(R.id.currentTotal);
         TextView userWilks = (TextView) findViewById(R.id.userWilks);
 
+        final Double bodyweightKg;
+        final Double totalWeightKg;
+
         try {
-            readFromUserParamDb();  // Load databases
+            //readFromUserParamDb();  // Load databases
+            unit = sharedpref.getString("unit", "kilograms");
+            bodyweight = (double) sharedpref.getLong("bodyweight", -1);
+            sex = sharedpref.getString("sex", "Male");
+
+            Log.i("ReadParameters", "Read the following user parameters: " + "Unit: " + unit +
+                    ", bodyweight: " + bodyweight + ", sex: " + sex);
         } catch (NullPointerException e) {
             Log.d("DbReadError", "User parameter DB read error: " + e);  // First creation of database.
         }
@@ -69,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
         try {
             readFromUserMaxDb();  // Load databases
 
-            int totalWeight = squat_max + bench_max + deadlift_max;
+            Double totalWeight = (double) squat_max + (double) bench_max + (double) deadlift_max;
             Log.d("Calculation", "Calculated total: " + totalWeight);
 
             // set unit abbreviation
@@ -81,7 +94,15 @@ public class MainActivity extends AppCompatActivity {
                 unitAbbreviation = "";
             }
 
-            double wilksScore = wilksScore(sex, unitConverter(165, "lbs"), unitConverter(totalWeight, "lbs"));
+            if (unit.equals("pounds")) {
+                bodyweightKg = unitConverter(bodyweight, unit);
+                totalWeightKg = unitConverter(totalWeight, unit);
+            } else {
+                bodyweightKg = bodyweight;
+                totalWeightKg = totalWeight;
+            }
+
+            double wilksScore = wilksScore(sex, bodyweightKg, totalWeightKg);
 
             // TODO: properly set the strings
             squatMax.setText(String.valueOf(squat_max) + " " + unitAbbreviation);
@@ -294,33 +315,6 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Read from user Parameters DB
-    private void readFromUserParamDb() {
-        SQLiteDatabase database = new userParametersHelper(this).getReadableDatabase();
-
-        // Get the last user parameter entry
-        String[] columns = {
-                "units",
-                "body_weight",
-                "sex"
-        };
-
-        Cursor cursor = database.query(userData.UserParameters.TABLE_NAME, columns, null, null, null, null, null);
-
-        Log.d("CursorCount", "The total cursor count is " + cursor.getColumnCount());
-
-        // Get values from DB cursor
-        if (cursor.moveToLast()) {
-            unit = cursor.getString(cursor.getColumnIndex(userData.UserParameters.USER_UNITS));
-            bodyweight = cursor.getString(cursor.getColumnIndex(userData.UserParameters.BODY_WEIGHT));
-            sex = cursor.getString(cursor.getColumnIndex(userData.UserParameters.SEX));
-        }
-        cursor.close();
-
-        Log.d("Database", "Successfully read user parameters from DB.");
-        Log.d("Database", "Units: " + unit);
-    }
-
     // Read from user User Max DB
     private void readFromUserMaxDb() {
         SQLiteDatabase database = new userMaxesHelper(this).getReadableDatabase();
@@ -399,9 +393,11 @@ public class MainActivity extends AppCompatActivity {
 
     private double unitConverter(double fromWeight, String fromUnit) {
         double toWeight;
-        if (fromUnit.equals("lbs")) {
+        if (fromUnit.equals("pounds")) {
+            Log.i("UnitConverter", "Converting " + fromUnit + " to kg");
             toWeight = fromWeight * 0.45359237;
         } else {
+            Log.i("UnitConverter", "Converting " + fromUnit + " to lbs");
             toWeight = fromWeight * 2.2046;
         }
 

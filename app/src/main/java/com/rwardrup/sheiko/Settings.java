@@ -63,17 +63,17 @@ public class Settings extends AppCompatActivity {
             bodyweight = sharedpref.getLong("bodyweight", -1);
             sex = sharedpref.getString("sex", "unset");
             sexId = sharedpref.getInt("sexId", 1);
-            unit = sharedpref.getString("unit", "lbs");
+            unit = sharedpref.getString("unit", "kilograms");
             activitySettingsBinding.genderSpinner.setSelection(sexId);
 
             try {
-                if (unit.equals("lbs")) {
+                if (unit.equals("pounds")) {
                     activitySettingsBinding.lbsRadiobutton.setChecked(true);
                 } else {
                     activitySettingsBinding.kgsRadioButton.setChecked(true);
                 }
             } catch (NullPointerException e) {
-                unit = "kg";
+                unit = "kilograms";
                 Log.d("ParameterLoadError", "Couldn't load unit. Defaulted to kg.");
             }
 
@@ -105,9 +105,9 @@ public class Settings extends AppCompatActivity {
                 saveUserParameters(activitySettingsBinding, unit, editor);
 
                 if (activitySettingsBinding.lbsRadiobutton.isChecked()) {
-                    unit = "lbs";
+                    unit = "pounds";
                 } else {
-                    unit = "kg";
+                    unit = "kilograms";
                 }
 
                 saveToUserMaxDb(activitySettingsBinding);
@@ -121,9 +121,9 @@ public class Settings extends AppCompatActivity {
     private void saveUserParameters(ActivitySettingsBinding binding, String unit, SharedPreferences.Editor editor) {
 
         if (binding.lbsRadiobutton.isChecked()) {
-            unit = "lbs";
+            unit = "pounds";
         } else {
-            unit = "kg";
+            unit = "kilograms";
         }
 
         Log.i("WriteParameters", "Writing the following parameters: " + bodyweight + ", " +
