@@ -15,6 +15,12 @@ android {
         abortOnError false
     }
     buildTypes {
+        debug {
+         runProguard false
+         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+         debuggable true
+
+      }
         release {
             minifyEnabled false
             debuggable    false
