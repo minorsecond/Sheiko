@@ -447,13 +447,24 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
 
-            <SeekBar
-                android:id="@+id/volumeController"
-                style="@style/Widget.AppCompat.SeekBar.Discrete"
+            <TextView
+                android:id="@+id/alarmVolumeLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:max="10"
-                android:progress="3" />
+                android:gravity="center"
+                android:text="Volume"
+                android:textColor="@color/secondary_text" />
+
+            <com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar
+                android:id="@+id/volumeController"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:bar_color="#388e3c"
+                app:bar_highlight_color="#4caf50"
+                app:left_thumb_color="#9e9e9e"
+                app:left_thumb_color_pressed="#4caf50"
+                app:max_value="7"
+                app:min_value="0" />
 
         </LinearLayout>
     </LinearLayout>

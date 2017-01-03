@@ -45,4 +45,5 @@ dependencies {
     compile 'mobi.upod:time-duration-picker:1.1.1'
     compile 'com.shawnlin:number-picker:2.3.0'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
+    compile 'com.crystal:crystalrangeseekbar:1.1.1'
 }

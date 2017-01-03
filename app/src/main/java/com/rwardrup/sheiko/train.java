@@ -16,11 +16,12 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.SeekBar;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
 
+import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
+import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 import com.shawnlin.numberpicker.NumberPicker;
 
 import java.util.Arrays;
@@ -55,7 +56,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     TextView breakTimerOutput;
     TextView currentExercise;
     TextView currentWorkout;
-    SeekBar alarmVolumeControl;
+    CrystalSeekbar alarmVolumeControl;
     private SharedPreferences.Editor editor;
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
@@ -84,24 +85,15 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPref.edit();
 
-        alarmVolumeControl = (SeekBar) findViewById(R.id.volumeController);
+        alarmVolumeControl = (CrystalSeekbar) findViewById(R.id.volumeController);
 
-        alarmVolumeControl.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-            public void onProgressChanged(SeekBar seekbar, int i, boolean b) {
-                currentVolume = alarmVolumeControl.getProgress();
+        alarmVolumeControl.setOnSeekbarFinalValueListener(new OnSeekbarFinalValueListener() {
+            @Override
+            public void finalValue(Number value) {
+                currentVolume = value.intValue();
                 editor.putInt("alarmVolume", currentVolume);
                 editor.commit();
                 Log.i("TimerVolume", "Timer volume changed to " + currentVolume);
-            }
-
-            @Override
-            public void onStartTrackingTouch(SeekBar seekbar) {
-
-            }
-
-            @Override
-            public void onStopTrackingTouch(SeekBar seekBar) {
-
             }
         });
 
