@@ -5,10 +5,10 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.rwardrup.sheiko"
-        minSdkVersion 23
+        minSdkVersion 25
         targetSdkVersion 25
-        versionCode 2
-        versionName "2"
+        versionCode 1
+        versionName "1"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
