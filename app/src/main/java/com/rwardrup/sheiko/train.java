@@ -62,6 +62,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean timerIsPaused = false;
     private boolean timerIsRunning = false;
+
     private BroadcastReceiver br = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -259,8 +260,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         // Set timer display TODO: Get this to keep incrementing dimer display off-activity
         breakTimerOutput.setText(secondsToString(timerDurationSeconds));
 
-        // break timer start / stop / pause
-        // break timer start
+        // break timer start / stop
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
 
             Intent timerService = new Intent(train.this, BreakTimer.class);
@@ -369,12 +369,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         }
         super.onStop();
     }
-
-    //@Override
-    //public void onDestroy() {
-    // do nothing
-    //   super.onDestroy();
-    //}
 
     private void updateGUI(Intent intent) {
         if (intent.getExtras() != null) {
