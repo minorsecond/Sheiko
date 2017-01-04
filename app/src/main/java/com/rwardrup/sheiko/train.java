@@ -86,8 +86,14 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPref.edit();
 
-        alarmVolumeControl = (CrystalSeekbar) findViewById(R.id.volumeController);
 
+        // Set up volume control
+        alarmVolumeControl = (CrystalSeekbar) findViewById(R.id.volumeController);
+        currentVolume = sharedPref.getInt("alarmVolume", 4);  // Try to get last set volume
+        Log.i("VolumeControl", "Initial volume position: " + currentVolume);
+        alarmVolumeControl.setMinStartValue(currentVolume).apply(); // Set the bar at the last vol position
+
+        // Set up the seekbar change listener
         alarmVolumeControl.setOnSeekbarFinalValueListener(new OnSeekbarFinalValueListener() {
             @Override
             public void finalValue(Number value) {
