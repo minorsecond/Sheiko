@@ -78,7 +78,12 @@ public class Settings extends AppCompatActivity {
             }
 
             Log.i("ReadParameters", "Read the following parameters: " + bodyweight);
-            activitySettingsBinding.weightInput.setText(Long.toString(bodyweight));
+
+            if (bodyweight > 0) {
+                activitySettingsBinding.weightInput.setText(Long.toString(bodyweight));
+            } else {
+                activitySettingsBinding.weightInput.setText("");
+            }
 
         } catch (NullPointerException e) {
             Log.d("DbReadError", "User parameter DB read error: " + e);  // First creation of database.
@@ -182,9 +187,23 @@ public class Settings extends AppCompatActivity {
         cursor.close();
 
         // Write the DB values to text entry fields
-        binding.squatMax.setText(String.valueOf(squat_max));
-        binding.benchMax.setText(String.valueOf(bench_max));
-        binding.dlMax.setText(String.valueOf(deadlift_max));
+        if (squat_max > 0) {
+            binding.squatMax.setText(String.valueOf(squat_max));
+        } else {
+            binding.squatMax.setText("");
+        }
+
+        if (bench_max > 0) {
+            binding.benchMax.setText(String.valueOf(bench_max));
+        } else {
+            binding.benchMax.setText("");
+        }
+
+        if (deadlift_max > 0) {
+            binding.dlMax.setText(String.valueOf(deadlift_max));
+        } else {
+            binding.dlMax.setText("");
+        }
     }
 
     // Create user parameter DB
