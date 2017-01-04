@@ -62,6 +62,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean timerIsPaused = false;
     private boolean timerIsRunning = false;
+
     private BroadcastReceiver br = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -233,6 +234,15 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             }
         });
 
+        currentWorkout.setOnLongClickListener(new OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                startActivity(new Intent(train.this, selectProgram.class));
+                return true;
+            }
+        });
+
 
         // TODO: Handle accesssory change -> updated current workout text
 
@@ -250,8 +260,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         // Set timer display TODO: Get this to keep incrementing dimer display off-activity
         breakTimerOutput.setText(secondsToString(timerDurationSeconds));
 
-        // break timer start / stop / pause
-        // break timer start
+        // break timer start / stop
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
 
             Intent timerService = new Intent(train.this, BreakTimer.class);
@@ -277,6 +286,23 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                     breakTimerOutput.setText(secondsToString(timerDurationSeconds));
                 }
         });
+
+        // Load workout history database here TODO: write this in actual code
+        // lastWorkout = workoutHistoryDb.LastWorkout()
+        // if (lastWorkout > 0 && lastWorkout < 4) {
+        //  nextWorkout = lastWorkout + 1
+        // } else if (lastWorkout == 4 && currentWeek < 4) {
+        //  nextWorkout = 1
+        //  currentWeek += 1
+        // } else if (lastWorkout == 4 && currentWeek == 4 && !currentCycle.equals("Competition")) {
+        //  nextWorkout = 1
+        //  currentWeek = 1
+        //  currentCycle += 1
+        // } else if (lastWorkout == 4 && currentWeek == 4 && currentCycle.equals("Competition")) {
+        //  nextWorkout = 1
+        //  currentWeek = 1
+        //  currentCycle = 1
+        // }
     }
 
     // Break timer long-click set time
@@ -302,7 +328,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         NumberPicker repPicker = (NumberPicker) findViewById(R.id.repsPicker);
         NumberPicker weightPicker = (NumberPicker) findViewById(R.id.weightPicker);
 
-        // Disable keyboard
+        // Disable keyboard when numberpicker is selected
         repPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         weightPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
@@ -360,12 +386,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         }
         super.onStop();
     }
-
-    //@Override
-    //public void onDestroy() {
-    // do nothing
-    //   super.onDestroy();
-    //}
 
     private void updateGUI(Intent intent) {
         if (intent.getExtras() != null) {

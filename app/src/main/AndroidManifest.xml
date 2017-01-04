@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.rwardrup.sheiko">
 
+    <uses-sdk android:minSdkVersion="23" />
+
     <application
         android:name=".CalligraphySettings"
         android:allowBackup="true"
