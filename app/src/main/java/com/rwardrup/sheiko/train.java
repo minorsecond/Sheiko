@@ -311,7 +311,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         NumberPicker repPicker = (NumberPicker) findViewById(R.id.repsPicker);
         NumberPicker weightPicker = (NumberPicker) findViewById(R.id.weightPicker);
 
-        // Disable keyboard
+        // Disable keyboard when numberpicker is selected
         repPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
         weightPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);
 
