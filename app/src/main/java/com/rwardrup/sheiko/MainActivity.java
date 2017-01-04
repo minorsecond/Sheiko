@@ -42,6 +42,7 @@ public class MainActivity extends AppCompatActivity {
     private String unitAbbreviation;
     private Double bodyweight;
     private String sex;
+    private boolean firstLoad = false;
 
     // Set font
     @Override
@@ -72,6 +73,8 @@ public class MainActivity extends AppCompatActivity {
             unit = sharedpref.getString("unit", "kilograms");
             bodyweight = (double) sharedpref.getLong("bodyweight", -1);
             sex = sharedpref.getString("sex", "Male");
+
+            firstLoad = bodyweight == -1;
 
             Log.i("ReadParameters", "Read the following user parameters: " + "Unit: " + unit +
                     ", bodyweight: " + bodyweight + ", sex: " + sex);
@@ -114,11 +117,15 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (NullPointerException e) {
             Log.d("DbReadError", "User max DB read error: " + e);  // First creation of database.
-            squatMax.setText("Press the gear icon to set");
-            benchMax.setText("Press the gear icon to set");
-            deadliftMax.setText("Press the gear icon to set");
-            userTotal.setText("Press the gear icon to set");
-            userWilks.setText("Press the gear icon to set");
+            firstLoad = true;
+        }
+
+        if (firstLoad) {
+            squatMax.setText("");
+            benchMax.setText("");
+            deadliftMax.setText("");
+            userTotal.setText("");
+            userWilks.setText("");
         }
 
         // The graph on the main window. See www.android-graphview.org for more info
