@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -46,9 +47,9 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Button pauseBreakTimerButton;
     Button nextSetButton;
     // Activity buttons
-    Button squatSelectButton;
-    Button deadliftSelectButton;
-    Button benchSelectButton;
+    ImageButton squatSelectButton;
+    ImageButton deadliftSelectButton;
+    ImageButton benchSelectButton;
     Spinner accessorySpinner;
     Switch autoTimerSwitch;
     Boolean autoTimerEnabled = false;  // TODO: get this from shared preferences
@@ -149,9 +150,9 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         startBreakTimerButton = (Button) findViewById(R.id.startBreakTimer);
         stopBreakTimerButton = (Button) findViewById(R.id.stopBreakButton);
         pauseBreakTimerButton = (Button) findViewById(R.id.pauseBreakButton);
-        squatSelectButton = (Button) findViewById(R.id.squatSelectButton);
-        benchSelectButton = (Button) findViewById(R.id.benchSelectButton);
-        deadliftSelectButton = (Button) findViewById(R.id.deadliftButton);
+        squatSelectButton = (ImageButton) findViewById(R.id.squatSelectButton);
+        benchSelectButton = (ImageButton) findViewById(R.id.benchSelectButton);
+        deadliftSelectButton = (ImageButton) findViewById(R.id.deadliftButton);
         autoTimerSwitch = (Switch) findViewById(R.id.autoTimerSwitch);
         nextSetButton = (Button) findViewById(R.id.nextSetButton);
 

@@ -131,41 +131,45 @@
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
-                            <Button
+                            <ImageButton
                                 android:id="@+id/squatSelectButton"
                                 android:layout_width="45dp"
                                 android:layout_height="45dp"
-                                android:background="@drawable/squats_inactive"
-                                android:gravity="center"
-                                android:textColor="@color/secondary_text"
-                                android:textSize="14sp" />
+                                android:layout_gravity="center"
+                                android:adjustViewBounds="true"
+                                android:background="#0000"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/squats_inactive" />
 
                             <Space
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1" />
 
-                            <Button
+                            <ImageButton
                                 android:id="@+id/benchSelectButton"
                                 android:layout_width="55dp"
                                 android:layout_height="65dp"
-                                android:background="@drawable/bench_press"
-                                android:gravity="center"
-                                android:textSize="14sp" />
+                                android:layout_gravity="center"
+                                android:adjustViewBounds="true"
+                                android:background="#0000"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/bench_press" />
 
                             <Space
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1" />
 
-                            <Button
+                            <ImageButton
                                 android:id="@+id/deadliftButton"
                                 android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:background="@drawable/deadlift_inactive"
-                                android:gravity="center"
-                                android:textColor="@color/secondary_text"
-                                android:textSize="14sp" />
+                                android:layout_height="40dp"
+                                android:layout_gravity="center"
+                                android:adjustViewBounds="true"
+                                android:background="#0000"
+                                android:scaleType="fitCenter"
+                                android:src="@drawable/deadlift_inactive" />
 
                             <Space
                                 android:layout_width="wrap_content"
@@ -174,8 +178,8 @@
 
                             <Spinner
                                 android:id="@+id/accessorySpinner"
-                                android:layout_width="60dp"
-                                android:layout_height="50dp"
+                                android:layout_width="53dp"
+                                android:layout_height="43dp"
                                 android:layout_gravity="center"
                                 android:layout_marginEnd="-10dp"
                                 android:layout_marginStart="-10dp"
