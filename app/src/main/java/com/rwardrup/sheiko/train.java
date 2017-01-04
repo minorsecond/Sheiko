@@ -233,6 +233,15 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             }
         });
 
+        currentWorkout.setOnLongClickListener(new OnLongClickListener() {
+
+            @Override
+            public boolean onLongClick(View v) {
+                startActivity(new Intent(train.this, selectProgram.class));
+                return true;
+            }
+        });
+
 
         // TODO: Handle accesssory change -> updated current workout text
 
