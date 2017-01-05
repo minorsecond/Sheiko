@@ -28,7 +28,7 @@
                 android:id="@+id/imageView6"
                 android:layout_width="56dp"
                 android:layout_height="50dp"
-                app:srcCompat="@drawable/logo"
+                app:srcCompat="@drawable/logo_blue"
                 tools:ignore="ContentDescription" />
 
             <TextView

@@ -164,6 +164,10 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         // Set the reps and weights
         setRepsWeightPickers();
 
+        // This is an example of how changing images to active/inactive versions
+        // will be done programmatically
+        squatSelectButton.setImageResource(R.drawable.squats);
+
         this.squatSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
