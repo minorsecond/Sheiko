@@ -137,7 +137,8 @@
                                 android:layout_height="45dp"
                                 android:layout_gravity="center"
                                 android:adjustViewBounds="true"
-                                android:background="#0000"
+                                android:background="?attr/selectableItemBackgroundBorderless"
+                                android:elevation="25dp"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/squats_inactive" />
 
@@ -152,7 +153,7 @@
                                 android:layout_height="65dp"
                                 android:layout_gravity="center"
                                 android:adjustViewBounds="true"
-                                android:background="#0000"
+                                android:background="?attr/selectableItemBackgroundBorderless"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/bench_press" />
 
@@ -167,7 +168,7 @@
                                 android:layout_height="40dp"
                                 android:layout_gravity="center"
                                 android:adjustViewBounds="true"
-                                android:background="#0000"
+                                android:background="?attr/selectableItemBackgroundBorderless"
                                 android:scaleType="fitCenter"
                                 android:src="@drawable/deadlift_inactive" />
 

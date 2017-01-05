@@ -61,8 +61,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     private SharedPreferences.Editor editor;
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
-    private boolean timerIsPaused = false;
-    private boolean timerIsRunning = false;
+    private boolean activityLoaded = false;
 
     private BroadcastReceiver br = new BroadcastReceiver() {
         @Override
@@ -205,7 +204,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         });
 
         this.accessorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            private boolean activityLoaded = false;
 
             @Override
             public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
@@ -214,8 +212,9 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
                 // If user has selected an accessory, update the current activity. This prevents
                 // The current activity from being set to the acessory on Activity load.
-                if (selectedAccessory.length() > 0 && activityLoaded) {
+                if (activityLoaded) {
                     currentExercise.setText(selectedAccessory);
+                    Log.i("Selection", "Selection set.");
                 } else {
                     activityLoaded = true;
                 }
