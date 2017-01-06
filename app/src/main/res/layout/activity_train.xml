@@ -369,109 +369,117 @@
                     android:alpha="0.12"
                     android:background="@android:color/black" />
 
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rest_timer"
-                    android:textAlignment="center"
-                    android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
-
                 <LinearLayout
-                    android:id="@+id/timerSpacer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
-                    <Button
-                        android:id="@+id/startBreakTimer"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/play"
-                        android:elevation="1dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/rest_timer"
+                        android:textAlignment="center"
+                        android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+
+                    <LinearLayout
+                        android:id="@+id/timerSpacer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <Button
+                            android:id="@+id/startBreakTimer"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/play"
+                            android:elevation="1dp"
+                            android:fontFamily="sans-serif-medium"
+                            android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+                        <Space
+                            android:layout_width="15dp"
+                            android:layout_height="wrap_content" />
+
+                        <Button
+                            android:id="@+id/stopBreakButton"
+                            android:layout_width="60dp"
+                            android:layout_height="60dp"
+                            android:layout_gravity="center"
+                            android:background="@drawable/stop" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView3"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Long-press to edit"
+                                android:textColor="@color/secondary_text"
+                                android:textSize="10sp" />
+
+                            <TextView
+                                android:id="@+id/breakTimerOutput"
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:text="05:00"
+                                android:textAlignment="gravity"
+                                android:textAppearance="@android:style/TextAppearance.Material.Display1"
+                                android:textColor="@color/primary_text"
+                                android:textSize="36sp"
+                                tools:gravity="center_horizontal|center" />
+
+                            <Switch
+                                android:id="@+id/autoTimerSwitch"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:text="Auto-Timer"
+                                android:textAppearance="@android:style/TextAppearance.Material.Small"
+                                android:textColor="@color/secondary_text"
+                                android:textSize="14sp" />
+                        </LinearLayout>
+
+                    </LinearLayout>
 
                     <Space
-                        android:layout_width="15dp"
-                        android:layout_height="wrap_content" />
-
-                    <Button
-                        android:id="@+id/stopBreakButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/stop" />
-
-                    <Space
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_weight="1" />
 
-                    <LinearLayout
+                    <TextView
+                        android:id="@+id/alarmVolumeLabel"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="Volume"
+                        android:textColor="@color/secondary_text" />
+
+                    <com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar
+                        android:id="@+id/volumeController"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Long-press to edit"
-                            android:textColor="@color/secondary_text"
-                            android:textSize="10sp" />
-
-                        <TextView
-                            android:id="@+id/breakTimerOutput"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="05:00"
-                            android:textAlignment="gravity"
-                            android:textAppearance="@android:style/TextAppearance.Material.Display1"
-                            android:textColor="@color/primary_text"
-                            android:textSize="36sp"
-                            tools:gravity="center_horizontal|center" />
-
-                        <Switch
-                            android:id="@+id/autoTimerSwitch"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:text="Auto-Timer"
-                            android:textAppearance="@android:style/TextAppearance.Material.Small"
-                            android:textColor="@color/secondary_text"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
+                        app:bar_color="#388e3c"
+                        app:bar_highlight_color="#4caf50"
+                        app:left_thumb_color="#9e9e9e"
+                        app:left_thumb_color_pressed="#4caf50"
+                        app:max_value="7"
+                        app:min_value="0" />
                 </LinearLayout>
             </LinearLayout>
-
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
-
-            <TextView
-                android:id="@+id/alarmVolumeLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Volume"
-                android:textColor="@color/secondary_text" />
-
-            <com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar
-                android:id="@+id/volumeController"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                app:bar_color="#388e3c"
-                app:bar_highlight_color="#4caf50"
-                app:left_thumb_color="#9e9e9e"
-                app:left_thumb_color_pressed="#4caf50"
-                app:max_value="7"
-                app:min_value="0" />
 
         </LinearLayout>
     </LinearLayout>
