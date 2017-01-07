@@ -374,7 +374,7 @@
                                     android:layout_weight="1"
                                     android:checked="true"
                                     android:gravity="top"
-                                    android:text="Metric"
+                                    android:text="Kilos"
                                     android:textColor="@color/primary_text" />
 
                                 <RadioButton
@@ -387,7 +387,7 @@
                                     android:layout_weight="1"
                                     android:checked="true"
                                     android:gravity="top"
-                                    android:text="Imperial"
+                                    android:text="Pounds"
                                     android:textColor="@color/primary_text" />
 
                             </RadioGroup>

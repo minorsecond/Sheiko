@@ -62,6 +62,52 @@
             android:paddingStart="@dimen/activity_horizontal_margin"
             tools:ignore="RtlHardcoded,UselessParent">
 
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
+            <TextView
+                android:id="@+id/currentWorkoutText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="TextView"
+                android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                android:textColor="?android:attr/textColorPrimary"
+                android:textSize="16sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="5dp" />
+
+            <LinearLayout
+                android:id="@+id/divider1"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:gravity="top"
+                android:orientation="horizontal">
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+
+                <View
+                    android:id="@+id/graphStatsDivider0"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_gravity="top"
+                    android:alpha="0.12"
+                    android:background="@android:color/black" />
+
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1" />
+            </LinearLayout>
+
+
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -69,7 +115,7 @@
 
                 <Space
                     android:layout_width="match_parent"
-                    android:layout_height="15dp" />
+                    android:layout_height="5dp" />
 
                 <com.jjoe64.graphview.GraphView
                     android:id="@+id/graph"
@@ -94,9 +140,8 @@
                         android:id="@+id/statsLayout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center"
                         android:layout_weight="1"
-                        android:gravity="center_vertical"
+                        android:gravity="center"
                         android:orientation="vertical">
 
 
@@ -126,6 +171,10 @@
                                 android:layout_weight="1" />
                         </LinearLayout>
 
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="20dp" />
+
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
@@ -137,7 +186,7 @@
                                 android:layout_height="wrap_content"
                                 android:gravity="center_horizontal"
                                 android:text="Athlete Stats"
-                                android:textAppearance="@android:style/TextAppearance.Material.Headline" />
+                                android:textAppearance="@android:style/TextAppearance.Material.Medium" />
                         </LinearLayout>
 
                         <LinearLayout
