@@ -5,10 +5,11 @@ android {
     buildToolsVersion "25.0.2"
     defaultConfig {
         applicationId "com.rwardrup.sheiko"
-        minSdkVersion 25
+        minSdkVersion 24
         targetSdkVersion 25
         versionCode 1
         versionName "1"
+        multiDexEnabled false
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     lintOptions {
@@ -27,6 +28,7 @@ android {
 
 repositories {
     jcenter()
+    mavenCentral()
 }
 
 dependencies {
@@ -46,4 +48,5 @@ dependencies {
     compile 'com.shawnlin:number-picker:2.3.0'
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.crystal:crystalrangeseekbar:1.1.1'
+    compile 'com.sothree.slidinguppanel:library:3.3.0'
 }
