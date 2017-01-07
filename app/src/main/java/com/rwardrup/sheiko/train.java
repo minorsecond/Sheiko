@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -63,7 +64,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean activityLoaded = false;
-    private boolean timerIsRunning = false;
+    private AudioManager audioManager;
 
     private BroadcastReceiver br = new BroadcastReceiver() {
         @Override
@@ -84,6 +85,8 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
+        audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
+
         // Shared prefs
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPref.edit();
@@ -102,6 +105,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 currentVolume = value.intValue();
                 editor.putInt("alarmVolume", currentVolume);
                 editor.commit();
+                audioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, -1);
                 Log.i("TimerVolume", "Timer volume changed to " + currentVolume);
             }
         });
@@ -285,7 +289,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 // Set up service for timer
                 startService(timerService);
                 Log.i("TimerService", "Started timer service");
-                timerIsRunning = true;
                 }
         });
 
@@ -298,7 +301,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
                 //mCountDownTimer.cancel();
                 stopService(new Intent(train.this, BreakTimer.class));
                 breakTimerOutput.setTextSize(36);
-                timerIsRunning = false;
                 breakTimerOutput.setText(secondsToString(timerDurationSeconds));
                 breakTimerTab.setText("Rest Timer - " + secondsToString(timerDurationSeconds));
                 }
