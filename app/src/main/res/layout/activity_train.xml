@@ -9,14 +9,15 @@
     android:layout_height="match_parent"
     android:gravity="bottom"
     sothree:umanoDragView="@+id/dragView"
-    sothree:umanoOverlay="true"
-    sothree:umanoPanelHeight="68dp"
+    sothree:umanoOverlay="false"
+    sothree:umanoPanelHeight="25dp"
     sothree:umanoParallaxOffset="100dp"
+    sothree:umanoScrollableView="@+id/list"
     sothree:umanoShadowHeight="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
         android:orientation="vertical"
@@ -364,21 +365,15 @@
                 android:layout_gravity="bottom|end"
                 android:src="@drawable/timer" />
 
-            <View
-                android:id="@+id/restTimerDivider"
-                android:layout_width="fill_parent"
-                android:layout_height="1dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="20dp"
-                android:alpha="0.12"
-                android:background="@android:color/black" />
         </LinearLayout>
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/timerLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="bottom"
         android:orientation="vertical">
 
         <TextView
