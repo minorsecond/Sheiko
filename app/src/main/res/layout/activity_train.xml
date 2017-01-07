@@ -221,7 +221,8 @@
                                 android:background="@color/accent"
                                 android:elevation="1dp"
                                 android:text="Prev. Set"
-                                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                                android:textAppearance="@android:style/TextAppearance.Material.Button"
+                                android:textColor="@color/icons" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -270,7 +271,8 @@
                                 android:background="@color/accent"
                                 android:elevation="1dp"
                                 android:text="Next Set"
-                                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                                android:textAppearance="@android:style/TextAppearance.Material.Button"
+                                android:textColor="@color/icons" />
                         </LinearLayout>
 
                         <Space
