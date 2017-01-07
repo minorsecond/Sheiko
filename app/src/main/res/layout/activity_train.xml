@@ -76,6 +76,7 @@
                 android:orientation="vertical">
 
                 <LinearLayout
+                    android:id="@+id/topLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="top"
@@ -327,7 +328,7 @@
                                 <LinearLayout
                                     android:id="@+id/weightLayout"
                                     android:layout_width="0dp"
-                                    android:layout_height="match_parent"
+                                    android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:background="?android:attr/windowBackground"
                                     android:orientation="vertical">
@@ -350,6 +351,7 @@
                                         app:np_textColor="@color/primary_dark"
                                         app:np_textSize="18sp"
                                         app:np_wheelItemCount="5" />
+
                                 </LinearLayout>
 
                             </LinearLayout>
@@ -359,6 +361,13 @@
                     </LinearLayout>
 
                 </LinearLayout>
+
+                <android.support.design.widget.FloatingActionButton
+                    android:id="@+id/timer_fab"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|end"
+                    android:src="@drawable/timer" />
 
                 <View
                     android:id="@+id/restTimerDivider"
