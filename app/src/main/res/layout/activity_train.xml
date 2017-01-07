@@ -205,10 +205,9 @@
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
-                        android:layout_weight="1"
                         android:gravity="center"
                         android:orientation="vertical"
-                        android:paddingBottom="@dimen/activity_vertical_margin">
+                        android:paddingBottom="2dp">
 
                         <LinearLayout
                             android:id="@+id/setSelectionView"
@@ -221,7 +220,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:background="@color/accent"
+                                android:background="@color/primary_dark"
                                 android:elevation="1dp"
                                 android:text="Prev. Set"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button"
@@ -271,7 +270,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:background="@color/accent"
+                                android:background="@color/primary_dark"
                                 android:elevation="1dp"
                                 android:text="Next Set"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button"
@@ -332,39 +331,15 @@
                                 android:orientation="vertical"
                                 android:paddingBottom="9dp">
 
-                                <android.support.design.widget.FloatingActionButton
-                                    android:id="@+id/additionalSetFAB"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_add_black_24dp"
-                                    android:tint="@color/icons" />
-
                                 <android.support.v4.widget.Space
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1" />
 
-                                <android.support.design.widget.FloatingActionButton
-                                    android:id="@+id/removeSetFAB"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_remove_black_24dp"
-                                    android:tint="@color/icons" />
-
                                 <android.support.v4.widget.Space
                                     android:layout_width="wrap_content"
                                     android:layout_height="match_parent"
                                     android:layout_weight="1" />
-
-                                <android.support.design.widget.FloatingActionButton
-                                    android:id="@+id/noteFAB"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_gravity="center"
-                                    android:src="@drawable/ic_create_black_24dp"
-                                    android:tint="@color/icons" />
 
 
                             </LinearLayout>
@@ -415,14 +390,14 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:background="@color/accent"
+                                android:background="@color/primary_dark"
                                 android:elevation="1dp"
                                 android:text="Prev. Workout"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button"
                                 android:textColor="@color/icons" />
 
                             <Space
-                                android:layout_width="0dp"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1" />
 
@@ -431,15 +406,87 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:background="@color/accent"
+                                android:background="@color/primary_dark"
                                 android:elevation="1dp"
                                 android:text="Next Workout"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button"
                                 android:textColor="@color/icons" />
+
+                        </LinearLayout>
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:layout_weight="0" />
+
+                        <View
+                            android:id="@+id/exerciseDivider2"
+                            android:layout_width="70dp"
+                            android:layout_height="1dp"
+                            android:layout_gravity="top|center_horizontal"
+                            android:alpha="0.12"
+                            android:background="@android:color/black" />
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal">
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/noteFAB"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginStart="10dp"
+                                android:src="@drawable/ic_create_black_24dp"
+                                android:tint="@color/icons" />
+
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/removeSetFAB"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:src="@drawable/ic_remove_black_24dp"
+                                android:tint="@color/icons" />
+
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/additionalSetFAB"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:src="@drawable/ic_add_black_24dp"
+                                android:tint="@color/icons" />
+
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <android.support.design.widget.FloatingActionButton
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginBottom="10dp"
+                                android:layout_marginEnd="10dp"
+                                android:src="@drawable/ic_save_black_24dp"
+                                android:tint="@color/icons" />
+
                         </LinearLayout>
 
                     </LinearLayout>
-
 
                 </LinearLayout>
 
