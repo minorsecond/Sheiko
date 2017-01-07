@@ -223,7 +223,8 @@
                                     android:background="@color/accent"
                                     android:elevation="1dp"
                                     android:text="Prev. Set"
-                                    android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                                    android:textAppearance="@android:style/TextAppearance.Material.Button"
+                                    android:textColor="@color/icons" />
 
                                 <LinearLayout
                                     android:layout_width="0dp"
@@ -272,7 +273,8 @@
                                     android:background="@color/accent"
                                     android:elevation="1dp"
                                     android:text="Next Set"
-                                    android:textAppearance="@android:style/TextAppearance.Material.Button" />
+                                    android:textAppearance="@android:style/TextAppearance.Material.Button"
+                                    android:textColor="@color/icons" />
                             </LinearLayout>
 
                             <Space
@@ -466,8 +468,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:bar_color="#388e3c"
-                app:bar_highlight_color="#4caf50"
+                app:bar_color="@color/primary_dark"
+                app:bar_highlight_color="@color/primary"
                 app:left_thumb_color="#9e9e9e"
                 app:left_thumb_color_pressed="#4caf50"
                 app:max_value="7"
