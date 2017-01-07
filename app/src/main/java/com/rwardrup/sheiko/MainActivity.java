@@ -25,6 +25,7 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -42,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private String unitAbbreviation;
     private Double bodyweight;
     private String sex;
+    private String currentCycleText;
     private boolean firstLoad = false;
 
     // Set font
@@ -56,7 +58,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
+
         SharedPreferences sharedpref = PreferenceManager.getDefaultSharedPreferences(this);
+        TextView currentWorkoutDisplay = (TextView) findViewById(R.id.currentWorkoutText);
+
+        // Get current workout
+        String currentProgram = sharedpref.getString("selectedProgram", "Advanced Medium Load");
+        String currentCycle = sharedpref.getString("selectedCycle", "1");
+        String currentWeek = sharedpref.getString("selectedWeek", "1");
+        String currentDay = sharedpref.getString("selectedDay", "1");
+
+        if (Arrays.asList(oldNumberedPrograms).contains(currentProgram)) {
+            currentCycleText = "";
+        } else {
+            currentCycleText = " (" + currentCycle + ") ";
+        }
+
+
+        // Build the string for current workout display
+        String currentWorkoutText = currentProgram + currentCycleText + " - " + "Week " +
+                currentWeek + " " + "Day " + currentDay;
+
+        currentWorkoutDisplay.setText(currentWorkoutText);
 
         // Lift max textviews
         TextView squatMax = (TextView) findViewById(R.id.squatMax);
@@ -291,6 +315,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set Title
         graph.setTitle("Program History");
+        graph.setTitleTextSize(48);
 
         // Handle button clicks that take user to another action.
 
