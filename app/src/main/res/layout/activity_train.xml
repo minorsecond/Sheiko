@@ -10,7 +10,7 @@
     android:gravity="bottom"
     sothree:umanoDragView="@+id/dragView"
     sothree:umanoOverlay="false"
-    sothree:umanoPanelHeight="25dp"
+    sothree:umanoPanelHeight="45dp"
     sothree:umanoParallaxOffset="100dp"
     sothree:umanoScrollableView="@+id/list"
     sothree:umanoShadowHeight="4dp">
@@ -383,7 +383,7 @@
                 sothree:srcCompat="@drawable/expand_up" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/timerTabTitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -497,5 +497,9 @@
             app:left_thumb_color_pressed="#4caf50"
             app:max_value="7"
             app:min_value="0" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
     </LinearLayout>
 </com.sothree.slidinguppanel.SlidingUpPanelLayout>

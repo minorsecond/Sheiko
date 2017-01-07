@@ -55,6 +55,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     Boolean autoTimerEnabled = false;  // TODO: get this from shared preferences
     // Text output
     TextView breakTimerOutput;
+    TextView breakTimerTab;
     TextView currentExercise;
     TextView currentWorkout;
     CrystalSeekbar alarmVolumeControl;
@@ -62,6 +63,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean activityLoaded = false;
+    private boolean timerIsRunning = false;
 
     private BroadcastReceiver br = new BroadcastReceiver() {
         @Override
@@ -156,6 +158,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         nextSetButton = (Button) findViewById(R.id.nextSetButton);
 
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
+        breakTimerTab = (TextView) findViewById(R.id.timerTabTitle);
         currentExercise = (TextView) findViewById(R.id.currentExerciseDisplay);
         currentWorkout = (TextView) findViewById(R.id.currentWorkoutDisplay);
 
@@ -269,6 +272,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
         // Set timer display TODO: Get this to keep incrementing dimer display off-activity
         breakTimerOutput.setText(secondsToString(timerDurationSeconds));
+        breakTimerTab.setText("Rest Timer - " + secondsToString(timerDurationSeconds));
 
         // break timer start / stop
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
@@ -277,10 +281,11 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public void onClick(View v) {
-                    breakTimerOutput.setTextSize(36);
-                    // Set up service for timer
-                    startService(timerService);
-                    Log.i("TimerService", "Started timer service");
+                breakTimerOutput.setTextSize(36);
+                // Set up service for timer
+                startService(timerService);
+                Log.i("TimerService", "Started timer service");
+                timerIsRunning = true;
                 }
         });
 
@@ -289,11 +294,13 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public void onClick(View v) {
-                    millisLeftOnTimer = 0;
-                    //mCountDownTimer.cancel();
-                    stopService(new Intent(train.this, BreakTimer.class));
-                    breakTimerOutput.setTextSize(36);
-                    breakTimerOutput.setText(secondsToString(timerDurationSeconds));
+                millisLeftOnTimer = 0;
+                //mCountDownTimer.cancel();
+                stopService(new Intent(train.this, BreakTimer.class));
+                breakTimerOutput.setTextSize(36);
+                timerIsRunning = false;
+                breakTimerOutput.setText(secondsToString(timerDurationSeconds));
+                breakTimerTab.setText("Rest Timer - " + secondsToString(timerDurationSeconds));
                 }
         });
 
@@ -324,6 +331,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
         // Assign the new custom timer duration to the timerduration variable
         breakTimerOutput.setText(secondsToString(timerDurationSeconds));
+        breakTimerTab.setText("Rest Timer - " + secondsToString(timerDurationSeconds));
         Log.d("NewTimer", "New Timer Duration: " + secondsToString(timerDurationSeconds));
     }
 
@@ -403,7 +411,8 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             millisLeftOnTimer = millisUntilFinished;
             secondsLeftOnTimer = (int) (long) millisUntilFinished / 1000;
             breakTimerOutput.setText(secondsToString(secondsLeftOnTimer));
-            Log.i("BreakTimer", "Countdown seconds remaining: " + millisUntilFinished / 1000);
+            breakTimerTab.setText("Rest Timer - " + secondsToString(secondsLeftOnTimer));
+            Log.i("UpdatingGui", "Countdown seconds remaining: " + millisUntilFinished / 1000);
         }
     }
 
