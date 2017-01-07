@@ -276,7 +276,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
         // Set timer display TODO: Get this to keep incrementing dimer display off-activity
         breakTimerOutput.setText(secondsToString(timerDurationSeconds));
-        breakTimerTab.setText("Rest Timer - " + secondsToString(timerDurationSeconds));
+        breakTimerTab.setText("Rest Timer " + secondsToString(timerDurationSeconds));
 
         // break timer start / stop
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
