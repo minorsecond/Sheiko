@@ -204,7 +204,6 @@
                         android:id="@+id/setsAndWeights"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_weight="1"
                         android:orientation="vertical">
 
                         <LinearLayout
@@ -282,14 +281,13 @@
                         <LinearLayout
                             android:id="@+id/weightSelectionView"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <LinearLayout
                                 android:id="@+id/repsLayout"
                                 android:layout_width="0dp"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:background="?android:attr/windowBackground"
                                 android:gravity="center_horizontal"
@@ -307,7 +305,7 @@
                                 <com.shawnlin.numberpicker.NumberPicker
                                     android:id="@+id/repsPicker"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="150dp"
+                                    android:layout_height="match_parent"
                                     android:layout_gravity="center"
                                     app:np_dividerColor="@color/primary_dark"
                                     app:np_dividerDistance="20dp"
@@ -319,10 +317,52 @@
                                     app:np_wheelItemCount="5" />
                             </LinearLayout>
 
-                            <Space
+                            <LinearLayout
+                                android:id="@+id/liftActionButtons"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:clipToPadding="false"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingBottom="9dp">
+
+                                <android.support.design.widget.FloatingActionButton
+                                    android:id="@+id/additionalSetFAB"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_add_black_24dp"
+                                    android:tint="@color/icons" />
+
+                                <android.support.v4.widget.Space
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1" />
+
+                                <android.support.design.widget.FloatingActionButton
+                                    android:id="@+id/removeSetFAB"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_remove_black_24dp"
+                                    android:tint="@color/icons" />
+
+                                <android.support.v4.widget.Space
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1" />
+
+                                <android.support.design.widget.FloatingActionButton
+                                    android:id="@+id/noteFAB"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:src="@drawable/ic_create_black_24dp"
+                                    android:tint="@color/icons" />
+
+
+                            </LinearLayout>
 
                             <LinearLayout
                                 android:id="@+id/weightLayout"
@@ -342,7 +382,7 @@
                                 <com.shawnlin.numberpicker.NumberPicker
                                     android:id="@+id/weightPicker"
                                     android:layout_width="wrap_content"
-                                    android:layout_height="150dp"
+                                    android:layout_height="match_parent"
                                     android:layout_gravity="center"
                                     app:np_dividerColor="@color/primary_dark"
                                     app:np_dividerDistance="20dp"
