@@ -223,7 +223,7 @@ public class Settings extends AppCompatActivity {
     // Create user parameter DB
     public class userParametersHelper extends SQLiteOpenHelper {
 
-        public static final String DATABASE_NAME = "testing_database";  // TODO: change this
+        public static final String DATABASE_NAME = "SheikoDb";  // TODO: change this
         private static final int DATABASE_VERSION = 1;
 
         public userParametersHelper(Context context) {
@@ -247,7 +247,7 @@ public class Settings extends AppCompatActivity {
     // Create user maxes DB
     public class userMaxesHelper extends SQLiteOpenHelper {
 
-        public static final String DATABASE_NAME = "testing_database";  // TODO: change this
+        public static final String DATABASE_NAME = "SheikoDb";  // TODO: change this
         private static final int DATABASE_VERSION = 1;
 
         public userMaxesHelper(Context context) {
