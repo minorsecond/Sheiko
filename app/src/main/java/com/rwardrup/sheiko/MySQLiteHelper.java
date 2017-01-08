@@ -11,6 +11,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Table names
@@ -123,7 +126,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Get workout history
+    // Get workout history by date
     public Workout getSpecificWorkoutByDate(int date) {
 
         // 1. Get reference to readable db
@@ -158,6 +161,36 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         // 6. Return workout
         return workout;
+    }
+
+    // Get all workout history
+    public List<Workout> getAllWorkoutHistory() {
+        List<Workout> workouts = new LinkedList<Workout>();
+
+        // 1. Build the query
+        String query = "SELECT * FROM " + TABLE_HISTORY;
+
+        // 2. Get reference to the writable db
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        // 3. Go over each row. Build workout and add it to list
+        Workout workout = null;
+        if (cursor.moveToFirst()) {
+            do {
+                workout = new Workout();
+                workout.setWorkoutId(cursor.getString(0));
+                workout.setWorkoutName(cursor.getString(1));
+                workout.setDate(cursor.getInt(2));
+
+                // Add workout to workouts
+                workouts.add(workout);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("getAllWorkouts()", workouts.toString());
+
+        return workouts;
     }
 
 }
