@@ -69,8 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
         // get all workouts
         List<Workout> workoutHistory = db.getAllWorkoutHistory();
-        Log.d("WorkoutHistory", "Workout history list: " + workoutHistory);
 
+        for (int i = 0; i < workoutHistory.size(); i++) {
+            Log.i("historyElement", "Workout session: " + workoutHistory.get(i).getDate());
+        }
 
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
 
@@ -247,15 +249,33 @@ public class MainActivity extends AppCompatActivity {
         //totalWeightLifted.setDataPointsRadius(10);
         //totalWeightLifted.setThickness(8);
 
-        LineGraphSeries<DataPoint> numberLifts = new LineGraphSeries<>(new DataPoint[]{
+        LineGraphSeries<DataPoint> numberLifts = new LineGraphSeries<>();
+        LineGraphSeries<DataPoint> averageWeightLifted = new LineGraphSeries<>();
 
-                new DataPoint(d1, 250),
-                new DataPoint(d2, 220),
-                new DataPoint(d3, 275),
-                new DataPoint(d4, 325),
-                new DataPoint(d5, 230),
-                new DataPoint(d6, 210)
-        });
+        for (int i = 0; i < workoutHistory.size(); i++) {
+            Log.i("historyElement", "Workout session: " + workoutHistory.get(i).getDate());
+            String _date = workoutHistory.get(i).getDate();
+            Integer nLifts = workoutHistory.get(i).getAllVolume();
+            Float averageWeightLiftedAll = workoutHistory.get(i).getAverageWeightLiftedAll();
+            Date date = null;
+
+            try {
+                date = df.parse(_date);
+
+                // Add the volume data points
+                DataPoint volumedataPoint = new DataPoint(date, nLifts);
+                numberLifts.appendData(volumedataPoint, false, 1000, false);
+
+                // Add the AWL data points
+                DataPoint averageWeightLiftedDataPoint = new DataPoint(date, averageWeightLiftedAll);
+                averageWeightLifted.appendData(averageWeightLiftedDataPoint, false, 1000, false);
+
+            } catch (ParseException e) {
+                Log.e("DateParseError", "ParseException in reading workout history: " + e);
+            }
+        }
+
+        graph.addSeries(numberLifts);
 
         // Series style for number of lifts
         numberLifts.setTitle("# Lifts");
@@ -263,16 +283,6 @@ public class MainActivity extends AppCompatActivity {
         numberLifts.setDrawDataPoints(true);
         numberLifts.setDataPointsRadius(10);
         numberLifts.setThickness(8);
-
-        LineGraphSeries<DataPoint> averageWeightLifted = new LineGraphSeries<>(new DataPoint[]{
-
-                new DataPoint(d1, 350),
-                new DataPoint(d2, 375),
-                new DataPoint(d3, 315),
-                new DataPoint(d4, 335),
-                new DataPoint(d5, 375),
-                new DataPoint(d6, 395)
-        });
 
         // Series style for Average Weight Lifted
         averageWeightLifted.setTitle("AWL");
@@ -282,7 +292,7 @@ public class MainActivity extends AppCompatActivity {
         averageWeightLifted.setThickness(8);
 
         //graph.addSeries(totalWeightLifted);
-        graph.addSeries(numberLifts);
+        //graph.addSeries(numberLifts);
         graph.getSecondScale().addSeries(averageWeightLifted);
 
         // Set the date label formatter
@@ -308,9 +318,9 @@ public class MainActivity extends AppCompatActivity {
 
         // Set vertical axis color
         glr.setVerticalLabelsColor(Color.rgb(38, 138, 58));
-        // Set second scale bounds
-        graph.getSecondScale().setMinY(150);
-        graph.getSecondScale().setMaxY(450);
+        // Set second scale bounds TODO: Set these programattically
+        graph.getSecondScale().setMinY(0);
+        graph.getSecondScale().setMaxY(350);
         glr.setVerticalLabelsSecondScaleColor(Color.rgb(0, 119, 211));
         graph.getSecondScale().setVerticalAxisTitle("# Lifts");
 

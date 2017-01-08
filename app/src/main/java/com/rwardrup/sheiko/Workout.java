@@ -55,14 +55,22 @@ public class Workout {
         this.workoutId = workoutId;
     }
 
-    // Setters
-
-    public int getDate() {
-        return -1;
+    public String getDate() {
+        return date;
     }
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    // Setters
+
+    public Integer getAllVolume() {
+        return squatSets + benchSets + deadliftSets;  // TODO: Make this actually reflect volume
+    }
+
+    public float getAverageWeightLiftedAll() {
+        return averageWeightLiftedAll;
     }
 
     public void setSquatSets(int squatSets) {
