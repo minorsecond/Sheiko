@@ -31,17 +31,17 @@ public class Workout {
         return "PLACEHOLDER";
     }
 
-    public int getDate() {
-        return -1;
+    public void setWorkoutId(String workoutId) {
+        this.workoutId = workoutId;
     }
 
     // Setters
 
-    public String setWorkoutId(String workoutId) {
-        return workoutId;
+    public int getDate() {
+        return -1;
     }
 
-    public int setDate(int date) {
-        return date;
+    public void setDate(int date) {
+        this.date = date;
     }
 }

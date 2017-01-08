@@ -47,7 +47,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     // Database Version
     private static final int DATABASE_VERSION = 1;
     // Database Name
-    private static final String DATABASE_NAME = "SheikoDb";
+    private static final String DATABASE_NAME = "SheikoDbTest";
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -149,8 +149,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         // 4. Build workout object
         Workout workout = new Workout();
-        workout.setWorkoutId(cursor.getString(0));
-        workout.setDate(cursor.getInt(1));
+        workout.setWorkoutId(cursor.getString(1));
+        workout.setDate(cursor.getInt(2));
 
         // Log
         Log.d("getWorkout(" + date + ")", workout.toString());

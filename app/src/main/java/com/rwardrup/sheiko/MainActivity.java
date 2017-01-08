@@ -28,6 +28,7 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 import java.text.ParseException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -58,6 +59,17 @@ public class MainActivity extends AppCompatActivity {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Set up DB connection
+        MySQLiteHelper db = new MySQLiteHelper(this);
+
+        /**
+         * CRUD Operations
+         **/
+
+        // get all workouts
+        List<Workout> workoutHistory = db.getAllWorkoutHistory();
+
 
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
 
@@ -352,9 +364,7 @@ public class MainActivity extends AppCompatActivity {
     private void readFromUserMaxDb() {
         SQLiteDatabase database = new userMaxesHelper(this).getReadableDatabase();
 
-        int squat;
-        int bench;
-        int deadlift;
+        Log.d("ReadUserMaxTable", "Attempting to read from User Max table");
 
         // Get the last user parameter entry
         String[] columns = {
@@ -446,7 +456,7 @@ public class MainActivity extends AppCompatActivity {
     // Create user parameter DB
     public class userParametersHelper extends SQLiteOpenHelper {
 
-        public static final String DATABASE_NAME = "testing_database";  // TODO: change this
+        public static final String DATABASE_NAME = "SheikoDb";  // TODO: change this
         private static final int DATABASE_VERSION = 1;
 
         public userParametersHelper(Context context) {
@@ -470,7 +480,7 @@ public class MainActivity extends AppCompatActivity {
     // Create user maxes DB
     public class userMaxesHelper extends SQLiteOpenHelper {
 
-        public static final String DATABASE_NAME = "testing_database";  // TODO: change this
+        public static final String DATABASE_NAME = "SheikoDb";  // TODO: change this
         private static final int DATABASE_VERSION = 1;
 
         public userMaxesHelper(Context context) {
