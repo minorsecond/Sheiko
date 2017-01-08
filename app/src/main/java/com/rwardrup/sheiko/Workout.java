@@ -9,6 +9,7 @@ import android.util.Log;
 
 public class Workout {
 
+    public int totalReps;
     private int _id; // PKEY
     private String workoutId;  // Identifies the last workout performed will be a UUID
     private String date;  // date the workout was performed
@@ -22,6 +23,9 @@ public class Workout {
     private float averageWeightLiftedSquat;
     private float averageWeightLiftedBench;
     private float averageWeightLiftedDeadlift;
+    private int squatReps;
+    private int benchReps;
+    private int deadliftReps;
 
     public Workout() {
     }
@@ -36,6 +40,9 @@ public class Workout {
         this.squatTotalWeight = squatTotalWeight;
         this.benchTotalWeight = benchTotalWeight;
         this.deadliftTotalWeight = deadliftTotalWeight;
+        this.squatReps = squatReps;
+        this.benchReps = benchReps;
+        this.deadliftReps = deadliftReps;
     }
 
     // Getters
@@ -63,11 +70,11 @@ public class Workout {
         this.date = date;
     }
 
-    // Setters
-
-    public Integer getAllVolume() {
-        return squatSets + benchSets + deadliftSets;  // TODO: Make this actually reflect volume
+    public Integer getTotalReps() {
+        return this.squatReps + this.benchReps + this.deadliftReps;  // TODO: Make this actually reflect volume
     }
+
+    // Setters
 
     public float getAverageWeightLiftedAll() {
         return averageWeightLiftedAll;
@@ -104,4 +111,21 @@ public class Workout {
         Log.d("AverageWeightLiftedAll", "AWL ALL: " + this.averageWeightLiftedAll);
     }
 
+    public void setSquatReps(int squatReps) {
+        this.squatReps = squatReps;
+        Log.i("SquatReps", "Squat reps: " + this.squatReps);
+    }
+
+    public void setBenchReps(int benchReps) {
+        this.benchReps = benchReps;
+    }
+
+    public void setDeadliftReps(int deadliftReps) {
+        this.deadliftReps = deadliftReps;
+    }
+
+    public void setTotalReps() {
+        this.totalReps = squatReps + benchReps + deadliftReps;
+        Log.i("TotalReps", "Total reps: " + this.totalReps);
+    }
 }

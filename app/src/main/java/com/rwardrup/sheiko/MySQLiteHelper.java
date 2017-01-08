@@ -35,6 +35,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String exerciseCategory = "exercise_category";
     private static final String date = "date";
 
+
     // Define columns in each table
     private static final String[] historyColumns = {ID, workoutId, date};
 
@@ -66,6 +67,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 "\t`squatTotalWeight`\tINTEGER,\n" +
                 "\t`benchTotalWeight`\tINTEGER,\n" +
                 "\t`deadliftTotalWeight`\tINTEGER,\n" +
+                "\t`squatReps`\tINTEGER,\n" +
+                "\t`benchReps`\tINTEGER,\n" +
+                "\t`deadliftReps`\tINTEGER,\n" +
                 "\t`programTableName`\tTEXT\n" +
                 ");";
 
@@ -192,6 +196,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 workout.setSquatTotalWeight(cursor.getInt(6));
                 workout.setBenchTotalWeight(cursor.getInt(7));
                 workout.setDeadliftTotalWeight(cursor.getInt(8));
+                workout.setSquatReps(cursor.getInt(9));
+                workout.setBenchReps(cursor.getInt(10));
+                workout.setDeadliftReps(cursor.getInt(11));
                 workout.setAverageWeightLiftedAll();
 
                 // Add workout to workouts

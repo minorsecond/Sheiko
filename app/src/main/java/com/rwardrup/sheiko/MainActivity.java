@@ -252,12 +252,23 @@ public class MainActivity extends AppCompatActivity {
         LineGraphSeries<DataPoint> numberLifts = new LineGraphSeries<>();
         LineGraphSeries<DataPoint> averageWeightLifted = new LineGraphSeries<>();
 
+        float minVolume = 999;
+        float maxVolume = 0;
+
         for (int i = 0; i < workoutHistory.size(); i++) {
             Log.i("historyElement", "Workout session: " + workoutHistory.get(i).getDate());
             String _date = workoutHistory.get(i).getDate();
-            Integer nLifts = workoutHistory.get(i).getAllVolume();
+            Integer nLifts = workoutHistory.get(i).getTotalReps();
+            Log.i("WorkoutHistory", "Volume: " + nLifts);
             Float averageWeightLiftedAll = workoutHistory.get(i).getAverageWeightLiftedAll();
             Date date = null;
+
+            // Set the minimum and max values for graph second axis
+            if (averageWeightLiftedAll <= minVolume) {
+                minVolume = averageWeightLiftedAll - 10;
+            } else if (averageWeightLiftedAll >= maxVolume) {
+                maxVolume = averageWeightLiftedAll + 10;
+            }
 
             try {
                 date = df.parse(_date);
@@ -319,8 +330,8 @@ public class MainActivity extends AppCompatActivity {
         // Set vertical axis color
         glr.setVerticalLabelsColor(Color.rgb(38, 138, 58));
         // Set second scale bounds TODO: Set these programattically
-        graph.getSecondScale().setMinY(0);
-        graph.getSecondScale().setMaxY(350);
+        graph.getSecondScale().setMinY(minVolume);
+        graph.getSecondScale().setMaxY(maxVolume);
         glr.setVerticalLabelsSecondScaleColor(Color.rgb(0, 119, 211));
         graph.getSecondScale().setVerticalAxisTitle("# Lifts");
 
