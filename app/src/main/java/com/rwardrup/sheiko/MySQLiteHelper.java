@@ -56,11 +56,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // SQL statement to create book table
-        String CREATE_HISTORY_TABLE = "CREATE TABLE `history` (\n" +
+        String CREATE_HISTORY_TABLE = "CCREATE TABLE `history` (\n" +
                 "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
                 "\t`workoutId`\tTEXT NOT NULL UNIQUE,\n" +
-                "\t`date`\tINTEGER NOT NULL,\n" +
-                "\tFOREIGN KEY(`workoutId`) REFERENCES `workouts`(`workout_uuid`)\n" +
+                "\t`date`\tTEXT NOT NULL,\n" +
+                "\t`squatVolume`\tINTEGER,\n" +
+                "\t`benchVolume`\tINTEGER,\n" +
+                "\t`deadliftVolume`\tINTEGER,\n" +
+                "\t`squatTotalWeight`\tINTEGER,\n" +
+                "\t`benchTotalWeight`\tINTEGER,\n" +
+                "\t`deadliftTotalWeight`\tINTEGER,\n" +
+                "\t`programTableName`\tTEXT\n" +
                 ");";
 
         String CREATE_CUSTOM_WORKOUT_TABLE = "CREATE TABLE `customPrograms` (\n" +
@@ -150,7 +156,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         // 4. Build workout object
         Workout workout = new Workout();
         workout.setWorkoutId(cursor.getString(1));
-        workout.setDate(cursor.getInt(2));
+        workout.setDate(cursor.getString(2));
 
         // Log
         Log.d("getWorkout(" + date + ")", workout.toString());
@@ -178,8 +184,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         if (cursor.moveToFirst()) {
             do {
                 workout = new Workout();
-                workout.setWorkoutId(cursor.getString(0));
-                workout.setDate(cursor.getInt(1));
+                workout.setWorkoutId(cursor.getString(1));
+                workout.setDate(cursor.getString(2));
 
                 // Add workout to workouts
                 workouts.add(workout);

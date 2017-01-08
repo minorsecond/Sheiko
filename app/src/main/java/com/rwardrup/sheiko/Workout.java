@@ -9,12 +9,12 @@ public class Workout {
 
     private int _id; // PKEY
     private String workoutId;  // Identifies the last workout performed will be a UUID
-    private int date;  // date the workout was performed
+    private String date;  // date the workout was performed
 
     public Workout() {
     }
 
-    public Workout(String workoutId, int date) {
+    public Workout(String workoutId, String date) {
         super();
         this.workoutId = workoutId;
         this.date = date;
@@ -41,7 +41,7 @@ public class Workout {
         return -1;
     }
 
-    public void setDate(int date) {
+    public void setDate(String date) {
         this.date = date;
     }
 }
