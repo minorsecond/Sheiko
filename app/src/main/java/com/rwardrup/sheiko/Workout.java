@@ -9,7 +9,6 @@ public class Workout {
 
     private int _id; // PKEY
     private String workoutId;  // Identifies the last workout performed will be a UUID
-    private String workoutName;  // Identifies the last workout performed
     private int date;  // date the workout was performed
 
     public Workout() {
@@ -44,9 +43,5 @@ public class Workout {
 
     public int setDate(int date) {
         return date;
-    }
-
-    public String setWorkoutName(String workoutName) {
-        return workoutName;
     }
 }

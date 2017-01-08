@@ -150,8 +150,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         // 4. Build workout object
         Workout workout = new Workout();
         workout.setWorkoutId(cursor.getString(0));
-        workout.setWorkoutName(cursor.getString(1));
-        workout.setDate(cursor.getInt(2));
+        workout.setDate(cursor.getInt(1));
 
         // Log
         Log.d("getWorkout(" + date + ")", workout.toString());
@@ -180,8 +179,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             do {
                 workout = new Workout();
                 workout.setWorkoutId(cursor.getString(0));
-                workout.setWorkoutName(cursor.getString(1));
-                workout.setDate(cursor.getInt(2));
+                workout.setDate(cursor.getInt(1));
 
                 // Add workout to workouts
                 workouts.add(workout);
@@ -190,7 +188,32 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         Log.d("getAllWorkouts()", workouts.toString());
 
+        // Close the cursor
+        cursor.close();
+
         return workouts;
+    }
+
+    // Update workout history
+    public int updateWorkoutHistory(Workout workout) {
+        // 1. Get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // 2. Create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(workoutId, workout.getWorkoutId());
+        values.put(date, workout.getDate());
+
+        // 3. Update row
+        int i = db.update(TABLE_HISTORY,
+                values,
+                ID + " = ?",
+                new String[]{String.valueOf(workout.getWorkoutId())});
+
+        // 5. Close DB
+        db.close();
+
+        return i;
     }
 
 }
