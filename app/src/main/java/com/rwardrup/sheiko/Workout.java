@@ -8,7 +8,8 @@ package com.rwardrup.sheiko;
 public class Workout {
 
     private int _id; // PKEY
-    private String workoutId;  // Identifies the last workout performed
+    private String workoutId;  // Identifies the last workout performed will be a UUID
+    private String workoutName;  // Identifies the last workout performed
     private int date;  // date the workout was performed
 
     public Workout() {
@@ -20,10 +21,32 @@ public class Workout {
         this.date = date;
     }
 
-    // Getters & Setters
+    // Getters
     @Override
     public String toString() {
         return "Workout [_id=" + _id + ", workoutId=" + workoutId + ", date=" + date
                 + "]";
+    }
+
+    public String getWorkoutId() {
+        return "PLACEHOLDER";
+    }
+
+    public int getDate() {
+        return -1;
+    }
+
+    // Setters
+
+    public String setWorkoutId(String workoutId) {
+        return workoutId;
+    }
+
+    public int setDate(int date) {
+        return date;
+    }
+
+    public String setWorkoutName(String workoutName) {
+        return workoutName;
     }
 }

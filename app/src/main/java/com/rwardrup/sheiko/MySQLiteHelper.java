@@ -4,11 +4,42 @@ package com.rwardrup.sheiko;
  * Created by rwardrup on 1/8/17.
  */
 
+import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class MySQLiteHelper extends SQLiteOpenHelper {
+
+    // Table names
+    private static final String TABLE_HISTORY = "history";
+    private static final String TABLE_CUSTOM_WORKOUTS = "customPrograms";
+    private static final String TABLE_ADVANCED_MEDIUM_LOAD = "workout_advanced_medium_load";
+
+    // Table columns
+    private static final String ID = "_id";
+    private static final String customWorkoutName = "customWorkoutName";
+    private static final String workoutId = "workoutId";
+    private static final String liftName = "lift_name";
+    private static final String sets = "sets";
+    private static final String reps = "reps";
+    private static final String percentage = "percentage";
+    private static final String dayNumber = "day_number";
+    private static final String cycleNumber = "cycle_number";
+    private static final String weekNumber = "week_number";
+    private static final String exerciseCategory = "exercise_category";
+    private static final String date = "date";
+
+    // Define columns in each table
+    private static final String[] historyColumns = {ID, workoutId, date};
+
+    private static final String[] customProgramColumns = {ID, customWorkoutName, liftName, sets,
+            reps, percentage, dayNumber, cycleNumber, weekNumber, exerciseCategory};
+
+    private static final String[] advancedMediumLoadColumns = {ID, liftName, sets, reps, percentage,
+            dayNumber, cycleNumber, weekNumber, exerciseCategory};
 
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -68,6 +99,65 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         // create fresh tables
         this.onCreate(db);
+    }
+
+    // Add workout history
+    public void addWorkoutHistory(Workout workout) {
+        // For logging
+        Log.d("addWorkout", workout.toString());
+
+        // 1. Get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // 2. Create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(workoutId, workout.getWorkoutId());
+        values.put(date, workout.getDate());
+
+        // 3. Insert
+        db.insert(TABLE_HISTORY,  // table
+                null,  // nullColumnHack
+                values); // key/value keys = column names/ values = col
+
+        // 4. Close
+        db.close();
+    }
+
+    // Get workout history
+    public Workout getSpecificWorkoutByDate(int date) {
+
+        // 1. Get reference to readable db
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // 2. Build query TODO: make this actually do what I want (get by date integer)
+        Cursor cursor = db.query(TABLE_HISTORY,
+                historyColumns,
+                " _id = ?", // selections
+                new String[]{String.valueOf(date)},  // Selection's args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null // h. limit
+        );
+
+        // 3. if we got results, show the first
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        // 4. Build workout object
+        Workout workout = new Workout();
+        workout.setWorkoutId(cursor.getString(0));
+        workout.setWorkoutName(cursor.getString(1));
+        workout.setDate(cursor.getInt(2));
+
+        // Log
+        Log.d("getWorkout(" + date + ")", workout.toString());
+
+        // 5. Close cursor
+        cursor.close();
+
+        // 6. Return workout
+        return workout;
     }
 
 }
