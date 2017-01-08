@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "408529677938",
+    "firebase_url": "https://sheiko-pl.firebaseio.com",
+    "project_id": "sheiko-pl",
+    "storage_bucket": "sheiko-pl.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:408529677938:android:3e362c725cb43496",
+        "android_client_info": {
+          "package_name": "com.rwardrup.sheiko"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "408529677938-p0htn9ti7a0fjiekog9grlc4p1tmsj7b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.rwardrup.sheiko",
+            "certificate_hash": "AEF7D7412F3DB9EF37D385A88C7E8A20F2FF0AD6"
+          }
+        },
+        {
+          "client_id": "408529677938-b0s0egn012qmgcfm8ck6spdu61frlepi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDalQEgwC0gpSo7MCEjzbp9f_iRABuCCHY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "408529677938-b0s0egn012qmgcfm8ck6spdu61frlepi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
