@@ -132,7 +132,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         // 2. Build query TODO: make this actually do what I want (get by date integer)
         Cursor cursor = db.query(TABLE_HISTORY,
                 historyColumns,
-                " _id = ?", // selections
+                " date = ?", // selections
                 new String[]{String.valueOf(date)},  // Selection's args
                 null, // e. group by
                 null, // f. having
