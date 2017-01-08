@@ -17,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LegendRenderer;
@@ -370,9 +371,15 @@ public class MainActivity extends AppCompatActivity {
 
         // Get values from DB cursor
         if (cursor.moveToLast()) {
-            squat_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.SQUAT_MAX)));
-            bench_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.BENCH_MAX)));
-            deadlift_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.DEADLIFT_MAX)));
+            try {
+                squat_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.SQUAT_MAX)));
+                bench_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.BENCH_MAX)));
+                deadlift_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.DEADLIFT_MAX)));
+            } catch (Exception e) {
+                // User probably didn't save anything on the settings page
+                FirebaseCrash.report(new Exception("DbReadError: " + e));
+                Log.e("DbReadError", "Db Read Error: " + e);
+            }
         }
         cursor.close();
 

@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.Spinner;
 
+import com.google.firebase.crash.FirebaseCrash;
 import com.rwardrup.sheiko.databinding.ActivitySettingsBinding;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -93,6 +94,7 @@ public class Settings extends AppCompatActivity {
             readFromUserMaxDb(activitySettingsBinding);  // Load databases
         } catch (NullPointerException e) {
             Log.d("DbReadError", "User max DB read error: " + e);  // First creation of database.
+            FirebaseCrash.report(new Exception("DbReadError: " + e));
         }
 
         // Handle user clicking on the timer settings button
@@ -134,11 +136,17 @@ public class Settings extends AppCompatActivity {
         Log.i("WriteParameters", "Writing the following parameters: " + bodyweight + ", " +
                 sex + ", " + unit);
 
-        editor.putString("unit", unit);
-        editor.putLong("bodyweight", Long.parseLong(binding.weightInput.getText().toString()));
-        editor.putString("sex", binding.genderSpinner.getSelectedItem().toString());
-        editor.putInt("sexId", binding.genderSpinner.getSelectedItemPosition());
-        editor.commit();
+        try {
+            editor.putString("unit", unit);
+            editor.putLong("bodyweight", Long.parseLong(binding.weightInput.getText().toString()));
+            editor.putString("sex", binding.genderSpinner.getSelectedItem().toString());
+            editor.putInt("sexId", binding.genderSpinner.getSelectedItemPosition());
+            editor.commit();
+        } catch (Exception e) {
+            // User probably tried to save without entering anything
+            FirebaseCrash.report(new Exception("DbWriteError: " + e));
+            Log.e("DbWriteError", "DB Write error: " + e);
+        }
     }
 
     // Save user maxes to DB
@@ -180,9 +188,15 @@ public class Settings extends AppCompatActivity {
 
         // Get values from DB cursor
         if (cursor.moveToLast()) {
-            squat_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.SQUAT_MAX)));
-            bench_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.BENCH_MAX)));
-            deadlift_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.DEADLIFT_MAX)));
+            try {
+                squat_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.SQUAT_MAX)));
+                bench_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.BENCH_MAX)));
+                deadlift_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.DEADLIFT_MAX)));
+            } catch (Exception e) {
+                // DB Was empty. User probably previously didn't enter anything before saving
+                FirebaseCrash.report(new Exception("DbReadError: " + e));
+                Log.e("DbReadError", "Db read error: " + e);
+            }
         }
         cursor.close();
 

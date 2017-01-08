@@ -49,6 +49,7 @@ dependencies {
     compile 'uk.co.chrisjenx:calligraphy:2.2.0'
     compile 'com.crystal:crystalrangeseekbar:1.1.1'
     compile 'com.sothree.slidinguppanel:library:3.3.0'
+    compile 'com.google.firebase:firebase-crash:10.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
