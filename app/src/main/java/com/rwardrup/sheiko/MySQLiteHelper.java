@@ -216,4 +216,19 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return i;
     }
 
+    // Delete workout
+    public void deleteWorkoutFromHistory(Workout workout) {
+        // 1. Get reference to writable db
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // 2. Delete
+        db.delete(TABLE_HISTORY, ID + " = ?", new String[]{String.valueOf(workout.getWorkoutId())});
+
+        //3. Close
+        db.close();
+
+        // log
+        Log.d("DeleteWorkout", workout.toString());
+    }
+
 }
