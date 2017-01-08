@@ -325,7 +325,7 @@ public class MainActivity extends AppCompatActivity {
 
         // Set padding for axis labels
         GridLabelRenderer glr = graph.getGridLabelRenderer();
-        glr.setPadding(12);
+        glr.setPadding(20);
 
         // Set vertical axis color
         glr.setVerticalLabelsColor(Color.rgb(38, 138, 58));
