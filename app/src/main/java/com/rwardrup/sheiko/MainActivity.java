@@ -69,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
 
         // get all workouts
         List<Workout> workoutHistory = db.getAllWorkoutHistory();
+        Log.d("WorkoutHistory", "Workout history list: " + workoutHistory);
 
 
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};

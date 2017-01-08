@@ -56,13 +56,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // SQL statement to create book table
-        String CREATE_HISTORY_TABLE = "CCREATE TABLE `history` (\n" +
+        String CREATE_HISTORY_TABLE = "CREATE TABLE `history` (\n" +
                 "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
                 "\t`workoutId`\tTEXT NOT NULL UNIQUE,\n" +
                 "\t`date`\tTEXT NOT NULL,\n" +
-                "\t`squatVolume`\tINTEGER,\n" +
-                "\t`benchVolume`\tINTEGER,\n" +
-                "\t`deadliftVolume`\tINTEGER,\n" +
+                "\t`squatSets`\tINTEGER,\n" +
+                "\t`benchSets`\tINTEGER,\n" +
+                "\t`deadliftSets`\tINTEGER,\n" +
                 "\t`squatTotalWeight`\tINTEGER,\n" +
                 "\t`benchTotalWeight`\tINTEGER,\n" +
                 "\t`deadliftTotalWeight`\tINTEGER,\n" +
@@ -186,6 +186,13 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 workout = new Workout();
                 workout.setWorkoutId(cursor.getString(1));
                 workout.setDate(cursor.getString(2));
+                workout.setSquatSets(cursor.getInt(3));
+                workout.setBenchSets(cursor.getInt(4));
+                workout.setDeadliftSets(cursor.getInt(5));
+                workout.setSquatTotalWeight(cursor.getInt(6));
+                workout.setBenchTotalWeight(cursor.getInt(7));
+                workout.setDeadliftTotalWeight(cursor.getInt(8));
+                workout.setAverageWeightLiftedAll();
 
                 // Add workout to workouts
                 workouts.add(workout);
