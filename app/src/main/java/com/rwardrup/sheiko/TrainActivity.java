@@ -207,6 +207,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         startService(timerService);
                     }
                 }
+
+                // Commit the current repPicker and weightPicker values to Workout history table
+
             }
         });
 

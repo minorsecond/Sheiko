@@ -134,17 +134,17 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     // Add workout history
-    public void addWorkoutHistory(Workout workout) {
+    public void addWorkoutHistory(WorkoutStatistics workoutStatistics) {
         // For logging
-        Log.d("addWorkout", workout.toString());
+        Log.d("addWorkout", workoutStatistics.toString());
 
         // 1. Get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
 
         // 2. Create ContentValues to add key "column"/value
         ContentValues values = new ContentValues();
-        values.put(workoutId, workout.getWorkoutId());
-        values.put(date, workout.getDate());
+        values.put(workoutId, workoutStatistics.getWorkoutId());
+        values.put(date, workoutStatistics.getDate());
 
         // 3. Insert
         db.insert(TABLE_HISTORY,  // table
@@ -156,7 +156,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     // Get workout history by date
-    public Workout getSpecificWorkoutByDate(int date) {
+    public WorkoutStatistics getSpecificWorkoutByDate(int date) {
 
         // 1. Get reference to readable db
         SQLiteDatabase db = this.getReadableDatabase();
@@ -177,23 +177,23 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         // 4. Build workout object
-        Workout workout = new Workout();
-        workout.setWorkoutId(cursor.getString(1));
-        workout.setDate(cursor.getString(2));
+        WorkoutStatistics workoutStatistics = new WorkoutStatistics();
+        workoutStatistics.setWorkoutId(cursor.getString(1));
+        workoutStatistics.setDate(cursor.getString(2));
 
         // Log
-        Log.d("getWorkout(" + date + ")", workout.toString());
+        Log.d("getWorkout(" + date + ")", workoutStatistics.toString());
 
         // 5. Close cursor
         cursor.close();
 
         // 6. Return workout
-        return workout;
+        return workoutStatistics;
     }
 
     // Get all workout history
-    public List<Workout> getAllWorkoutHistory() {
-        List<Workout> workouts = new LinkedList<Workout>();
+    public List<WorkoutStatistics> getAllWorkoutHistory() {
+        List<WorkoutStatistics> workoutStatisticses = new LinkedList<WorkoutStatistics>();
 
         // 1. Build the query
         String query = "SELECT * FROM " + TABLE_HISTORY;
@@ -203,51 +203,51 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         Cursor cursor = db.rawQuery(query, null);
 
         // 3. Go over each row. Build workout and add it to list
-        Workout workout = null;
+        WorkoutStatistics workoutStatistics = null;
         if (cursor.moveToFirst()) {
             do {
-                workout = new Workout();
-                workout.setWorkoutId(cursor.getString(1));
-                workout.setDate(cursor.getString(2));
-                workout.setSquatSets(cursor.getInt(3));
-                workout.setBenchSets(cursor.getInt(4));
-                workout.setDeadliftSets(cursor.getInt(5));
-                workout.setSquatTotalWeight(cursor.getInt(6));
-                workout.setBenchTotalWeight(cursor.getInt(7));
-                workout.setDeadliftTotalWeight(cursor.getInt(8));
-                workout.setSquatReps(cursor.getInt(9));
-                workout.setBenchReps(cursor.getInt(10));
-                workout.setDeadliftReps(cursor.getInt(11));
-                workout.setAverageWeightLiftedAll();
+                workoutStatistics = new WorkoutStatistics();
+                workoutStatistics.setWorkoutId(cursor.getString(1));
+                workoutStatistics.setDate(cursor.getString(2));
+                workoutStatistics.setSquatSets(cursor.getInt(3));
+                workoutStatistics.setBenchSets(cursor.getInt(4));
+                workoutStatistics.setDeadliftSets(cursor.getInt(5));
+                workoutStatistics.setSquatTotalWeight(cursor.getInt(6));
+                workoutStatistics.setBenchTotalWeight(cursor.getInt(7));
+                workoutStatistics.setDeadliftTotalWeight(cursor.getInt(8));
+                workoutStatistics.setSquatReps(cursor.getInt(9));
+                workoutStatistics.setBenchReps(cursor.getInt(10));
+                workoutStatistics.setDeadliftReps(cursor.getInt(11));
+                workoutStatistics.setAverageWeightLiftedAll();
 
                 // Add workout to workouts
-                workouts.add(workout);
+                workoutStatisticses.add(workoutStatistics);
             } while (cursor.moveToNext());
         }
 
-        Log.d("getAllWorkouts()", workouts.toString());
+        Log.d("getAllWorkouts()", workoutStatisticses.toString());
 
         // Close the cursor
         cursor.close();
 
-        return workouts;
+        return workoutStatisticses;
     }
 
     // Update workout history
-    public int updateWorkoutHistory(Workout workout) {
+    public int updateWorkoutHistory(WorkoutStatistics workoutStatistics) {
         // 1. Get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
 
         // 2. Create ContentValues to add key "column"/value
         ContentValues values = new ContentValues();
-        values.put(workoutId, workout.getWorkoutId());
-        values.put(date, workout.getDate());
+        values.put(workoutId, workoutStatistics.getWorkoutId());
+        values.put(date, workoutStatistics.getDate());
 
         // 3. Update row
         int i = db.update(TABLE_HISTORY,
                 values,
                 ID + " = ?",
-                new String[]{String.valueOf(workout.getWorkoutId())});
+                new String[]{String.valueOf(workoutStatistics.getWorkoutId())});
 
         // 5. Close DB
         db.close();
@@ -256,18 +256,18 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     // Delete workout
-    public void deleteWorkoutFromHistory(Workout workout) {
+    public void deleteWorkoutFromHistory(WorkoutStatistics workoutStatistics) {
         // 1. Get reference to writable db
         SQLiteDatabase db = this.getWritableDatabase();
 
         // 2. Delete
-        db.delete(TABLE_HISTORY, ID + " = ?", new String[]{String.valueOf(workout.getWorkoutId())});
+        db.delete(TABLE_HISTORY, ID + " = ?", new String[]{String.valueOf(workoutStatistics.getWorkoutId())});
 
         //3. Close
         db.close();
 
         // log
-        Log.d("DeleteWorkout", workout.toString());
+        Log.d("DeleteWorkout", workoutStatistics.toString());
     }
 
     // Add user max

@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
          **/
 
         // get all workouts
-        List<Workout> workoutHistory = db.getAllWorkoutHistory();
+        List<WorkoutStatistics> workoutStatisticsHistory = db.getAllWorkoutHistory();
         UserMaxEntry userMaxEntry = db.getLastUserMaxEntry();
 
-        for (int i = 0; i < workoutHistory.size(); i++) {
-            Log.i("historyElement", "Workout session: " + workoutHistory.get(i).getDate());
+        for (int i = 0; i < workoutStatisticsHistory.size(); i++) {
+            Log.i("historyElement", "Workout session: " + workoutStatisticsHistory.get(i).getDate());
         }
 
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
@@ -182,12 +182,12 @@ public class MainActivity extends AppCompatActivity {
         float minVolume = 999;
         float maxVolume = 0;
 
-        for (int i = 0; i < workoutHistory.size(); i++) {
-            Log.i("historyElement", "Workout session: " + workoutHistory.get(i).getDate());
-            String _date = workoutHistory.get(i).getDate();
-            Integer nLifts = workoutHistory.get(i).getTotalReps();
+        for (int i = 0; i < workoutStatisticsHistory.size(); i++) {
+            Log.i("historyElement", "Workout session: " + workoutStatisticsHistory.get(i).getDate());
+            String _date = workoutStatisticsHistory.get(i).getDate();
+            Integer nLifts = workoutStatisticsHistory.get(i).getTotalReps();
             Log.i("WorkoutHistory", "Volume: " + nLifts);
-            Float averageWeightLiftedAll = workoutHistory.get(i).getAverageWeightLiftedAll();
+            Float averageWeightLiftedAll = workoutStatisticsHistory.get(i).getAverageWeightLiftedAll();
             Date date = null;
 
             // Set the minimum and max values for graph second axis
