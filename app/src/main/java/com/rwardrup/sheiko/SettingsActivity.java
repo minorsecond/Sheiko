@@ -18,7 +18,7 @@ import com.rwardrup.sheiko.databinding.ActivitySettingsBinding;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class Settings extends AppCompatActivity {
+public class SettingsActivity extends AppCompatActivity {
 
     //public ActivitySettingsBinding activitySettingsBinding;
     private String unit;
@@ -123,6 +123,7 @@ public class Settings extends AppCompatActivity {
 
         // Save to the DB when user clicks the save button.
         activitySettingsBinding.saveSettings.setOnClickListener(new View.OnClickListener() {
+            // TODO: save to firebase as well
             @Override
             public void onClick(View v) {
                 saveUserParameters(activitySettingsBinding, unit, editor);
@@ -144,7 +145,7 @@ public class Settings extends AppCompatActivity {
 
                 Log.d("Database", "Committed data to database");
 
-                startActivity(new Intent(Settings.this, MainActivity.class));
+                startActivity(new Intent(SettingsActivity.this, MainActivity.class));
             }
         });
     }

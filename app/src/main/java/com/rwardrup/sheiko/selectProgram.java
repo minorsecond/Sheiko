@@ -64,7 +64,7 @@ public class selectProgram extends AppCompatActivity {
         setLiftsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(selectProgram.this, Settings.class));
+                startActivity(new Intent(selectProgram.this, SettingsActivity.class));
             }
         });
 
