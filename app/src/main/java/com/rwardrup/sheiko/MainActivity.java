@@ -3,12 +3,10 @@ package com.rwardrup.sheiko;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -17,7 +15,6 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.google.firebase.crash.FirebaseCrash;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.GridLabelRenderer;
 import com.jjoe64.graphview.LegendRenderer;
@@ -38,9 +35,9 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity {
 
     // Lift max variables
-    private int squat_max;
-    private int bench_max;
-    private int deadlift_max;
+    private Double squat_max;
+    private Double bench_max;
+    private Double deadlift_max;
     private String unit;
     private String unitAbbreviation;
     private Double bodyweight;
@@ -69,6 +66,7 @@ public class MainActivity extends AppCompatActivity {
 
         // get all workouts
         List<Workout> workoutHistory = db.getAllWorkoutHistory();
+        UserMaxEntry userMaxEntry = db.getLastUserMaxEntry();
 
         for (int i = 0; i < workoutHistory.size(); i++) {
             Log.i("historyElement", "Workout session: " + workoutHistory.get(i).getDate());
@@ -110,6 +108,11 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             //readFromUserParamDb();  // Load databases
+
+            squat_max = userMaxEntry.getSquatMax();
+            bench_max = userMaxEntry.getBenchMax();
+            deadlift_max = userMaxEntry.getDeadliftMax();
+
             unit = sharedpref.getString("unit", "kilograms");
             bodyweight = (double) sharedpref.getLong("bodyweight", -1);
             sex = sharedpref.getString("sex", "Male");
@@ -123,9 +126,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            readFromUserMaxDb();  // Load databases
-
-            Double totalWeight = (double) squat_max + (double) bench_max + (double) deadlift_max;
+            Double totalWeight = squat_max + bench_max + deadlift_max;
             Log.d("Calculation", "Calculated total: " + totalWeight);
 
             // set unit abbreviation
@@ -154,7 +155,6 @@ public class MainActivity extends AppCompatActivity {
             userTotal.setText(String.valueOf(totalWeight) + " " + unitAbbreviation);
             userWilks.setText(String.format(Locale.US, "%.2f", wilksScore));
 
-
         } catch (NullPointerException e) {
             Log.d("DbReadError", "User max DB read error: " + e);  // First creation of database.
             firstLoad = true;
@@ -169,85 +169,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // The graph on the main window. See www.android-graphview.org for more info
-        Calendar calendar = Calendar.getInstance();
-
-        // Add example dates
-        String date1 = "01/21/2016";
-        String date2 = "03/21/2016";
-        String date3 = "05/21/2016";
-        String date4 = "07/21/2016";
-        String date5 = "09/21/2016";
-        String date6 = "11/21/2016";
 
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
-        Date d1 = null;
-        Date d2 = null;
-        Date d3 = null;
-        Date d4 = null;
-        Date d5 = null;
-        Date d6 = null;
-
         // Create Date objects from the strings declared above.
-        // For the app, this will probably need to be done using a for loop.
-
-        try {
-            d1 = df.parse(date1);
-            calendar.add(Calendar.DATE, 1);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d2 = df.parse(date2);
-            calendar.add(Calendar.DATE, 1);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d3 = df.parse(date3);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d4 = df.parse(date4);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d5 = df.parse(date5);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d6 = df.parse(date6);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
-
-        // Add the points to the line graph - Not currently used
-        //LineGraphSeries<DataPoint> totalWeightLifted = new LineGraphSeries<>(new DataPoint[]{
-
-        //      new DataPoint(d1, 25475),
-        //    new DataPoint(d2, 22330),
-        //      new DataPoint(d3, 28795),
-        //      new DataPoint(d4, 29977),
-        //      new DataPoint(d5, 22590),
-        //      new DataPoint(d6, 22550)
-        //});
-
-        // Series style
-        //totalWeightLifted.setTitle("Volume");
-        //totalWeightLifted.setColor(Color.rgb(255, 116, 52));
-        //totalWeightLifted.setDrawDataPoints(true);
-        //totalWeightLifted.setDataPointsRadius(10);
-        //totalWeightLifted.setThickness(8);
 
         LineGraphSeries<DataPoint> numberLifts = new LineGraphSeries<>();
         LineGraphSeries<DataPoint> averageWeightLifted = new LineGraphSeries<>();
@@ -382,46 +309,9 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    // Read from user User Max DB
-    private void readFromUserMaxDb() {
-        SQLiteDatabase database = new userMaxesHelper(this).getReadableDatabase();
-
-        Log.d("ReadUserMaxTable", "Attempting to read from User Max table");
-
-        // Get the last user parameter entry
-        String[] columns = {
-                "units",
-                "squat_max",
-                "bench_max",
-                "deadlift_max",
-                "date",
-                "wilks"
-        };
-
-        Cursor cursor = database.query(userData.UserMaxes.TABLE_NAME, columns, null, null, null, null, null);
-        Log.d("CursorCount", "The total cursor count is " + cursor.getColumnCount());
-
-        // Get values from DB cursor
-        if (cursor.moveToLast()) {
-            try {
-                squat_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.SQUAT_MAX)));
-                bench_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.BENCH_MAX)));
-                deadlift_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.DEADLIFT_MAX)));
-            } catch (Exception e) {
-                // User probably didn't save anything on the settings page
-                FirebaseCrash.report(new Exception("DbReadError: " + e));
-                Log.e("DbReadError", "Db Read Error: " + e);
-            }
-        }
-        cursor.close();
-
-        // Write the DB values to text entry fields
-
-        Log.d("Database", "Successfully read user maxes from DB.");
-    }
-
     private double wilksScore(String sex, double bodyWeight, double weightLifted) {
         // Wilk's coefficients. Default to males as they will most likely be the primary user
+        // TODO: Consider moving this into its own class
         double a = -216.0475144;
         double b = 16.2606339;
         double c = -0.002388645;
