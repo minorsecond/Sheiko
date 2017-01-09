@@ -18,6 +18,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Table names
     private static final String TABLE_HISTORY = "history";
+    private static final String TABLE_USER_MAXES = "userMaxes";
     private static final String TABLE_CUSTOM_WORKOUTS = "customPrograms";
     private static final String TABLE_ADVANCED_MEDIUM_LOAD = "workout_advanced_medium_load";
 
@@ -34,6 +35,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String weekNumber = "week_number";
     private static final String exerciseCategory = "exercise_category";
     private static final String date = "date";
+    private static final String units = "units";
+    private static final String squatMax = "squat_max";
+    private static final String benchMax = "bench_max";
+    private static final String deadliftMax = "deadlift_max";
+    private static final String wilks = "wilks";
+
 
 
     // Define columns in each table
@@ -261,6 +268,32 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         // log
         Log.d("DeleteWorkout", workout.toString());
+    }
+
+    // Add user max
+    public void addUserMaxEntry(UserMaxEntry userMaxEntry) {
+        // For logging
+        Log.d("addUserMaxEntry()", userMaxEntry.toString());
+
+        // 1. Get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // 2. Create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(units, userMaxEntry.getUnits());
+        values.put(squatMax, userMaxEntry.getSquatMax());
+        values.put(benchMax, userMaxEntry.getBenchMax());
+        values.put(deadliftMax, userMaxEntry.getDeadliftMax());
+        values.put(date, userMaxEntry.getDate());
+        values.put(wilks, userMaxEntry.getWilks());
+
+        // 3. Insert
+        db.insert(TABLE_USER_MAXES,  // table
+                null,  // nullColumnHack
+                values); // key/value keys = column names/ values = col
+
+        // 4. Close
+        db.close();
     }
 
     public UserMaxEntry getLastUserMaxEntry() {
