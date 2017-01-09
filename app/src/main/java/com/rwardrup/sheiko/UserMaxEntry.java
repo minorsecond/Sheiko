@@ -6,6 +6,7 @@ package com.rwardrup.sheiko;
 
 public class UserMaxEntry {
 
+    private String units;
     private Double squatMax;
     private Double benchMax;
     private Double deadliftMax;
@@ -15,9 +16,10 @@ public class UserMaxEntry {
     public UserMaxEntry() {
     }
 
-    public UserMaxEntry(Double squatMax, Double benchMax, Double deadliftMax, Double wilks,
-                        String date) {
+    public UserMaxEntry(String units, Double squatMax, Double benchMax, Double deadliftMax,
+                        Double wilks, String date) {
         super();
+        this.units = units;
         this.squatMax = squatMax;
         this.benchMax = benchMax;
         this.deadliftMax = deadliftMax;
@@ -27,8 +29,16 @@ public class UserMaxEntry {
 
     @Override
     public String toString() {
-        return "Max entry [squatMax=" + squatMax + ", benchMax=" + benchMax + ", deadliftMax=" +
-                deadliftMax + ", wilks=" + wilks + ", date=" + date + "]";
+        return "Max entry [units=" + units + ", squatMax=" + squatMax + ", benchMax=" + benchMax +
+                ", deadliftMax=" + deadliftMax + ", wilks=" + wilks + ", date=" + date + "]";
+    }
+
+    public String getUnits() {
+        return units;
+    }
+
+    public void setUnits(String units) {
+        this.units = units;
     }
 
     public Double getSquatMax() {
@@ -65,5 +75,9 @@ public class UserMaxEntry {
 
     public String getDate() {
         return date;
+    }
+
+    public void setDate(String date) {
+        this.date = date;
     }
 }

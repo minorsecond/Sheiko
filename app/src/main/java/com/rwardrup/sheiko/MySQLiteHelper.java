@@ -99,8 +99,20 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                         "\t`exercise_category`\tINTEGER\n" +
                         ");";
 
+        String CREATE_USER_MAX_TABLE =
+                "CREATE TABLE `userMaxes` (\n" +
+                        "\t`_id`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                        "\t`units`\tTEXT,\n" +
+                        "\t`squat_max`\tREA;,\n" +
+                        "\t`bench_max`\tREAL,\n" +
+                        "\t`deadlift_max`\tREAL,\n" +
+                        "\t`date`\tTEXT,\n" +
+                        "\t`wilks`\tREAL\n" +
+                        ");";
+
         // create tables
         db.execSQL(CREATE_HISTORY_TABLE);
+        db.execSQL(CREATE_USER_MAX_TABLE);
         db.execSQL(CREATE_CUSTOM_WORKOUT_TABLE);
         db.execSQL(CREATE_WORKOUT_ADVANCED_MEDIUM_LOAD_TABLE);
     }
@@ -180,7 +192,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         String query = "SELECT * FROM " + TABLE_HISTORY;
 
         // 2. Get reference to the writable db
-        SQLiteDatabase db = this.getWritableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         // 3. Go over each row. Build workout and add it to list
@@ -251,4 +263,27 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         Log.d("DeleteWorkout", workout.toString());
     }
 
+    public UserMaxEntry getLastUserMaxEntry() {
+        // 1. Get reference to readable db
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // 2. Build query TODO: make this actually do what I want (get by date integer)
+        String query = "SELECT * FROM " + TABLE_HISTORY;
+        Cursor cursor = db.rawQuery(query, null);
+
+        // 3. Make the query
+        UserMaxEntry userMaxEntry = null;
+        if (cursor.moveToLast()) {
+            userMaxEntry = new UserMaxEntry();
+            userMaxEntry.setUnits(cursor.getString(1));
+            userMaxEntry.setSquatMax(cursor.getDouble(2));
+            userMaxEntry.setBenchMax(cursor.getDouble(3));
+            userMaxEntry.setDeadliftMax(cursor.getDouble(4));
+            userMaxEntry.setWilks(cursor.getDouble(5));
+            userMaxEntry.setDate(cursor.getString(6));
+        }
+
+        Log.d("getLastUserMaxEntry()", userMaxEntry.toString());
+        return userMaxEntry;
+    }
 }
