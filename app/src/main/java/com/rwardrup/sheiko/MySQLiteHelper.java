@@ -95,7 +95,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         String CREATE_WORKOUT_ADVANCED_MEDIUM_LOAD_TABLE =
                 "CREATE TABLE `workout_advanced_medium_load` (\n" +
-                        "\t`_id`\tINTEGER NOT NULL UNIQUE,\n" +
+                        "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
                         "\t`lift_name`\tTEXT NOT NULL,\n" +
                         "\t`sets`\tINTEGER NOT NULL,\n" +
                         "\t`reps`\tINTEGER NOT NULL,\n" +
@@ -108,9 +108,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         String CREATE_USER_MAX_TABLE =
                 "CREATE TABLE `userMaxes` (\n" +
-                        "\t`_id`\tINTEGER PRIMARY KEY AUTOINCREMENT,\n" +
+                        "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
                         "\t`units`\tTEXT,\n" +
-                        "\t`squat_max`\tREA;,\n" +
+                        "\t`squat_max`\tREAL,\n" +
                         "\t`bench_max`\tREAL,\n" +
                         "\t`deadlift_max`\tREAL,\n" +
                         "\t`date`\tTEXT,\n" +
@@ -301,7 +301,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         // 2. Build query TODO: make this actually do what I want (get by date integer)
-        String query = "SELECT * FROM " + TABLE_HISTORY;
+        String query = "SELECT * FROM " + TABLE_USER_MAXES;
         Cursor cursor = db.rawQuery(query, null);
 
         // 3. Make the query
@@ -314,9 +314,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             userMaxEntry.setDeadliftMax(cursor.getDouble(4));
             userMaxEntry.setWilks(cursor.getDouble(5));
             userMaxEntry.setDate(cursor.getString(6));
+            Log.d("getLastUserMaxEntry()", userMaxEntry.toString());
         }
-
-        Log.d("getLastUserMaxEntry()", userMaxEntry.toString());
+        cursor.close();
         return userMaxEntry;
     }
 }

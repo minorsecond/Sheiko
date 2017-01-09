@@ -1,12 +1,8 @@
 package com.rwardrup.sheiko;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -29,11 +25,11 @@ public class Settings extends AppCompatActivity {
     private Long bodyweight;
     private String sex;
     private int sexId;
-    private int squat_max;
-    private int bench_max;
-    private int deadlift_max;
-    private int max_date;
-    private int wilks;
+    private Double squat_max;
+    private Double bench_max;
+    private Double deadlift_max;
+    private String max_date;
+    private Double wilks;
     private EditText weightInput;
     private RadioButton lbsButton;
     private RadioButton kgButton;
@@ -51,6 +47,11 @@ public class Settings extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // Set up DB connection
+        final MySQLiteHelper db = new MySQLiteHelper(this);
+        UserMaxEntry userMaxEntry = db.getLastUserMaxEntry();
+        Log.d("UserMaxEntry", "Latest user max entry: " + userMaxEntry);
+
         final RadioButton lbsButton = (RadioButton) findViewById(R.id.lbsRadiobutton);
         kgButton = (RadioButton) findViewById(R.id.kgsRadioButton);
         sexSpinner = (Spinner) findViewById(R.id.genderSpinner);
@@ -59,6 +60,21 @@ public class Settings extends AppCompatActivity {
 
         final ActivitySettingsBinding activitySettingsBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_settings);
+
+        // Update the Lift Numbers EditText widgets
+
+        try {
+
+            squat_max = userMaxEntry.getSquatMax();
+            bench_max = userMaxEntry.getBenchMax();
+            deadlift_max = userMaxEntry.getDeadliftMax();
+
+            activitySettingsBinding.squatMax.setText(String.valueOf(squat_max));
+            activitySettingsBinding.benchMax.setText(String.valueOf(bench_max));
+            activitySettingsBinding.dlMax.setText(String.valueOf(deadlift_max));
+        } catch (NullPointerException e) {
+            // Probably loaded without having entered anything
+        }
 
         try {
             bodyweight = sharedpref.getLong("bodyweight", -1);
@@ -91,7 +107,7 @@ public class Settings extends AppCompatActivity {
         }
 
         try {
-            readFromUserMaxDb(activitySettingsBinding);  // Load databases
+            //readFromUserMaxDb(activitySettingsBinding);  // Load databases
         } catch (NullPointerException e) {
             Log.d("DbReadError", "User max DB read error: " + e);  // First creation of database.
             FirebaseCrash.report(new Exception("DbReadError: " + e));
@@ -117,7 +133,15 @@ public class Settings extends AppCompatActivity {
                     unit = "kilograms";
                 }
 
-                saveToUserMaxDb(activitySettingsBinding);
+                //saveToUserMaxDb(activitySettingsBinding); //old method
+
+                squat_max = Double.valueOf(activitySettingsBinding.squatMax.getText().toString());
+                bench_max = Double.valueOf(activitySettingsBinding.benchMax.getText().toString());
+                deadlift_max = Double.valueOf(activitySettingsBinding.dlMax.getText().toString());
+
+                db.addUserMaxEntry(new UserMaxEntry(unit, squat_max, bench_max, deadlift_max,
+                        wilks, max_date));
+
                 Log.d("Database", "Committed data to database");
 
                 startActivity(new Intent(Settings.this, MainActivity.class));
@@ -146,124 +170,6 @@ public class Settings extends AppCompatActivity {
             // User probably tried to save without entering anything
             FirebaseCrash.report(new Exception("DbWriteError: " + e));
             Log.e("DbWriteError", "DB Write error: " + e);
-        }
-    }
-
-    // Save user maxes to DB
-    private void saveToUserMaxDb(ActivitySettingsBinding binding) {
-        SQLiteDatabase userMaxDb = new userParametersHelper(this).getWritableDatabase();
-        Log.d("SQL", "Got new userMaxes db");
-        ContentValues maxValues = new ContentValues();
-
-        // Commit the data to the UserMaxes table
-        try {
-            maxValues.put(userData.UserMaxes.USER_UNITS, unit);
-            maxValues.put(userData.UserMaxes.SQUAT_MAX, Integer.parseInt(binding.squatMax.getText().toString()));
-            maxValues.put(userData.UserMaxes.BENCH_MAX, Integer.parseInt(binding.benchMax.getText().toString()));
-            maxValues.put(userData.UserMaxes.DEADLIFT_MAX, Integer.parseInt(binding.dlMax.getText().toString()));
-        } catch (NumberFormatException e) {
-            // User probably just didn't enter anything in the max fields
-        }
-
-        long newRowId = userMaxDb.insert(userData.UserMaxes.TABLE_NAME, null, maxValues);
-        Log.d("SQL", "Wrote new maxes to userMaxes table");
-    }
-
-    // Read from user User Max DB
-    private void readFromUserMaxDb(ActivitySettingsBinding binding) {
-        SQLiteDatabase database = new userMaxesHelper(this).getReadableDatabase();
-
-        // Get the last user parameter entry
-        String[] columns = {
-                "units",
-                "squat_max",
-                "bench_max",
-                "deadlift_max",
-                "date",
-                "wilks"
-        };
-
-        Cursor cursor = database.query(userData.UserMaxes.TABLE_NAME, columns, null, null, null, null, null);
-        Log.d("CursorCount", "The total cursor count is " + cursor.getColumnCount());
-
-        // Get values from DB cursor
-        if (cursor.moveToLast()) {
-            try {
-                squat_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.SQUAT_MAX)));
-                bench_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.BENCH_MAX)));
-                deadlift_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.DEADLIFT_MAX)));
-            } catch (Exception e) {
-                // DB Was empty. User probably previously didn't enter anything before saving
-                FirebaseCrash.report(new Exception("DbReadError: " + e));
-                Log.e("DbReadError", "Db read error: " + e);
-            }
-        }
-        cursor.close();
-
-        // Write the DB values to text entry fields
-        if (squat_max > 0) {
-            binding.squatMax.setText(String.valueOf(squat_max));
-        } else {
-            binding.squatMax.setText("");
-        }
-
-        if (bench_max > 0) {
-            binding.benchMax.setText(String.valueOf(bench_max));
-        } else {
-            binding.benchMax.setText("");
-        }
-
-        if (deadlift_max > 0) {
-            binding.dlMax.setText(String.valueOf(deadlift_max));
-        } else {
-            binding.dlMax.setText("");
-        }
-    }
-
-    // Create user parameter DB
-    public class userParametersHelper extends SQLiteOpenHelper {
-
-        public static final String DATABASE_NAME = "SheikoDb";  // TODO: change this
-        private static final int DATABASE_VERSION = 1;
-
-        public userParametersHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            sqLiteDatabase.execSQL(userData.UserParameters.CREATE_TABLE);
-            sqLiteDatabase.execSQL(userData.UserMaxes.CREATE_TABLE);
-            Log.d("SQL", "Created userMaxes table");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + userData.UserParameters.TABLE_NAME);
-            onCreate(sqLiteDatabase);
-        }
-    }
-
-    // Create user maxes DB
-    public class userMaxesHelper extends SQLiteOpenHelper {
-
-        public static final String DATABASE_NAME = "SheikoDb";  // TODO: change this
-        private static final int DATABASE_VERSION = 1;
-
-        public userMaxesHelper(Context context) {
-            super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        }
-
-        @Override
-        public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            sqLiteDatabase.execSQL(userData.UserMaxes.CREATE_TABLE);
-            Log.d("SQL", "Created userMaxes table");
-        }
-
-        @Override
-        public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + userData.UserMaxes.TABLE_NAME);
-            onCreate(sqLiteDatabase);
         }
     }
 }
