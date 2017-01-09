@@ -37,7 +37,7 @@
             android:screenOrientation="portrait" />
 
         <activity
-            android:name=".train"
+            android:name=".TrainActivity"
             android:screenOrientation="portrait" />
 
         <service

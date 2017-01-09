@@ -31,7 +31,7 @@ import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class train extends AppCompatActivity implements RestDurationPicker.DurationListener {
+public class TrainActivity extends AppCompatActivity implements RestDurationPicker.DurationListener {
 
     private static long millisLeftOnTimer;
     private static Integer secondsLeftOnTimer;
@@ -85,6 +85,8 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
+        final MySQLiteHelper db = new MySQLiteHelper(this);
+
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // Shared prefs
@@ -116,12 +118,6 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
                 "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
 
-        String[] workoutsForSelectionSpinner = new String[]{
-                "Advanced Medium Load (1) - W1 D1",
-                "Advanced Medium Load (1) - W1 D2",
-                "Advanced Medium Load (1) - W1 D3",
-                "Advanced Medium Load (1) - W1 D4"
-        };
 
         // Hide the accessory spinner text
         accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
@@ -203,9 +199,9 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
                 // reset timer if user goes to next set before it reaches 0
                 if (autoTimerEnabled) {
-                    Intent timerService = new Intent(train.this, BreakTimer.class);
+                    Intent timerService = new Intent(TrainActivity.this, BreakTimer.class);
                     if (millisLeftOnTimer > 0) {
-                        stopService(new Intent(train.this, BreakTimer.class));
+                        stopService(new Intent(TrainActivity.this, BreakTimer.class));
                         startService(timerService);
                     } else {
                         startService(timerService);
@@ -255,7 +251,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
 
             @Override
             public boolean onLongClick(View v) {
-                startActivity(new Intent(train.this, selectProgram.class));
+                startActivity(new Intent(TrainActivity.this, selectProgram.class));
                 return true;
             }
         });
@@ -281,7 +277,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
         // break timer start / stop
         startBreakTimerButton.setOnClickListener(new View.OnClickListener() {
 
-            Intent timerService = new Intent(train.this, BreakTimer.class);
+            Intent timerService = new Intent(TrainActivity.this, BreakTimer.class);
 
             @Override
             public void onClick(View v) {
@@ -299,7 +295,7 @@ public class train extends AppCompatActivity implements RestDurationPicker.Durat
             public void onClick(View v) {
                 millisLeftOnTimer = 0;
                 //mCountDownTimer.cancel();
-                stopService(new Intent(train.this, BreakTimer.class));
+                stopService(new Intent(TrainActivity.this, BreakTimer.class));
                 breakTimerOutput.setTextSize(36);
                 breakTimerOutput.setText(secondsToString(timerDurationSeconds));
                 breakTimerTab.setText("Rest Timer - " + secondsToString(timerDurationSeconds));

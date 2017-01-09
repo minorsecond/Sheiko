@@ -224,7 +224,8 @@
                                 android:elevation="1dp"
                                 android:text="Prev. Set"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button"
-                                android:textColor="@color/icons" />
+                                android:textColor="@color/icons"
+                                android:textSize="12sp" />
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -274,7 +275,8 @@
                                 android:elevation="1dp"
                                 android:text="Next Set"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button"
-                                android:textColor="@color/icons" />
+                                android:textColor="@color/icons"
+                                android:textSize="12sp" />
                         </LinearLayout>
 
                         <Space
@@ -394,7 +396,8 @@
                                 android:elevation="1dp"
                                 android:text="Prev. Workout"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button"
-                                android:textColor="@color/icons" />
+                                android:textColor="@color/icons"
+                                android:textSize="12sp" />
 
                             <Space
                                 android:layout_width="wrap_content"
@@ -410,7 +413,8 @@
                                 android:elevation="1dp"
                                 android:text="Next Workout"
                                 android:textAppearance="@android:style/TextAppearance.Material.Button"
-                                android:textColor="@color/icons" />
+                                android:textColor="@color/icons"
+                                android:textSize="12sp" />
 
                         </LinearLayout>
 
