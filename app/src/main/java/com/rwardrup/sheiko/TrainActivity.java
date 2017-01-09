@@ -60,6 +60,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     TextView currentExercise;
     TextView currentWorkout;
     CrystalSeekbar alarmVolumeControl;
+    private NumberPicker repPicker;
+    private NumberPicker weightPicker;
     private SharedPreferences.Editor editor;
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
@@ -209,7 +211,11 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 }
 
                 // Commit the current repPicker and weightPicker values to Workout history table
-
+                // 1. Get repPicker current value
+                int currentReps = repPicker.getValue();
+                int currentWeight = (weightPicker.getValue() + 1) * 5;
+                Log.i("SetSaved", "Current reps: " + currentReps + ", " +
+                        "current weight: " + currentWeight);
             }
         });
 
@@ -344,8 +350,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     // set reps and weight picker contents
     private void setRepsWeightPickers() {
 
-        NumberPicker repPicker = (NumberPicker) findViewById(R.id.repsPicker);
-        NumberPicker weightPicker = (NumberPicker) findViewById(R.id.weightPicker);
+        repPicker = (NumberPicker) findViewById(R.id.repsPicker);
+        weightPicker = (NumberPicker) findViewById(R.id.weightPicker);
 
         // Disable keyboard when numberpicker is selected
         repPicker.setDescendantFocusability(NumberPicker.FOCUS_BLOCK_DESCENDANTS);

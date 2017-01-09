@@ -18,6 +18,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Table names
     private static final String TABLE_HISTORY = "history";
+    private static final String TABLE_STATS = "workoutStats";
     private static final String TABLE_USER_MAXES = "userMaxes";
     private static final String TABLE_CUSTOM_WORKOUTS = "customPrograms";
     private static final String TABLE_ADVANCED_MEDIUM_LOAD = "workout_advanced_medium_load";
@@ -44,7 +45,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
 
     // Define columns in each table
-    private static final String[] historyColumns = {ID, workoutId, date};
+    private static final String[] statsColumns = {ID, workoutId, date};
 
     private static final String[] customProgramColumns = {ID, customWorkoutName, liftName, sets,
             reps, percentage, dayNumber, cycleNumber, weekNumber, exerciseCategory};
@@ -64,7 +65,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         // SQL statement to create book table
-        String CREATE_HISTORY_TABLE = "CREATE TABLE `history` (\n" +
+        String CREATE_STATS_TABLE = "CREATE TABLE `workoutStats` (\n" +
                 "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
                 "\t`workoutId`\tTEXT NOT NULL UNIQUE,\n" +
                 "\t`date`\tTEXT NOT NULL,\n" +
@@ -118,7 +119,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                         ");";
 
         // create tables
-        db.execSQL(CREATE_HISTORY_TABLE);
+        db.execSQL(CREATE_STATS_TABLE);
         db.execSQL(CREATE_USER_MAX_TABLE);
         db.execSQL(CREATE_CUSTOM_WORKOUT_TABLE);
         db.execSQL(CREATE_WORKOUT_ADVANCED_MEDIUM_LOAD_TABLE);
@@ -127,14 +128,14 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older books table if existed
-        db.execSQL("DROP TABLE IF EXISTS history");
+        db.execSQL("DROP TABLE IF EXISTS workoutStats");
 
         // create fresh tables
         this.onCreate(db);
     }
 
-    // Add workout history
-    public void addWorkoutHistory(WorkoutStatistics workoutStatistics) {
+    // Add workout stats
+    public void addWorkoutStats(WorkoutStats workoutStatistics) {
         // For logging
         Log.d("addWorkout", workoutStatistics.toString());
 
@@ -147,7 +148,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(date, workoutStatistics.getDate());
 
         // 3. Insert
-        db.insert(TABLE_HISTORY,  // table
+        db.insert(TABLE_STATS,  // table
                 null,  // nullColumnHack
                 values); // key/value keys = column names/ values = col
 
@@ -155,15 +156,15 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    // Get workout history by date
-    public WorkoutStatistics getSpecificWorkoutByDate(int date) {
+    // Get workout stats by date
+    public WorkoutStats getSpecificWorkoutByDate(int date) {
 
         // 1. Get reference to readable db
         SQLiteDatabase db = this.getReadableDatabase();
 
         // 2. Build query TODO: make this actually do what I want (get by date integer)
-        Cursor cursor = db.query(TABLE_HISTORY,
-                historyColumns,
+        Cursor cursor = db.query(TABLE_STATS,
+                statsColumns,
                 " date = ?", // selections
                 new String[]{String.valueOf(date)},  // Selection's args
                 null, // e. group by
@@ -177,7 +178,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
             cursor.moveToFirst();
 
         // 4. Build workout object
-        WorkoutStatistics workoutStatistics = new WorkoutStatistics();
+        WorkoutStats workoutStatistics = new WorkoutStats();
         workoutStatistics.setWorkoutId(cursor.getString(1));
         workoutStatistics.setDate(cursor.getString(2));
 
@@ -191,22 +192,22 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return workoutStatistics;
     }
 
-    // Get all workout history
-    public List<WorkoutStatistics> getAllWorkoutHistory() {
-        List<WorkoutStatistics> workoutStatisticses = new LinkedList<WorkoutStatistics>();
+    // Get all workout STATS
+    public List<WorkoutStats> getAllWorkoutstats() {
+        List<WorkoutStats> workoutStatisticses = new LinkedList<WorkoutStats>();
 
         // 1. Build the query
-        String query = "SELECT * FROM " + TABLE_HISTORY;
+        String query = "SELECT * FROM " + TABLE_STATS;
 
         // 2. Get reference to the writable db
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(query, null);
 
         // 3. Go over each row. Build workout and add it to list
-        WorkoutStatistics workoutStatistics = null;
+        WorkoutStats workoutStatistics = null;
         if (cursor.moveToFirst()) {
             do {
-                workoutStatistics = new WorkoutStatistics();
+                workoutStatistics = new WorkoutStats();
                 workoutStatistics.setWorkoutId(cursor.getString(1));
                 workoutStatistics.setDate(cursor.getString(2));
                 workoutStatistics.setSquatSets(cursor.getInt(3));
@@ -233,8 +234,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         return workoutStatisticses;
     }
 
-    // Update workout history
-    public int updateWorkoutHistory(WorkoutStatistics workoutStatistics) {
+    // Update workout statistics
+    public int updateWorkoutStats(WorkoutStats workoutStatistics) {
         // 1. Get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -244,7 +245,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         values.put(date, workoutStatistics.getDate());
 
         // 3. Update row
-        int i = db.update(TABLE_HISTORY,
+        int i = db.update(TABLE_STATS,
                 values,
                 ID + " = ?",
                 new String[]{String.valueOf(workoutStatistics.getWorkoutId())});
@@ -256,12 +257,12 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     // Delete workout
-    public void deleteWorkoutFromHistory(WorkoutStatistics workoutStatistics) {
+    public void deleteWorkoutStats(WorkoutStats workoutStatistics) {
         // 1. Get reference to writable db
         SQLiteDatabase db = this.getWritableDatabase();
 
         // 2. Delete
-        db.delete(TABLE_HISTORY, ID + " = ?", new String[]{String.valueOf(workoutStatistics.getWorkoutId())});
+        db.delete(TABLE_STATS, ID + " = ?", new String[]{String.valueOf(workoutStatistics.getWorkoutId())});
 
         //3. Close
         db.close();

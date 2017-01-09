@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity {
          **/
 
         // get all workouts
-        List<WorkoutStatistics> workoutStatisticsHistory = db.getAllWorkoutHistory();
+        List<WorkoutStats> workoutStats = db.getAllWorkoutstats();
         UserMaxEntry userMaxEntry = db.getLastUserMaxEntry();
 
-        for (int i = 0; i < workoutStatisticsHistory.size(); i++) {
-            Log.i("historyElement", "Workout session: " + workoutStatisticsHistory.get(i).getDate());
+        for (int i = 0; i < workoutStats.size(); i++) {
+            Log.i("historyElement", "Workout session: " + workoutStats.get(i).getDate());
         }
 
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
@@ -179,16 +179,15 @@ public class MainActivity extends AppCompatActivity {
         LineGraphSeries<DataPoint> numberLifts = new LineGraphSeries<>();
         LineGraphSeries<DataPoint> averageWeightLifted = new LineGraphSeries<>();
 
-        float minVolume = 999;
-        float maxVolume = 0;
-
-        for (int i = 0; i < workoutStatisticsHistory.size(); i++) {
-            Log.i("historyElement", "Workout session: " + workoutStatisticsHistory.get(i).getDate());
-            String _date = workoutStatisticsHistory.get(i).getDate();
-            Integer nLifts = workoutStatisticsHistory.get(i).getTotalReps();
+        float minVolume = 9999;
+        float maxVolume = -9999;
+        for (int i = 0; i < workoutStats.size(); i++) {
+            Log.i("historyElement", "Workout session: " + workoutStats.get(i).getDate());
+            String _date = workoutStats.get(i).getDate();
+            Integer nLifts = workoutStats.get(i).getTotalReps();
             Log.i("WorkoutHistory", "Volume: " + nLifts);
-            Float averageWeightLiftedAll = workoutStatisticsHistory.get(i).getAverageWeightLiftedAll();
-            Date date = null;
+            Float averageWeightLiftedAll = workoutStats.get(i).getAverageWeightLiftedAll();
+            Date date;
 
             // Set the minimum and max values for graph second axis
             if (averageWeightLiftedAll <= minVolume) {

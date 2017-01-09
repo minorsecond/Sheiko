@@ -136,14 +136,18 @@ public class SettingsActivity extends AppCompatActivity {
 
                 //saveToUserMaxDb(activitySettingsBinding); //old method
 
-                squat_max = Double.valueOf(activitySettingsBinding.squatMax.getText().toString());
-                bench_max = Double.valueOf(activitySettingsBinding.benchMax.getText().toString());
-                deadlift_max = Double.valueOf(activitySettingsBinding.dlMax.getText().toString());
+                try {
+                    squat_max = Double.valueOf(activitySettingsBinding.squatMax.getText().toString());
+                    bench_max = Double.valueOf(activitySettingsBinding.benchMax.getText().toString());
+                    deadlift_max = Double.valueOf(activitySettingsBinding.dlMax.getText().toString());
 
-                db.addUserMaxEntry(new UserMaxEntry(unit, squat_max, bench_max, deadlift_max,
-                        wilks, max_date));
+                    db.addUserMaxEntry(new UserMaxEntry(unit, squat_max, bench_max, deadlift_max,
+                            wilks, max_date));
 
-                Log.d("Database", "Committed data to database");
+                    Log.d("Database", "Committed data to database");
+                } catch (NumberFormatException e) {
+                    // User probably entered nothing in one of the max fields
+                }
 
                 startActivity(new Intent(SettingsActivity.this, MainActivity.class));
             }

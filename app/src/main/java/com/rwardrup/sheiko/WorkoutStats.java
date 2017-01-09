@@ -7,7 +7,7 @@ import android.util.Log;
  * This is the bean for workouts to be store in Sqlite history database
  */
 
-public class WorkoutStatistics {
+public class WorkoutStats {
 
     public int totalReps;
     private int _id; // PKEY
@@ -27,10 +27,10 @@ public class WorkoutStatistics {
     private int benchReps;
     private int deadliftReps;
 
-    public WorkoutStatistics() {
+    public WorkoutStats() {
     }
 
-    public WorkoutStatistics(String workoutId, String date) {
+    public WorkoutStats(String workoutId, String date) {
         super();
         this.workoutId = workoutId;
         this.date = date;
