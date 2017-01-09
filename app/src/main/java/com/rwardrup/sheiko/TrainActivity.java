@@ -26,7 +26,9 @@ import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
 import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 import com.shawnlin.numberpicker.NumberPicker;
 
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -60,6 +62,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     TextView currentExercise;
     TextView currentWorkout;
     CrystalSeekbar alarmVolumeControl;
+    String current_exercise_string = "squat"; // TODO: Set this depending on first exercise of day
     private NumberPicker repPicker;
     private NumberPicker weightPicker;
     private SharedPreferences.Editor editor;
@@ -67,7 +70,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean activityLoaded = false;
     private AudioManager audioManager;
-
     private BroadcastReceiver br = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -87,7 +89,18 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
+        // Get today's date
+        Calendar c = Calendar.getInstance();
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
+        final String date = df.format(c.getTime());
+
+        Log.i("TodaysDate", "Today's date: " + date);
+
         final MySQLiteHelper db = new MySQLiteHelper(this);
+
+        /**
+         * CRUD Operations
+         **/
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
@@ -176,6 +189,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         this.squatSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                current_exercise_string = "squat";
                 currentExercise.setText(R.string.squat);
             }
         });
@@ -184,6 +198,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             @Override
             public void onClick(View v) {
                 currentExercise.setText(R.string.bench);
+                current_exercise_string = "bench";
             }
         });
 
@@ -191,6 +206,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             @Override
             public void onClick(View v) {
                 currentExercise.setText(R.string.deadlift);
+                current_exercise_string = "deadlift";
             }
         });
 
@@ -212,10 +228,16 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                 // Commit the current repPicker and weightPicker values to Workout history table
                 // 1. Get repPicker current value
+                String workoutId = "0";
                 int currentReps = repPicker.getValue();
-                int currentWeight = (weightPicker.getValue() + 1) * 5;
+                Double currentWeight = Double.valueOf((weightPicker.getValue() + 1) * 5);
                 Log.i("SetSaved", "Current reps: " + currentReps + ", " +
                         "current weight: " + currentWeight);
+
+                db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
+                        currentReps, currentWeight, currentProgram));
+
+                Log.d("Database", "Committed workout history to database");
             }
         });
 

@@ -17,7 +17,7 @@ import java.util.List;
 public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Table names
-    private static final String TABLE_HISTORY = "history";
+    private static final String TABLE_HISTORY = "workoutHistory";
     private static final String TABLE_STATS = "workoutStats";
     private static final String TABLE_USER_MAXES = "userMaxes";
     private static final String TABLE_CUSTOM_WORKOUTS = "customPrograms";
@@ -26,6 +26,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     // Table columns
     private static final String ID = "_id";
     private static final String customWorkoutName = "customWorkoutName";
+    private static final String exercise = "exercise";
+    private static final String weight = "weight";
+    private static final String programTableName = "programTableName";
     private static final String workoutId = "workoutId";
     private static final String liftName = "lift_name";
     private static final String sets = "sets";
@@ -46,6 +49,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     // Define columns in each table
     private static final String[] statsColumns = {ID, workoutId, date};
+
+    private static final String[] workoutHistoryColumns = {ID, workoutId, date, exercise, reps,
+            weight, programTableName};
 
     private static final String[] customProgramColumns = {ID, customWorkoutName, liftName, sets,
             reps, percentage, dayNumber, cycleNumber, weekNumber, exerciseCategory};
@@ -118,9 +124,21 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                         "\t`wilks`\tREAL\n" +
                         ");";
 
+        String CREATE_WORKOUT_HISTORY_TABLE =
+                "CREATE TABLE `workoutHistory` (\n" +
+                        "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
+                        "\t`workoutId`\tTEXT NOT NULL,\n" +
+                        "\t`date`\tTEXT NOT NULL,\n" +
+                        "\t`exercise`\tTEXT NOT NULL,\n" +
+                        "\t`reps`\tINTEGER NOT NULL,\n" +
+                        "\t`weight`\tINTEGER NOT NULL,\n" +
+                        "\t`programTableName`\tTEXT NOT NULL\n" +
+                        ");";
+
         // create tables
         db.execSQL(CREATE_STATS_TABLE);
         db.execSQL(CREATE_USER_MAX_TABLE);
+        db.execSQL(CREATE_WORKOUT_HISTORY_TABLE);
         db.execSQL(CREATE_CUSTOM_WORKOUT_TABLE);
         db.execSQL(CREATE_WORKOUT_ADVANCED_MEDIUM_LOAD_TABLE);
     }
@@ -129,9 +147,34 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older books table if existed
         db.execSQL("DROP TABLE IF EXISTS workoutStats");
+        db.execSQL("DROP TABLE IF EXISTS workoutHistory");
 
         // create fresh tables
         this.onCreate(db);
+    }
+
+    public void addWorkoutHistory(WorkoutHistory workoutHistory) {
+        // For logging
+        Log.d("addWorkout", workoutHistory.toString());
+
+        // 1. Get writable Db
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // 2. Create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(workoutId, workoutHistory.getWorkoutId());
+        values.put(date, workoutHistory.getDate());
+        values.put(exercise, workoutHistory.getExercise());
+        values.put(reps, workoutHistory.getReps());
+        values.put(weight, workoutHistory.getWeight());
+        values.put(programTableName, workoutHistory.getProgramTableName());
+
+        db.insert(TABLE_HISTORY,
+                null,
+                values);
+
+        db.close();
+
     }
 
     // Add workout stats
