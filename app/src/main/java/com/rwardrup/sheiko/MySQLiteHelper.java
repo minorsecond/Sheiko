@@ -200,7 +200,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         // 1. Get reference to readable db
         SQLiteDatabase db = this.getReadableDatabase();
 
-        // 2. Build query TODO: make this actually do what I want (get by date integer)
+        // 2. Build query
         Cursor cursor = db.query(TABLE_HISTORY,
                 workoutHistoryColumns,
                 " _id = ?", // selections
@@ -232,6 +232,33 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
         // 6. Return workout
         return workoutHistory;
+    }
+
+    public int changeWorkoutHistoryAtId(int id, WorkoutHistory workoutHistory) {
+        Log.i("WorkoutHistory", "Writing to workout history row " + id);
+
+        // 1. Get writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // 2. Create ContentValues
+        ContentValues values = new ContentValues();
+        //values.put(workoutId = workoutHistory.getWorkoutId());
+        values.put(date, workoutHistory.getDate());
+        values.put(exercise, workoutHistory.getExercise());
+        values.put(reps, workoutHistory.getReps());
+        values.put(weight, workoutHistory.getWeight());
+        values.put(programTableName, workoutHistory.getProgramTableName());
+
+        // 3. Update row
+        int i = db.update(TABLE_HISTORY,
+                values,
+                ID + " = ?",
+                new String[]{String.valueOf(workoutHistory.getWorkoutId())});
+
+        // 4. Close DB
+        db.close();
+
+        return i;
 
     }
 
