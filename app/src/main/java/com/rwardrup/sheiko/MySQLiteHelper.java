@@ -153,6 +153,23 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
+    public int getWorkoutHistoryRowCount() {
+        String countQuery = "SELECT * FROM " + TABLE_HISTORY;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(countQuery, null);
+        int cnt = cursor.getCount();
+        return cnt;
+    }
+
+    public Workout getTodaysWorkout(String programTableName, int workoutId) {
+        // For logging
+        //Log.d("GetWorkout", Workout.toString());
+
+        Workout todaysWorkout = new Workout();
+
+        return todaysWorkout;
+    }
+
     public void addWorkoutHistory(WorkoutHistory workoutHistory) {
         // For logging
         Log.d("addWorkout", workoutHistory.toString());
@@ -174,6 +191,47 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
                 values);
 
         db.close();
+
+    }
+
+    public WorkoutHistory getWorkoutHistory(int id) {
+        Log.i("WorkoutHistory", "Getting workout history row: " + id);
+
+        // 1. Get reference to readable db
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // 2. Build query TODO: make this actually do what I want (get by date integer)
+        Cursor cursor = db.query(TABLE_HISTORY,
+                workoutHistoryColumns,
+                " _id = ?", // selections
+                new String[]{String.valueOf(id)},  // Selection's args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null // h. limit
+        );
+
+        // 3. if we got results, show the first
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        // 4. Build workout object
+        WorkoutHistory workoutHistory = new WorkoutHistory();
+        workoutHistory.setWorkoutId(cursor.getString(1));
+        workoutHistory.setDate(cursor.getString(2));
+        workoutHistory.setExercise(cursor.getString(3));
+        workoutHistory.setReps(cursor.getInt(4));
+        workoutHistory.setWeight(cursor.getDouble(5));
+        workoutHistory.setProgramTableName(cursor.getString(6));
+
+        // Log
+        Log.d("getWorkout(" + date + ")", workoutHistory.toString());
+
+        // 5. Close cursor
+        cursor.close();
+
+        // 6. Return workout
+        return workoutHistory;
 
     }
 

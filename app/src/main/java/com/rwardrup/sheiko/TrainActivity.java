@@ -49,6 +49,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     Button stopBreakTimerButton;
     Button pauseBreakTimerButton;
     Button nextSetButton;
+    Button previousSetButton;
     // Activity buttons
     ImageButton squatSelectButton;
     ImageButton deadliftSelectButton;
@@ -77,6 +78,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         }
     };
     private int currentVolume;
+    private int workoutHistoryRow = 0;
+    private int setNumber = 0;
 
     // Set font
     @Override
@@ -171,6 +174,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         deadliftSelectButton = (ImageButton) findViewById(R.id.deadliftButton);
         autoTimerSwitch = (Switch) findViewById(R.id.autoTimerSwitch);
         nextSetButton = (Button) findViewById(R.id.nextSetButton);
+        previousSetButton = (Button) findViewById(R.id.previousSetButton);
 
         breakTimerOutput = (TextView) findViewById(R.id.breakTimerOutput);
         breakTimerTab = (TextView) findViewById(R.id.timerTabTitle);
@@ -237,7 +241,28 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
                         currentReps, currentWeight, currentProgram));
 
-                Log.d("Database", "Committed workout history to database");
+                workoutHistoryRow = db.getWorkoutHistoryRowCount();
+
+                Log.d("Database", "Committed workout history to database. There are now " + workoutHistoryRow + " rows.");
+                setNumber += 1;
+            }
+        });
+
+        this.previousSetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Go back to last-entered set if it exists
+                if (setNumber > 0) {
+                    // Get previous workout history row
+                    WorkoutHistory lastSet = db.getWorkoutHistory(workoutHistoryRow - 1);
+                    int reps = lastSet.getReps();
+                    int weight = lastSet.getWeight().intValue();
+                    repPicker.setValue(reps);
+                    weightPicker.setValue(weight / 5);
+                    setNumber -= 1;
+
+                    Log.i("PreviousSet", "Previous set values: reps=" + reps + ", weight=" + weight);
+                }
             }
         });
 
