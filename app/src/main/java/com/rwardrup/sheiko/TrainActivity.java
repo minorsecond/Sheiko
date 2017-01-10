@@ -268,6 +268,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     repPicker.setValue(reps);
                     weightPicker.setValue((weight - 1) / 5);
                     setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of 14");
+
+                    // TODO: Enable changing previous sets by calling db.changeWorkoutHistoryAtId()
                 }
             }
         });
