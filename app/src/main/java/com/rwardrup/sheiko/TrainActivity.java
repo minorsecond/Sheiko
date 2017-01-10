@@ -80,6 +80,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private int currentVolume;
     private int workoutHistoryRow = 0;
     private int setNumber = 0;
+    private int moveBetweenSetsCounter = 0;
+    private TextView setDisplay;
 
     // Set font
     @Override
@@ -91,6 +93,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
+
+        setDisplay = (TextView) findViewById(R.id.setsDisplay);
+        setDisplay.setText("Set " + String.valueOf(setNumber + 1) + " of 14");
 
         // Get today's date
         Calendar c = Calendar.getInstance();
@@ -219,32 +224,51 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             @Override
             public void onClick(View v) {
 
-                // reset timer if user goes to next set before it reaches 0
-                if (autoTimerEnabled) {
-                    Intent timerService = new Intent(TrainActivity.this, BreakTimer.class);
-                    if (millisLeftOnTimer > 0) {
-                        stopService(new Intent(TrainActivity.this, BreakTimer.class));
-                        startService(timerService);
-                    } else {
-                        startService(timerService);
+                if (setNumber == moveBetweenSetsCounter) {  // If user is at current set
+
+                    Log.i("NewSet", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
+
+                    // reset timer if user goes to next set before it reaches 0
+                    if (autoTimerEnabled) {
+                        Intent timerService = new Intent(TrainActivity.this, BreakTimer.class);
+                        if (millisLeftOnTimer > 0) {
+                            stopService(new Intent(TrainActivity.this, BreakTimer.class));
+                            startService(timerService);
+                        } else {
+                            startService(timerService);
+                        }
                     }
+
+                    // Commit the current repPicker and weightPicker values to Workout history table
+                    // 1. Get repPicker current value
+                    String workoutId = "0";
+                    int currentReps = repPicker.getValue();
+                    Double currentWeight = Double.valueOf((weightPicker.getValue() + 1) * 5);
+                    Log.i("SetSaved", "Current reps: " + currentReps + ", " +
+                            "current weight: " + currentWeight);
+
+                    db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
+                            currentReps, currentWeight, currentProgram));
+
+                    workoutHistoryRow = db.getWorkoutHistoryRowCount();
+
+                    Log.d("Database", "Committed workout history to database. There are now " + workoutHistoryRow + " rows.");
+                    setNumber += 1;
+                    moveBetweenSetsCounter = setNumber;
+
+                    setDisplay.setText("Set " + (setNumber + 1) + " of 14");
+                } else if (setNumber > moveBetweenSetsCounter) { // Go forward in history
+                    moveBetweenSetsCounter += 1;
+                    Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
+                    int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
+                    Log.i("NextSetInHistory", "Moving to row " + currentDbRow);
+                    WorkoutHistory nextSet = db.getWorkoutHistory(currentDbRow);
+                    int reps = nextSet.getReps();
+                    int weight = nextSet.getWeight().intValue();
+                    repPicker.setValue(reps);
+                    weightPicker.setValue((weight - 1) / 5);
+                    setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of 14");
                 }
-
-                // Commit the current repPicker and weightPicker values to Workout history table
-                // 1. Get repPicker current value
-                String workoutId = "0";
-                int currentReps = repPicker.getValue();
-                Double currentWeight = Double.valueOf((weightPicker.getValue() + 1) * 5);
-                Log.i("SetSaved", "Current reps: " + currentReps + ", " +
-                        "current weight: " + currentWeight);
-
-                db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
-                        currentReps, currentWeight, currentProgram));
-
-                workoutHistoryRow = db.getWorkoutHistoryRowCount();
-
-                Log.d("Database", "Committed workout history to database. There are now " + workoutHistoryRow + " rows.");
-                setNumber += 1;
             }
         });
 
@@ -252,16 +276,23 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             @Override
             public void onClick(View v) {
                 // Go back to last-entered set if it exists
-                if (setNumber > 0) {
+                if (moveBetweenSetsCounter > 1 && moveBetweenSetsCounter <= setNumber) {
+                    moveBetweenSetsCounter -= 1;
+                    Log.i("MoveToOldSet", "Set number: " + setNumber + " moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     // Get previous workout history row
-                    WorkoutHistory lastSet = db.getWorkoutHistory(workoutHistoryRow - 1);
+                    int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
+                    Log.i("MoveBetweenSets", "Getting row number " + currentDbRow + " of" + workoutHistoryRow);
+                    WorkoutHistory lastSet = db.getWorkoutHistory(currentDbRow);
+                    Log.i("WorkoutHistory", lastSet.toString());
                     int reps = lastSet.getReps();
                     int weight = lastSet.getWeight().intValue();
                     repPicker.setValue(reps);
-                    weightPicker.setValue(weight / 5);
-                    setNumber -= 1;
+                    weightPicker.setValue((weight - 1) / 5);
 
-                    Log.i("PreviousSet", "Previous set values: reps=" + reps + ", weight=" + weight);
+                    setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of 14");
+
+                    Log.i("MoveBetweenSets", "Previous set values: reps=" + reps + ", weight=" +
+                            weight / 5 + " at set number " + moveBetweenSetsCounter);
                 }
             }
         });
