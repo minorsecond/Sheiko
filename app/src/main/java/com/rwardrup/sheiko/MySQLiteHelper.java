@@ -140,7 +140,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USER_MAX_TABLE);
         db.execSQL(CREATE_WORKOUT_HISTORY_TABLE);
         db.execSQL(CREATE_CUSTOM_WORKOUT_TABLE);
-        db.execSQL(CREATE_WORKOUT_ADVANCED_MEDIUM_LOAD_TABLE);
+        //db.execSQL(CREATE_WORKOUT_ADVANCED_MEDIUM_LOAD_TABLE);
     }
 
     @Override
