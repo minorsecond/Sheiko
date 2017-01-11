@@ -348,6 +348,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         this.previousSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                // TODO: Implement set-change code here too.
                 // Go back to last-entered set if it exists
                 if (moveBetweenSetsCounter > 1 && moveBetweenSetsCounter <= setNumber) {
                     moveBetweenSetsCounter -= 1;
