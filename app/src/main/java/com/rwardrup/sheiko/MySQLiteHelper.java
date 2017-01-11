@@ -8,13 +8,14 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
+
+import com.readystatesoftware.sqliteasset.SQLiteAssetHelper;
 
 import java.util.LinkedList;
 import java.util.List;
 
-public class MySQLiteHelper extends SQLiteOpenHelper {
+public class MySQLiteHelper extends SQLiteAssetHelper {
 
     // Table names
     private static final String TABLE_HISTORY = "workoutHistory";
@@ -71,80 +72,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
-        // SQL statement to create book table
-        String CREATE_STATS_TABLE = "CREATE TABLE `workoutStats` (\n" +
-                "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-                "\t`workoutId`\tTEXT NOT NULL UNIQUE,\n" +
-                "\t`date`\tTEXT NOT NULL,\n" +
-                "\t`squatSets`\tINTEGER,\n" +
-                "\t`benchSets`\tINTEGER,\n" +
-                "\t`deadliftSets`\tINTEGER,\n" +
-                "\t`squatTotalWeight`\tINTEGER,\n" +
-                "\t`benchTotalWeight`\tINTEGER,\n" +
-                "\t`deadliftTotalWeight`\tINTEGER,\n" +
-                "\t`squatReps`\tINTEGER,\n" +
-                "\t`benchReps`\tINTEGER,\n" +
-                "\t`deadliftReps`\tINTEGER,\n" +
-                "\t`programTableName`\tTEXT\n" +
-                ");";
-
-        String CREATE_CUSTOM_WORKOUT_TABLE = "CREATE TABLE `customPrograms` (\n" +
-                "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-                "\t`customWorkoutName`\tTEXT NOT NULL,\n" +
-                "\t`lift_name`\tTEXT NOT NULL,\n" +
-                "\t`sets`\tINTEGER NOT NULL,\n" +
-                "\t`reps`\tINTEGER NOT NULL,\n" +
-                "\t`percentage`\tREAL NOT NULL,\n" +
-                "\t`day_number`\tINTEGER NOT NULL,\n" +
-                "\t`cycle_number`\tINTEGER NOT NULL,\n" +
-                "\t`week_number`\tINTEGER NOT NULL,\n" +
-                "\t`exercise_category`\tINTEGER NOT NULL\n" +
-                ");";
-
-        String CREATE_WORKOUT_ADVANCED_MEDIUM_LOAD_TABLE =
-                "CREATE TABLE `workout_advanced_medium_load` (\n" +
-                        "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-                        "\t`lift_name`\tTEXT NOT NULL,\n" +
-                        "\t`sets`\tINTEGER NOT NULL,\n" +
-                        "\t`reps`\tINTEGER NOT NULL,\n" +
-                        "\t`percentage`\tREAL NOT NULL,\n" +
-                        "\t`day_number`\tINTEGER NOT NULL,\n" +
-                        "\t`cycle_number`\tINTEGER NOT NULL,\n" +
-                        "\t`week_number`\tINTEGER NOT NULL,\n" +
-                        "\t`exercise_category`\tINTEGER\n" +
-                        ");";
-
-        String CREATE_USER_MAX_TABLE =
-                "CREATE TABLE `userMaxes` (\n" +
-                        "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-                        "\t`units`\tTEXT,\n" +
-                        "\t`squat_max`\tREAL,\n" +
-                        "\t`bench_max`\tREAL,\n" +
-                        "\t`deadlift_max`\tREAL,\n" +
-                        "\t`date`\tTEXT,\n" +
-                        "\t`wilks`\tREAL\n" +
-                        ");";
-
-        String CREATE_WORKOUT_HISTORY_TABLE =
-                "CREATE TABLE `workoutHistory` (\n" +
-                        "\t`_id`\tINTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE,\n" +
-                        "\t`workoutId`\tTEXT NOT NULL,\n" +
-                        "\t`date`\tTEXT NOT NULL,\n" +
-                        "\t`exercise`\tTEXT NOT NULL,\n" +
-                        "\t`reps`\tINTEGER NOT NULL,\n" +
-                        "\t`weight`\tINTEGER NOT NULL,\n" +
-                        "\t`programTableName`\tTEXT NOT NULL\n" +
-                        ");";
-
-        // create tables
-        db.execSQL(CREATE_STATS_TABLE);
-        db.execSQL(CREATE_USER_MAX_TABLE);
-        db.execSQL(CREATE_WORKOUT_HISTORY_TABLE);
-        db.execSQL(CREATE_CUSTOM_WORKOUT_TABLE);
-    }
-
-    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older books table if existed
         db.execSQL("DROP TABLE IF EXISTS workoutStats");
@@ -160,8 +87,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         // 1. Get reference to readable db
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String query = "programName = " + "'" + programName + "'" + " AND cycleNumber = " + cycleNumber +
-                " AND weekNumber = " + weekNumber + " AND dayNumber = " + dayNumber;
+        String query = "programTableName = " + "'" + programName + "'" + " AND cycle_number = "
+                + cycleNumber + " AND week_number = " + weekNumber + " AND day_number = " +
+                dayNumber;
 
         Log.i("TodaysWorkout", "Program DB query: " + query);
 
