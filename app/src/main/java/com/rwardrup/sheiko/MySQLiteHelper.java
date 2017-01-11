@@ -236,6 +236,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
 
     public int changeWorkoutHistoryAtId(int id, WorkoutHistory workoutHistory) {
         Log.i("WorkoutHistory", "Changing workout history row " + id);
+        Log.d("WorkoutHistoryId", workoutHistory.getWorkoutId());
 
         // 1. Get writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -252,8 +253,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         // 3. Update row
         int i = db.update(TABLE_HISTORY,
                 values,
-                ID + " = ?",
-                new String[]{String.valueOf(workoutHistory.getWorkoutId())});
+                "_id=" + id,
+                null);  // TODO: Map this to pkey
 
         // 4. Close DB
         db.close();

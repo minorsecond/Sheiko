@@ -100,8 +100,13 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
+        // Set changer prompt
         changeSetPrompt = new AlertDialog.Builder(TrainActivity.this).setNegativeButton("Cancel",
                 null).create();
+
+        changeSetPrompt.setTitle("Previous set has been edited");
+        changeSetPrompt.setMessage("Previous set data has been edited. Do you want " +
+                "to save these changes?");
 
         setDisplay = (TextView) findViewById(R.id.setsDisplay);
         setDisplay.setText("Set " + String.valueOf(setNumber + 1) + " of 14");
@@ -267,7 +272,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                     // Commit the current repPicker and weightPicker values to Workout history table
                     // 1. Get repPicker current value
-                    String workoutId = "0";
+                    String workoutId = String.valueOf(db.getWorkoutHistoryRowCount());
                     int currentReps = repPicker.getValue();
                     Double currentWeight = Double.valueOf((weightPicker.getValue() + 1) * 5);
                     Log.i("SetSaved", "Current reps: " + currentReps + ", " +
@@ -312,12 +317,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         Log.i("ChangedWorkoutHistory", "old reps=" + reps + " old weight=" + Double.valueOf(weight)
                                 + " new reps=" + new_reps + " new weight=" + Double.valueOf(new_weight));
 
-                        // TODO: confirmation dialog for changing history
-
-
-                        changeSetPrompt.setTitle("Previous set has been edited");
-                        changeSetPrompt.setMessage("Previous set data has been edited. Do you want " +
-                                "to save these changes?");
                         changeSetPrompt.setButton(AlertDialog.BUTTON_POSITIVE, "YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
