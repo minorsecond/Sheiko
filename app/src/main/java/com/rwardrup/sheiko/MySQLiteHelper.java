@@ -235,7 +235,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     }
 
     public int changeWorkoutHistoryAtId(int id, WorkoutHistory workoutHistory) {
-        Log.i("WorkoutHistory", "Writing to workout history row " + id);
+        Log.i("WorkoutHistory", "Changing workout history row " + id);
 
         // 1. Get writable DB
         SQLiteDatabase db = this.getWritableDatabase();

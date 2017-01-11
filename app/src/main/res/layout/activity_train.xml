@@ -329,19 +329,8 @@
                                 android:layout_height="match_parent"
                                 android:layout_weight="1"
                                 android:clipToPadding="false"
-                                android:gravity="center"
                                 android:orientation="vertical"
                                 android:paddingBottom="9dp">
-
-                                <android.support.v4.widget.Space
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1" />
-
-                                <android.support.v4.widget.Space
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1" />
 
 
                             </LinearLayout>
@@ -438,47 +427,19 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
+                            android:gravity="end"
                             android:orientation="horizontal">
 
                             <android.support.design.widget.FloatingActionButton
-                                android:id="@+id/noteFAB"
+                                android:id="@+id/editSetSaveButton"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                android:layout_marginStart="10dp"
-                                android:src="@drawable/ic_create_black_24dp"
+                                android:src="@drawable/ic_done_black_24dp"
                                 android:tint="@color/icons" />
 
                             <Space
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
-                            <android.support.design.widget.FloatingActionButton
-                                android:id="@+id/removeSetFAB"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                android:src="@drawable/ic_remove_black_24dp"
-                                android:tint="@color/icons" />
-
-                            <Space
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
-
-                            <android.support.design.widget.FloatingActionButton
-                                android:id="@+id/additionalSetFAB"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginBottom="10dp"
-                                android:src="@drawable/ic_add_black_24dp"
-                                android:tint="@color/icons" />
-
-                            <Space
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+                                android:layout_width="10dp"
+                                android:layout_height="wrap_content" />
 
                             <android.support.design.widget.FloatingActionButton
                                 android:layout_width="wrap_content"

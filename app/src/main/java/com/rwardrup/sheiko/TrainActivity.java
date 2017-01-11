@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -67,10 +68,14 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private NumberPicker repPicker;
     private NumberPicker weightPicker;
     private SharedPreferences.Editor editor;
+    private FloatingActionButton editSetSaveButton;
+    private boolean viewingPastSet = false;
+
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean activityLoaded = false;
     private AudioManager audioManager;
+
     private BroadcastReceiver br = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -116,7 +121,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPref.edit();
 
-
         // Set up volume control
         alarmVolumeControl = (CrystalSeekbar) findViewById(R.id.volumeController);
         currentVolume = sharedPref.getInt("alarmVolume", 4);  // Try to get last set volume
@@ -141,6 +145,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
                 "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
 
+        editSetSaveButton = (FloatingActionButton) findViewById(R.id.editSetSaveButton);
+        editSetSaveButton.setVisibility(View.INVISIBLE);
 
         // Hide the accessory spinner text
         accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
@@ -191,6 +197,25 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // Set the reps and weights
         setRepsWeightPickers();
 
+        // Listen for changes in rep numberPicker
+        repPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+
+                if (viewingPastSet)
+                    editSetSaveButton.setVisibility(View.VISIBLE);
+            }
+        });
+
+        weightPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
+
+                if (viewingPastSet)
+                    editSetSaveButton.setVisibility(View.VISIBLE);
+            }
+        });
+
         // This is an example of how changing images to active/inactive versions
         // will be done programmatically
         squatSelectButton.setImageResource(R.drawable.squats);
@@ -225,7 +250,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             public void onClick(View v) {
 
                 if (setNumber == moveBetweenSetsCounter) {  // If user is at current set
-
+                    viewingPastSet = false;
+                    editSetSaveButton.setVisibility(View.INVISIBLE);
                     Log.i("NewSet", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
                     // reset timer if user goes to next set before it reaches 0
@@ -258,6 +284,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                     setDisplay.setText("Set " + (setNumber + 1) + " of 14");
                 } else if (setNumber > moveBetweenSetsCounter) { // Go forward in history
+                    editSetSaveButton.setVisibility(View.INVISIBLE);
                     moveBetweenSetsCounter += 1;
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
@@ -265,11 +292,33 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     WorkoutHistory nextSet = db.getWorkoutHistory(currentDbRow);
                     int reps = nextSet.getReps();
                     int weight = nextSet.getWeight().intValue();
+
+                    // TODO: Enable changing previous sets by calling db.changeWorkoutHistoryAtId()
+                    // Do current rep and weight picker values match what's in the table?
+                    Log.i("Forward", "repPicker value=" + repPicker.getValue() + " db reps value=" + reps +
+                            " weightPicker value=" + (weightPicker.getValue() + 1) * 5 + " db weight value=" + weight);
+                    if (repPicker.getValue() != reps || Double.valueOf((weightPicker.getValue() + 1) * 5) != Double.valueOf(weight)) {
+                        // update the table
+                        int new_reps = repPicker.getValue();
+                        Double new_weight = Double.valueOf(Double.valueOf((
+                                weightPicker.getValue() + 1) * 5));
+
+                        WorkoutHistory changedWorkoutHistory = new WorkoutHistory("0", date,
+                                current_exercise_string, new_reps, new_weight, currentProgram);
+
+                        Log.i("ChangedWorkoutHistory", "New row: " + changedWorkoutHistory + " at " +
+                                "row " + currentDbRow);
+
+                        Log.i("ChangedWorkoutHistory", "old reps=" + reps + " old weight=" + weight
+                                + " new reps=" + new_reps + " new weight=" + new_weight);
+
+                        // TODO: confirmation dialog for changing history
+                        db.changeWorkoutHistoryAtId(currentDbRow, changedWorkoutHistory);
+                    }
+
                     repPicker.setValue(reps);
                     weightPicker.setValue((weight - 1) / 5);
                     setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of 14");
-
-                    // TODO: Enable changing previous sets by calling db.changeWorkoutHistoryAtId()
                 }
             }
         });
@@ -280,6 +329,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 // Go back to last-entered set if it exists
                 if (moveBetweenSetsCounter > 1 && moveBetweenSetsCounter <= setNumber) {
                     moveBetweenSetsCounter -= 1;
+                    viewingPastSet = true;
                     Log.i("MoveToOldSet", "Set number: " + setNumber + " moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     // Get previous workout history row
                     int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
