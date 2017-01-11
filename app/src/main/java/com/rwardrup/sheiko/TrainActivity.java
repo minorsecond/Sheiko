@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -72,7 +71,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private NumberPicker repPicker;
     private NumberPicker weightPicker;
     private SharedPreferences.Editor editor;
-    private FloatingActionButton editSetSaveButton;
     private boolean viewingPastSet = false;
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
@@ -150,9 +148,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // TODO: Programmatically set the array of today's accessories based on the sqlite db row
         String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
                 "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
-
-        editSetSaveButton = (FloatingActionButton) findViewById(R.id.editSetSaveButton);
-        editSetSaveButton.setVisibility(View.INVISIBLE);
 
         // Hide the accessory spinner text
         accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
@@ -257,7 +252,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                 if (setNumber == moveBetweenSetsCounter) {  // If user is at current set
                     viewingPastSet = false;
-                    editSetSaveButton.setVisibility(View.INVISIBLE);
                     Log.i("NewSet", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
                     // reset timer if user goes to next set before it reaches 0
@@ -290,7 +284,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                     setDisplay.setText("Set " + (setNumber + 1) + " of 14");
                 } else if (setNumber > moveBetweenSetsCounter) { // Go forward in history
-                    editSetSaveButton.setVisibility(View.INVISIBLE);
                     moveBetweenSetsCounter += 1;
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     final int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
