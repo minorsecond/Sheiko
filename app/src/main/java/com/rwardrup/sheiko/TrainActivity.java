@@ -289,7 +289,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                     setDisplay.setText("Set " + (setNumber + 1) + " of 14");
                 } else if (setNumber > moveBetweenSetsCounter) { // Go forward in history
-                    moveBetweenSetsCounter += 1;
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     final int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
                     Log.i("NextSetInHistory", "Moving to row " + currentDbRow);
@@ -330,6 +329,13 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         // Show the prompt
                         changeSetPrompt.show();
                     }
+
+                    moveBetweenSetsCounter += 1;
+                    Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
+
+                    nextSet = db.getWorkoutHistory((workoutHistoryRow - (setNumber - moveBetweenSetsCounter)));
+                    reps = nextSet.getReps();
+                    weight = nextSet.getWeight().intValue();
 
                     repPicker.setValue(reps);
                     weightPicker.setValue((weight - 1) / 5);
