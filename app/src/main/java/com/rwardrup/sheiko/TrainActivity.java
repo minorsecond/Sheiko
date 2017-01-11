@@ -32,6 +32,7 @@ import com.shawnlin.numberpicker.NumberPicker;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -120,10 +121,14 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         Log.i("TodaysDate", "Today's date: " + date);
 
         final MySQLiteHelper db = new MySQLiteHelper(this);
+        final ProgramDbHelper programDb = new ProgramDbHelper(this);
 
         /**
          * CRUD Operations
          **/
+
+        List<WorkoutProgram> todaysWorkout = programDb.getTodaysWorkout("Advanced Medium Load",
+                1, 1, 1);
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
