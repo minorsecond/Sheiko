@@ -398,11 +398,11 @@
 
                         <Space
                             android:layout_width="match_parent"
-                            android:layout_height="10dp" />
+                            android:layout_height="5dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="425dp"
                             android:layout_weight="2"
                             android:clipChildren="false"
                             android:gravity="center_vertical"
@@ -426,10 +426,11 @@
                                 android:layout_weight="1" />
 
                             <android.support.design.widget.FloatingActionButton
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
                                 android:layout_marginBottom="5dp"
                                 android:layout_marginTop="5dp"
+                                android:scaleType="centerInside"
                                 android:src="@drawable/ic_save_black_24dp"
                                 android:tint="@color/icons" />
 
@@ -451,6 +452,10 @@
                                 android:textSize="12sp" />
 
                         </LinearLayout>
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp" />
 
                     </LinearLayout>
 
