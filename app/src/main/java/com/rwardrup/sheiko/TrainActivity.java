@@ -32,7 +32,6 @@ import com.shawnlin.numberpicker.NumberPicker;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.List;
 import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -69,16 +68,15 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     CrystalSeekbar alarmVolumeControl;
     String current_exercise_string = "squat"; // TODO: Set this depending on first exercise of day
     AlertDialog changeSetPrompt;
+    ProgramDbHelper programDbHelper;
     private NumberPicker repPicker;
     private NumberPicker weightPicker;
     private SharedPreferences.Editor editor;
     private boolean viewingPastSet = false;
-
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean activityLoaded = false;
     private AudioManager audioManager;
-
     private BroadcastReceiver br = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
@@ -121,14 +119,13 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         Log.i("TodaysDate", "Today's date: " + date);
 
         final MySQLiteHelper db = new MySQLiteHelper(this);
-        final ProgramDbHelper programDb = new ProgramDbHelper(this);
 
         /**
          * CRUD Operations
          **/
 
-        List<WorkoutProgram> todaysWorkout = programDb.getTodaysWorkout("Advanced Medium Load",
-                1, 1, 1);
+        //List<WorkoutProgram> todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
+        //        1, 1, 1);
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
