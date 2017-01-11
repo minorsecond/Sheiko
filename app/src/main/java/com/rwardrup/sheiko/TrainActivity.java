@@ -102,7 +102,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
-        changeSetPrompt = new AlertDialog.Builder(TrainActivity.this).create();
+        changeSetPrompt = new AlertDialog.Builder(TrainActivity.this).setNegativeButton("Cancel",
+                null).create();
 
         setDisplay = (TextView) findViewById(R.id.setsDisplay);
         setDisplay.setText("Set " + String.valueOf(setNumber + 1) + " of 14");
@@ -324,7 +325,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         changeSetPrompt.setTitle("Previous set has been edited");
                         changeSetPrompt.setMessage("Previous set data has been edited. Do you want " +
                                 "to save these changes?");
-                        changeSetPrompt.setButton(AlertDialog.BUTTON_NEUTRAL, "YES", new DialogInterface.OnClickListener() {
+                        changeSetPrompt.setButton(AlertDialog.BUTTON_POSITIVE, "YES", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 Toast.makeText(getApplicationContext(), "Changed previous set",
