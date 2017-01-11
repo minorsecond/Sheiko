@@ -72,6 +72,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private NumberPicker weightPicker;
     private SharedPreferences.Editor editor;
     private boolean viewingPastSet = false;
+
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean activityLoaded = false;
@@ -163,7 +164,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // Try to get the timer duration from shared preferences, defaulting to 1.5 minutes if it
         // hasn't been set. Time is stored in milliseconds in sharedPreferences. The time is saved
         // in the sharedPreferences file in RestDurationPicker.
-        timerDurationSeconds = (int) (long) (sharedPref.getLong("timerDuration", 180000) / 1000);
+        timerDurationSeconds = (int) (long) (sharedPref.getLong("timerDuration", 90000) / 1000);
         currentProgram = sharedPref.getString("selectedProgram", "Advanced Medium Load");
         currentCycle = sharedPref.getString("selectedCycle", "1");
         currentWeek = sharedPref.getString("selectedWeek", "1");
