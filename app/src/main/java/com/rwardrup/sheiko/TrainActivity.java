@@ -2,6 +2,7 @@ package com.rwardrup.sheiko;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
 import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
@@ -65,12 +68,12 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     TextView currentWorkout;
     CrystalSeekbar alarmVolumeControl;
     String current_exercise_string = "squat"; // TODO: Set this depending on first exercise of day
+    AlertDialog changeSetPrompt;
     private NumberPicker repPicker;
     private NumberPicker weightPicker;
     private SharedPreferences.Editor editor;
     private FloatingActionButton editSetSaveButton;
     private boolean viewingPastSet = false;
-
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
     private boolean activityLoaded = false;
@@ -98,6 +101,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
+
+        changeSetPrompt = new AlertDialog.Builder(TrainActivity.this).create();
 
         setDisplay = (TextView) findViewById(R.id.setsDisplay);
         setDisplay.setText("Set " + String.valueOf(setNumber + 1) + " of 14");
@@ -202,8 +207,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
-                if (viewingPastSet)
-                    editSetSaveButton.setVisibility(View.VISIBLE);
+                if (viewingPastSet) {
+                }
             }
         });
 
@@ -211,8 +216,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             @Override
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
-                if (viewingPastSet)
-                    editSetSaveButton.setVisibility(View.VISIBLE);
+                if (viewingPastSet) {
+                }
             }
         });
 
@@ -287,7 +292,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     editSetSaveButton.setVisibility(View.INVISIBLE);
                     moveBetweenSetsCounter += 1;
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
-                    int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
+                    final int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
                     Log.i("NextSetInHistory", "Moving to row " + currentDbRow);
                     WorkoutHistory nextSet = db.getWorkoutHistory(currentDbRow);
                     int reps = nextSet.getReps();
@@ -297,23 +302,40 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     // Do current rep and weight picker values match what's in the table?
                     Log.i("Forward", "repPicker value=" + repPicker.getValue() + " db reps value=" + reps +
                             " weightPicker value=" + (weightPicker.getValue() + 1) * 5 + " db weight value=" + weight);
-                    if (repPicker.getValue() != reps || Double.valueOf((weightPicker.getValue() + 1) * 5) != Double.valueOf(weight)) {
+
+                    if (repPicker.getValue() != reps || !Double.valueOf((weightPicker.getValue() + 1) * 5).equals(Double.valueOf(weight))) {
+
                         // update the table
                         int new_reps = repPicker.getValue();
-                        Double new_weight = Double.valueOf(Double.valueOf((
-                                weightPicker.getValue() + 1) * 5));
+                        Double new_weight = Double.valueOf((weightPicker.getValue() + 1) * 5);
 
-                        WorkoutHistory changedWorkoutHistory = new WorkoutHistory("0", date,
+                        final WorkoutHistory changedWorkoutHistory = new WorkoutHistory("0", date,
                                 current_exercise_string, new_reps, new_weight, currentProgram);
 
                         Log.i("ChangedWorkoutHistory", "New row: " + changedWorkoutHistory + " at " +
                                 "row " + currentDbRow);
 
-                        Log.i("ChangedWorkoutHistory", "old reps=" + reps + " old weight=" + weight
-                                + " new reps=" + new_reps + " new weight=" + new_weight);
+                        Log.i("ChangedWorkoutHistory", "old reps=" + reps + " old weight=" + Double.valueOf(weight)
+                                + " new reps=" + new_reps + " new weight=" + Double.valueOf(new_weight));
 
                         // TODO: confirmation dialog for changing history
-                        db.changeWorkoutHistoryAtId(currentDbRow, changedWorkoutHistory);
+
+
+                        changeSetPrompt.setTitle("Previous set has been edited");
+                        changeSetPrompt.setMessage("Previous set data has been edited. Do you want " +
+                                "to save these changes?");
+                        changeSetPrompt.setButton(AlertDialog.BUTTON_NEUTRAL, "YES", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                Toast.makeText(getApplicationContext(), "Changed previous set",
+                                        Toast.LENGTH_SHORT).show();
+
+                                db.changeWorkoutHistoryAtId(currentDbRow, changedWorkoutHistory);
+                            }
+                        });
+
+                        // Show the prompt
+                        changeSetPrompt.show();
                     }
 
                     repPicker.setValue(reps);
