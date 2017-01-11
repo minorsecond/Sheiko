@@ -21,10 +21,11 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String TABLE_STATS = "workoutStats";
     private static final String TABLE_USER_MAXES = "userMaxes";
     private static final String TABLE_CUSTOM_WORKOUTS = "customPrograms";
-    private static final String TABLE_ADVANCED_MEDIUM_LOAD = "workout_advanced_medium_load";
+    private static final String TABLE_PROGRAMS = "programs";
 
     // Table columns
     private static final String ID = "_id";
+    private static final String dayExerciseNumber = "dayExerciseNumber";
     private static final String customWorkoutName = "customWorkoutName";
     private static final String exercise = "exercise";
     private static final String weight = "weight";
@@ -44,6 +45,8 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String benchMax = "bench_max";
     private static final String deadliftMax = "deadlift_max";
     private static final String wilks = "wilks";
+    private static final String weightPercentage = "weightPercentage";
+    private static final String enabled = "enabled";
 
 
 
@@ -56,8 +59,9 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final String[] customProgramColumns = {ID, customWorkoutName, liftName, sets,
             reps, percentage, dayNumber, cycleNumber, weekNumber, exerciseCategory};
 
-    private static final String[] advancedMediumLoadColumns = {ID, liftName, sets, reps, percentage,
-            dayNumber, cycleNumber, weekNumber, exerciseCategory};
+    private static final String[] programColumns = {ID, workoutId, programTableName, cycleNumber,
+            weekNumber, dayNumber, exercise, exerciseCategory, dayExerciseNumber, reps, weightPercentage,
+            enabled};
 
     // Database Version
     private static final int DATABASE_VERSION = 1;
@@ -153,21 +157,69 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         this.onCreate(db);
     }
 
+    public List<WorkoutProgram> getTodaysWorkout(String programName, int cycleNumber, int weekNumber, int dayNumber) {
+
+        List<WorkoutProgram> todaysWorkout = new LinkedList<>();
+        // 1. Get reference to readable db
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "programName = " + programName + " AND cycleNumber = " + cycleNumber +
+                " AND weekNumber = " + weekNumber + " AND dayNumber = " + dayNumber;
+
+        Log.i("TodaysWorkout", "Program DB query: " + query);
+
+        // 2. Build query TODO: make this actually do what I want (get by date integer)
+        Cursor cursor = db.query(TABLE_PROGRAMS,
+                programColumns,
+                query, // selections
+                null,  // Selection's args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null // h. limit
+        );
+
+        // 3. if we got results, show the first
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        // 3. Go over each row. Build workout and add it to list
+        WorkoutProgram _todaysWorkout = null;
+        if (cursor.moveToFirst()) {
+            do {
+                _todaysWorkout = new WorkoutProgram();
+                _todaysWorkout.setWorkoutId(cursor.getString(1));
+                _todaysWorkout.setProgramName(cursor.getString(2));
+                _todaysWorkout.setCycleNumber(cursor.getInt(3));
+                _todaysWorkout.setWeekNumber(cursor.getInt(4));
+                _todaysWorkout.setDayNumber(cursor.getInt(5));
+                _todaysWorkout.setExerciseName(cursor.getString(6));
+                _todaysWorkout.setExerciseCategory(cursor.getInt(7));
+                _todaysWorkout.setDayExerciseNumber(cursor.getInt(8));
+                _todaysWorkout.setReps(cursor.getInt(9));
+                _todaysWorkout.setWeightPercentage(cursor.getDouble(10));
+                _todaysWorkout.setEnabled(cursor.getInt(11));
+
+                // Add workout to workouts
+                todaysWorkout.add(_todaysWorkout);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("getTodaysWorkout()", todaysWorkout.toString());
+
+        // Close the cursor
+        cursor.close();
+
+        return todaysWorkout;
+
+    }
+
     public int getWorkoutHistoryRowCount() {
         String countQuery = "SELECT * FROM " + TABLE_HISTORY;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
         int cnt = cursor.getCount();
         return cnt;
-    }
-
-    public Workout getTodaysWorkout(String programTableName, int workoutId) {
-        // For logging
-        //Log.d("GetWorkout", Workout.toString());
-
-        Workout todaysWorkout = new Workout();
-
-        return todaysWorkout;
     }
 
     public void addWorkoutHistory(WorkoutHistory workoutHistory) {

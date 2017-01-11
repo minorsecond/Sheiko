@@ -60,6 +60,14 @@ public class WorkoutProgram {
         this.workoutId = workoutId;
     }
 
+    public String getProgramName() {
+        return programName;
+    }
+
+    public void setProgramName(String programName) {
+        this.programName = programName;
+    }
+
     public int getCycleNumber() {
         return cycleNumber;
     }
