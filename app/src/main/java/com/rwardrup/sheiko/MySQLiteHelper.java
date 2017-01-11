@@ -63,6 +63,7 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 1;
     // Database Name
     private static final String DATABASE_NAME = "SheikoDbTest";
+    private static final String PROGRAM_DATABASE_NAME = "workoutPrograms";
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -140,7 +141,6 @@ public class MySQLiteHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_USER_MAX_TABLE);
         db.execSQL(CREATE_WORKOUT_HISTORY_TABLE);
         db.execSQL(CREATE_CUSTOM_WORKOUT_TABLE);
-        //db.execSQL(CREATE_WORKOUT_ADVANCED_MEDIUM_LOAD_TABLE);
     }
 
     @Override
