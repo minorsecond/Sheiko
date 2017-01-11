@@ -89,6 +89,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private int setNumber = 0;
     private int moveBetweenSetsCounter = 0;
     private TextView setDisplay;
+    private WorkoutSet currentSet;
 
     // Set font
     @Override
@@ -125,18 +126,19 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
          * CRUD Operations
          **/
 
-        List<WorkoutProgram> todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
+        final List<WorkoutSet> todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
                 1, 1, 1);
 
+        currentSet = todaysWorkout.get(1);
+
         for (int i = 0; i < todaysWorkout.size(); i++) {
-            //TODO: DO stuff with the todaysWorkout list
+            Log.i("TodaysWorkout", "Set: " + todaysWorkout.get(i));
         }
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // Shared prefs
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
-        editor = sharedPref.edit();
 
         // Set up volume control
         alarmVolumeControl = (CrystalSeekbar) findViewById(R.id.volumeController);
@@ -210,6 +212,20 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         // Set the reps and weights
         setRepsWeightPickers();
+
+        // TODO: Get users maxes for weight calculation
+        Double currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+        Integer reps = currentSet.getReps();
+        current_exercise_string = currentSet.getExerciseName();
+
+        repPicker.setValue(reps);
+        weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+        currentExercise.setText(current_exercise_string);
+
+        /* TODO: Change the exercise buttons depending on what text is used for the exercise that
+           TODO: day. For example: on day 1, you do front squats instead of regular squats. Front squats and
+           TODO: squats should both appear under the "squats" button.
+         */
 
         // Listen for changes in rep numberPicker
         repPicker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
@@ -296,6 +312,18 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     moveBetweenSetsCounter = setNumber;
 
                     setDisplay.setText("Set " + (setNumber + 1) + " of 14");
+
+                    currentSet = todaysWorkout.get(moveBetweenSetsCounter);
+                    currentReps = currentSet.getReps();
+
+                    // TODO: Get users maxes for weight calculation
+                    currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+                    current_exercise_string = currentSet.getExerciseName();
+
+                    repPicker.setValue(currentReps);
+                    weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                    currentExercise.setText(current_exercise_string);
+
                 } else if (setNumber > moveBetweenSetsCounter) { // Go forward in history
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     final int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));

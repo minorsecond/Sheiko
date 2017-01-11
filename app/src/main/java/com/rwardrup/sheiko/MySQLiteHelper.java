@@ -81,9 +81,9 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         this.onCreate(db);
     }
 
-    public List<WorkoutProgram> getTodaysWorkout(String programName, int cycleNumber, int weekNumber, int dayNumber) {
+    public List<WorkoutSet> getTodaysWorkout(String programName, int cycleNumber, int weekNumber, int dayNumber) {
 
-        List<WorkoutProgram> todaysWorkout = new LinkedList<>();
+        List<WorkoutSet> todaysWorkout = new LinkedList<>();
         // 1. Get reference to readable db
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -109,10 +109,10 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             cursor.moveToFirst();
 
         // 3. Go over each row. Build workout and add it to list
-        WorkoutProgram _todaysWorkout = null;
+        WorkoutSet _todaysWorkout = null;
         if (cursor.moveToFirst()) {
             do {
-                _todaysWorkout = new WorkoutProgram();
+                _todaysWorkout = new WorkoutSet();
                 _todaysWorkout.setWorkoutId(cursor.getString(1));
                 _todaysWorkout.setProgramName(cursor.getString(2));
                 _todaysWorkout.setCycleNumber(cursor.getInt(3));

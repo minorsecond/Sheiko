@@ -4,7 +4,7 @@ package com.rwardrup.sheiko;
  * Created by rwardrup on 1/11/17.
  */
 
-public class WorkoutProgram {
+public class WorkoutSet {
     private int _id;
     private String workoutId;
     private String programName;
@@ -18,12 +18,12 @@ public class WorkoutProgram {
     private Double weightPercentage;
     private int enabled;
 
-    public WorkoutProgram() {
+    public WorkoutSet() {
     }
 
-    public WorkoutProgram(String workoutId, String programName, int cycleNumber, int weekNumber,
-                          int dayNumber, String exerciseName, int exerciseCategory,
-                          int dayExerciseNumber, int reps, Double weightPercentage, int enabled) {
+    public WorkoutSet(String workoutId, String programName, int cycleNumber, int weekNumber,
+                      int dayNumber, String exerciseName, int exerciseCategory,
+                      int dayExerciseNumber, int reps, Double weightPercentage, int enabled) {
         super();
         this.workoutId = workoutId;
         this.programName = programName;
