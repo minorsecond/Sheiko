@@ -128,6 +128,10 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         List<WorkoutProgram> todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
                 1, 1, 1);
 
+        for (int i = 0; i < todaysWorkout.size(); i++) {
+            //TODO: DO stuff with the todaysWorkout list
+        }
+
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
         // Shared prefs
