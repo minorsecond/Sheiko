@@ -279,7 +279,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             @Override
             public void onClick(View v) {
 
-                if (setNumber == moveBetweenSetsCounter) {  // If user is at current set
+                if (setNumber == moveBetweenSetsCounter && setNumber < todaysWorkout.size() - 1) {  // If user is at current set
                     viewingPastSet = false;
                     Log.i("NewSet", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
@@ -324,7 +324,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     weightPicker.setValue((currentWeight.intValue() - 1) / 5);
                     currentExercise.setText(current_exercise_string);
 
-                } else if (setNumber > moveBetweenSetsCounter) { // Go forward in history
+                } else if (setNumber > moveBetweenSetsCounter && setNumber < todaysWorkout.size() - 1) { // Go forward in history
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     final int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
                     Log.i("NextSetInHistory", "Moving to row " + currentDbRow);
