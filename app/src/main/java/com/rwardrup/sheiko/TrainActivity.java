@@ -90,6 +90,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private int moveBetweenSetsCounter = 0;
     private TextView setDisplay;
     private WorkoutSet currentSet;
+    private boolean repsChanged = false;
+    private boolean weightChanged = false;
 
     // Set font
     @Override
@@ -235,6 +237,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
                 if (viewingPastSet) {
+                    repsChanged = true;
                 }
             }
         });
@@ -244,6 +247,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             public void onValueChange(NumberPicker picker, int oldVal, int newVal) {
 
                 if (viewingPastSet) {
+                    weightChanged = true;
                 }
             }
         });
@@ -353,7 +357,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     Log.i("Forward", "repPicker value=" + repPicker.getValue() + " db reps value=" + reps +
                             " weightPicker value=" + (weightPicker.getValue() + 1) * 5 + " db weight value=" + weight);
 
-                    if (repPicker.getValue() != reps || !Double.valueOf((weightPicker.getValue() + 1) * 5).equals(Double.valueOf(weight))) {
+                    if (repsChanged || weightChanged) {
 
                         // update the table
                         int new_reps = repPicker.getValue();
@@ -379,6 +383,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         });
 
                         // Show the prompt
+                        repsChanged = false;
+                        weightChanged = false;
                         changeSetPrompt.show();
                     }
 
@@ -387,7 +393,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     moveBetweenSetsCounter += 1;
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
-                    nextSet = db.getWorkoutHistory((workoutHistoryRow - (setNumber - moveBetweenSetsCounter)));
+                    nextSet = db.getWorkoutHistory((workoutHistoryRow + 1 - (setNumber - moveBetweenSetsCounter)));
                     reps = nextSet.getReps();
                     weight = nextSet.getWeight().intValue();
                     current_exercise_string = nextSet.getExercise();
@@ -400,9 +406,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     Log.d("NextSetInHistory", "Set Data=" + nextSet);
                 }
 
-                else {
+                else if (setNumber - 1 == moveBetweenSetsCounter) {  // This runs on the transition from old sets back to the current set
                     moveBetweenSetsCounter = setNumber;
-                    Log.i("NewSetNumber", "New set number=" + moveBetweenSetsCounter);
+                    Log.i("BackAtCurrentSet", "Set number=" + moveBetweenSetsCounter);
 
                     // Display set number + 1, since setNumber begins at 0
                     setDisplay.setText("Set " + (setNumber + 1) + " of 14");
@@ -418,7 +424,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     weightPicker.setValue((weight.intValue() - 1) / 5);
                     currentExercise.setText(current_exercise_string);
 
-                    Log.d("NextSet", "Next set: " + currentSet);
+                    Log.d("BackAtCurrentSet", "Next set: " + currentSet);
                 }
             }
         });
@@ -429,14 +435,14 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 // TODO: Implement set-change code here too.
                 // Go back to last-entered set if it exists
                 if (moveBetweenSetsCounter >= 1 && moveBetweenSetsCounter <= setNumber) {
-                    moveBetweenSetsCounter -= 1;
                     viewingPastSet = true;
+                    moveBetweenSetsCounter -= 1;
                     Log.i("MoveToOldSet", "Set number: " + setNumber + " moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     // Get previous workout history row
-                    int currentDbRow = (workoutHistoryRow) - (setNumber - moveBetweenSetsCounter);
+                    int currentDbRow = (workoutHistoryRow + 1) - (setNumber - moveBetweenSetsCounter);
                     Log.i("MoveBetweenSets", "Getting row number " + currentDbRow + " of" + workoutHistoryRow);
                     WorkoutHistory lastSet = db.getWorkoutHistory(currentDbRow);
-                    Log.i("WorkoutHistory", lastSet.toString());
+                    Log.i("WorkoutHistory", "Set on set " + currentDbRow + ":" + lastSet.toString());
                     int reps = lastSet.getReps();
                     int weight = lastSet.getWeight().intValue();
                     repPicker.setValue(reps);
