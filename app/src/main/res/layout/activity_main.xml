@@ -372,6 +372,19 @@
                             android:layout_weight="1.01" />
 
                         <Button
+                            android:id="@+id/calendarButton"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/calendar"
+                            android:elevation="2dp"
+                            android:textColor="@color/primary_text"/>
+
+                        <Space
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.01"/>
+
+                        <Button
                             android:id="@+id/selectProgramButton"
                             android:layout_width="50dp"
                             android:layout_height="50dp"

@@ -306,6 +306,15 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(new Intent(MainActivity.this, TrainActivity.class));
             }
         });
+
+        //Calendar button
+        Button calendarButton = (Button) findViewById(R.id.calendarButton);
+        calendarButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(MainActivity.this, CalendarSelectActivity.class));
+            }
+        });
     }
 
     private double wilksScore(String sex, double bodyWeight, double weightLifted) {
