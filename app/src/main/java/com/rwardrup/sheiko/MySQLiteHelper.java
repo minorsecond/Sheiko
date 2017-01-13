@@ -172,7 +172,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     }
 
     public WorkoutHistory getWorkoutHistory(int id) {
-        Log.i("WorkoutHistory", "Getting workout history row: " + id);
+        Log.i("WorkoutHistory", "Getting workoutId: " + id);
 
         // 1. Get reference to readable db
         SQLiteDatabase db = this.getReadableDatabase();
@@ -180,7 +180,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         // 2. Build query
         Cursor cursor = db.query(TABLE_HISTORY,
                 workoutHistoryColumns,
-                " _id = ?", // selections
+                " workoutId = ?", // selections
                 new String[]{String.valueOf(id)},  // Selection's args
                 null, // e. group by
                 null, // f. having
@@ -202,7 +202,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         workoutHistory.setProgramTableName(cursor.getString(6));
 
         // Log
-        Log.d("getWorkout(" + date + ")", workoutHistory.toString());
+        Log.d("getWorkout(" + workoutId + ")", workoutHistory.toString());
 
         // 5. Close cursor
         cursor.close();

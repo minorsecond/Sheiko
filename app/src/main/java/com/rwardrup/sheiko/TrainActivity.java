@@ -129,7 +129,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         final List<WorkoutSet> todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
                 1, 1, 1);
 
-        currentSet = todaysWorkout.get(1);
+        Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
+
+        currentSet = todaysWorkout.get(setNumber);  // Get first set on load
 
         for (int i = 0; i < todaysWorkout.size(); i++) {
             Log.i("TodaysWorkout", "Set: " + todaysWorkout.get(i));
@@ -296,11 +298,19 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                     // Commit the current repPicker and weightPicker values to Workout history table
                     // 1. Get repPicker current value
-                    String workoutId = String.valueOf(db.getWorkoutHistoryRowCount());
+                    String workoutId = String.valueOf(db.getWorkoutHistoryRowCount() + 1);
                     int currentReps = repPicker.getValue();
                     Double currentWeight = Double.valueOf((weightPicker.getValue() + 1) * 5);
                     Log.i("SetSaved", "Current reps: " + currentReps + ", " +
                             "current weight: " + currentWeight);
+
+                    currentSet = todaysWorkout.get(moveBetweenSetsCounter);
+                    //currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+                    current_exercise_string = currentSet.getExerciseName();
+
+                    repPicker.setValue(currentReps);
+                    weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                    currentExercise.setText(current_exercise_string);
 
                     db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
                             currentReps, currentWeight, currentProgram));
@@ -310,7 +320,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     Log.d("Database", "Committed workout history to database. There are now " + workoutHistoryRow + " rows.");
                     setNumber += 1;
                     moveBetweenSetsCounter = setNumber;
+                    Log.i("NewSetNumber", "New set number=" + moveBetweenSetsCounter);
 
+                    // Display set number + 1, since setNumber begins at 0
                     setDisplay.setText("Set " + (setNumber + 1) + " of 14");
 
                     currentSet = todaysWorkout.get(moveBetweenSetsCounter);
@@ -324,15 +336,19 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     weightPicker.setValue((currentWeight.intValue() - 1) / 5);
                     currentExercise.setText(current_exercise_string);
 
-                } else if (setNumber > moveBetweenSetsCounter && setNumber < todaysWorkout.size() - 1) { // Go forward in history
+                    Log.d("NextSet", "Next set: " + currentSet);
+
+                } else if (setNumber > moveBetweenSetsCounter + 1 && setNumber < todaysWorkout.size() - 1) { // Go forward in history
+
+                    // First, get values for current set in view to check if they've been changed
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     final int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
                     Log.i("NextSetInHistory", "Moving to row " + currentDbRow);
                     WorkoutHistory nextSet = db.getWorkoutHistory(currentDbRow);
                     int reps = nextSet.getReps();
                     int weight = nextSet.getWeight().intValue();
+                    current_exercise_string = nextSet.getExercise();
 
-                    // TODO: Enable changing previous sets by calling db.changeWorkoutHistoryAtId()
                     // Do current rep and weight picker values match what's in the table?
                     Log.i("Forward", "repPicker value=" + repPicker.getValue() + " db reps value=" + reps +
                             " weightPicker value=" + (weightPicker.getValue() + 1) * 5 + " db weight value=" + weight);
@@ -366,16 +382,43 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         changeSetPrompt.show();
                     }
 
+                    // Now, get the values for the next set to view
+
                     moveBetweenSetsCounter += 1;
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
                     nextSet = db.getWorkoutHistory((workoutHistoryRow - (setNumber - moveBetweenSetsCounter)));
                     reps = nextSet.getReps();
                     weight = nextSet.getWeight().intValue();
+                    current_exercise_string = nextSet.getExercise();
 
                     repPicker.setValue(reps);
                     weightPicker.setValue((weight - 1) / 5);
                     setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of 14");
+                    currentExercise.setText(current_exercise_string);
+
+                    Log.d("NextSetInHistory", "Set Data=" + nextSet);
+                }
+
+                else {
+                    moveBetweenSetsCounter = setNumber;
+                    Log.i("NewSetNumber", "New set number=" + moveBetweenSetsCounter);
+
+                    // Display set number + 1, since setNumber begins at 0
+                    setDisplay.setText("Set " + (setNumber + 1) + " of 14");
+
+                    currentSet = todaysWorkout.get(moveBetweenSetsCounter);
+                    int currentReps = currentSet.getReps();
+
+                    // TODO: Get users maxes for weight calculation
+                    Double weight = new Double(currentSet.getWeightPercentage() * 100);
+                    current_exercise_string = currentSet.getExerciseName();
+
+                    repPicker.setValue(currentReps);
+                    weightPicker.setValue((weight.intValue() - 1) / 5);
+                    currentExercise.setText(current_exercise_string);
+
+                    Log.d("NextSet", "Next set: " + currentSet);
                 }
             }
         });
@@ -385,12 +428,12 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             public void onClick(View v) {
                 // TODO: Implement set-change code here too.
                 // Go back to last-entered set if it exists
-                if (moveBetweenSetsCounter > 1 && moveBetweenSetsCounter <= setNumber) {
+                if (moveBetweenSetsCounter >= 1 && moveBetweenSetsCounter <= setNumber) {
                     moveBetweenSetsCounter -= 1;
                     viewingPastSet = true;
                     Log.i("MoveToOldSet", "Set number: " + setNumber + " moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     // Get previous workout history row
-                    int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
+                    int currentDbRow = (workoutHistoryRow) - (setNumber - moveBetweenSetsCounter);
                     Log.i("MoveBetweenSets", "Getting row number " + currentDbRow + " of" + workoutHistoryRow);
                     WorkoutHistory lastSet = db.getWorkoutHistory(currentDbRow);
                     Log.i("WorkoutHistory", lastSet.toString());
@@ -398,8 +441,10 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     int weight = lastSet.getWeight().intValue();
                     repPicker.setValue(reps);
                     weightPicker.setValue((weight - 1) / 5);
+                    current_exercise_string = lastSet.getExercise();
 
                     setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of 14");
+                    currentExercise.setText(current_exercise_string);
 
                     Log.i("MoveBetweenSets", "Previous set values: reps=" + reps + ", weight=" +
                             weight / 5 + " at set number " + moveBetweenSetsCounter);

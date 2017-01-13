@@ -25,6 +25,7 @@ public class WorkoutSet {
                       int dayNumber, String exerciseName, int exerciseCategory,
                       int dayExerciseNumber, int reps, Double weightPercentage, int enabled) {
         super();
+        this._id = _id;
         this.workoutId = workoutId;
         this.programName = programName;
         this.cycleNumber = cycleNumber;
