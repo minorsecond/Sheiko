@@ -3,12 +3,10 @@ package com.rwardrup.sheiko;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Color;
 import android.icu.text.SimpleDateFormat;
-import android.icu.util.Calendar;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -25,7 +23,9 @@ import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
 import java.text.ParseException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
@@ -35,13 +35,15 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 public class MainActivity extends AppCompatActivity {
 
     // Lift max variables
-    private int squat_max;
-    private int bench_max;
-    private int deadlift_max;
+    private Double squat_max;
+    private Double bench_max;
+    private Double deadlift_max;
     private String unit;
     private String unitAbbreviation;
     private Double bodyweight;
     private String sex;
+    private String currentCycleText;
+    private boolean firstLoad = false;
 
     // Set font
     @Override
@@ -55,7 +57,44 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // Set up DB connection
+        MySQLiteHelper db = new MySQLiteHelper(this);
+
+        /**
+         * CRUD Operations
+         **/
+
+        // get all workouts
+        List<WorkoutStats> workoutStats = db.getAllWorkoutstats();
+        UserMaxEntry userMaxEntry = db.getLastUserMaxEntry();
+
+        for (int i = 0; i < workoutStats.size(); i++) {
+            Log.i("historyElement", "Workout session: " + workoutStats.get(i).getDate());
+        }
+
+        final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
+
         SharedPreferences sharedpref = PreferenceManager.getDefaultSharedPreferences(this);
+        TextView currentWorkoutDisplay = (TextView) findViewById(R.id.currentWorkoutText);
+
+        // Get current workout
+        String currentProgram = sharedpref.getString("selectedProgram", "Advanced Medium Load");
+        String currentCycle = sharedpref.getString("selectedCycle", "1");
+        String currentWeek = sharedpref.getString("selectedWeek", "1");
+        String currentDay = sharedpref.getString("selectedDay", "1");
+
+        if (Arrays.asList(oldNumberedPrograms).contains(currentProgram)) {
+            currentCycleText = "";
+        } else {
+            currentCycleText = " (" + currentCycle + ") ";
+        }
+
+
+        // Build the string for current workout display
+        String currentWorkoutText = currentProgram + currentCycleText + " - " + "Week " +
+                currentWeek + " " + "Day " + currentDay;
+
+        currentWorkoutDisplay.setText(currentWorkoutText);
 
         // Lift max textviews
         TextView squatMax = (TextView) findViewById(R.id.squatMax);
@@ -69,9 +108,16 @@ public class MainActivity extends AppCompatActivity {
 
         try {
             //readFromUserParamDb();  // Load databases
+
+            squat_max = userMaxEntry.getSquatMax();
+            bench_max = userMaxEntry.getBenchMax();
+            deadlift_max = userMaxEntry.getDeadliftMax();
+
             unit = sharedpref.getString("unit", "kilograms");
             bodyweight = (double) sharedpref.getLong("bodyweight", -1);
             sex = sharedpref.getString("sex", "Male");
+
+            firstLoad = bodyweight == -1;
 
             Log.i("ReadParameters", "Read the following user parameters: " + "Unit: " + unit +
                     ", bodyweight: " + bodyweight + ", sex: " + sex);
@@ -80,9 +126,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         try {
-            readFromUserMaxDb();  // Load databases
-
-            Double totalWeight = (double) squat_max + (double) bench_max + (double) deadlift_max;
+            Double totalWeight = squat_max + bench_max + deadlift_max;
             Log.d("Calculation", "Calculated total: " + totalWeight);
 
             // set unit abbreviation
@@ -111,106 +155,64 @@ public class MainActivity extends AppCompatActivity {
             userTotal.setText(String.valueOf(totalWeight) + " " + unitAbbreviation);
             userWilks.setText(String.format(Locale.US, "%.2f", wilksScore));
 
-
         } catch (NullPointerException e) {
             Log.d("DbReadError", "User max DB read error: " + e);  // First creation of database.
-            squatMax.setText("Press the gear icon to set");
-            benchMax.setText("Press the gear icon to set");
-            deadliftMax.setText("Press the gear icon to set");
-            userTotal.setText("Press the gear icon to set");
-            userWilks.setText("Press the gear icon to set");
+            firstLoad = true;
+        }
+
+        if (firstLoad) {
+            squatMax.setText("");
+            benchMax.setText("");
+            deadliftMax.setText("");
+            userTotal.setText("");
+            userWilks.setText("");
         }
 
         // The graph on the main window. See www.android-graphview.org for more info
-        Calendar calendar = Calendar.getInstance();
-
-        // Add example dates
-        String date1 = "01/21/2016";
-        String date2 = "03/21/2016";
-        String date3 = "05/21/2016";
-        String date4 = "07/21/2016";
-        String date5 = "09/21/2016";
-        String date6 = "11/21/2016";
 
         SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy");
 
-        Date d1 = null;
-        Date d2 = null;
-        Date d3 = null;
-        Date d4 = null;
-        Date d5 = null;
-        Date d6 = null;
-
         // Create Date objects from the strings declared above.
-        // For the app, this will probably need to be done using a for loop.
-
-        try {
-            d1 = df.parse(date1);
-            calendar.add(Calendar.DATE, 1);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d2 = df.parse(date2);
-            calendar.add(Calendar.DATE, 1);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d3 = df.parse(date3);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d4 = df.parse(date4);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d5 = df.parse(date5);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            d6 = df.parse(date6);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         GraphView graph = (GraphView) findViewById(R.id.graph);
 
-        // Add the points to the line graph - Not currently used
-        //LineGraphSeries<DataPoint> totalWeightLifted = new LineGraphSeries<>(new DataPoint[]{
+        LineGraphSeries<DataPoint> numberLifts = new LineGraphSeries<>();
+        LineGraphSeries<DataPoint> averageWeightLifted = new LineGraphSeries<>();
 
-        //      new DataPoint(d1, 25475),
-        //    new DataPoint(d2, 22330),
-        //      new DataPoint(d3, 28795),
-        //      new DataPoint(d4, 29977),
-        //      new DataPoint(d5, 22590),
-        //      new DataPoint(d6, 22550)
-        //});
+        float minVolume = 9999;
+        float maxVolume = -9999;
+        for (int i = 0; i < workoutStats.size(); i++) {
+            Log.i("historyElement", "Workout session: " + workoutStats.get(i).getDate());
+            String _date = workoutStats.get(i).getDate();
+            Integer nLifts = workoutStats.get(i).getTotalReps();
+            Log.i("WorkoutHistory", "Volume: " + nLifts);
+            Float averageWeightLiftedAll = workoutStats.get(i).getAverageWeightLiftedAll();
+            Date date;
 
-        // Series style
-        //totalWeightLifted.setTitle("Volume");
-        //totalWeightLifted.setColor(Color.rgb(255, 116, 52));
-        //totalWeightLifted.setDrawDataPoints(true);
-        //totalWeightLifted.setDataPointsRadius(10);
-        //totalWeightLifted.setThickness(8);
+            // Set the minimum and max values for graph second axis
+            if (averageWeightLiftedAll <= minVolume) {
+                minVolume = averageWeightLiftedAll - 10;
+            } else if (averageWeightLiftedAll >= maxVolume) {
+                maxVolume = averageWeightLiftedAll + 10;
+            }
 
-        LineGraphSeries<DataPoint> numberLifts = new LineGraphSeries<>(new DataPoint[]{
+            try {
+                date = df.parse(_date);
 
-                new DataPoint(d1, 250),
-                new DataPoint(d2, 220),
-                new DataPoint(d3, 275),
-                new DataPoint(d4, 325),
-                new DataPoint(d5, 230),
-                new DataPoint(d6, 210)
-        });
+                // Add the volume data points
+                DataPoint volumedataPoint = new DataPoint(date, nLifts);
+                numberLifts.appendData(volumedataPoint, false, 1000, false);
+
+                // Add the AWL data points
+                DataPoint averageWeightLiftedDataPoint = new DataPoint(date, averageWeightLiftedAll);
+                averageWeightLifted.appendData(averageWeightLiftedDataPoint, false, 1000, false);
+
+            } catch (ParseException e) {
+                Log.e("DateParseError", "ParseException in reading workout history: " + e);
+            }
+        }
+
+        graph.addSeries(numberLifts);
 
         // Series style for number of lifts
         numberLifts.setTitle("# Lifts");
@@ -218,16 +220,6 @@ public class MainActivity extends AppCompatActivity {
         numberLifts.setDrawDataPoints(true);
         numberLifts.setDataPointsRadius(10);
         numberLifts.setThickness(8);
-
-        LineGraphSeries<DataPoint> averageWeightLifted = new LineGraphSeries<>(new DataPoint[]{
-
-                new DataPoint(d1, 350),
-                new DataPoint(d2, 375),
-                new DataPoint(d3, 315),
-                new DataPoint(d4, 335),
-                new DataPoint(d5, 375),
-                new DataPoint(d6, 395)
-        });
 
         // Series style for Average Weight Lifted
         averageWeightLifted.setTitle("AWL");
@@ -237,7 +229,7 @@ public class MainActivity extends AppCompatActivity {
         averageWeightLifted.setThickness(8);
 
         //graph.addSeries(totalWeightLifted);
-        graph.addSeries(numberLifts);
+        //graph.addSeries(numberLifts);
         graph.getSecondScale().addSeries(averageWeightLifted);
 
         // Set the date label formatter
@@ -259,13 +251,13 @@ public class MainActivity extends AppCompatActivity {
 
         // Set padding for axis labels
         GridLabelRenderer glr = graph.getGridLabelRenderer();
-        glr.setPadding(12);
+        glr.setPadding(20);
 
         // Set vertical axis color
         glr.setVerticalLabelsColor(Color.rgb(38, 138, 58));
-        // Set second scale bounds
-        graph.getSecondScale().setMinY(150);
-        graph.getSecondScale().setMaxY(450);
+        // Set second scale bounds TODO: Set these programattically
+        graph.getSecondScale().setMinY(minVolume);
+        graph.getSecondScale().setMaxY(maxVolume);
         glr.setVerticalLabelsSecondScaleColor(Color.rgb(0, 119, 211));
         graph.getSecondScale().setVerticalAxisTitle("# Lifts");
 
@@ -284,6 +276,7 @@ public class MainActivity extends AppCompatActivity {
 
         // set Title
         graph.setTitle("Program History");
+        graph.setTitleTextSize(48);
 
         // Handle button clicks that take user to another action.
 
@@ -292,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, Settings.class));
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
             }
         });
 
@@ -310,47 +303,14 @@ public class MainActivity extends AppCompatActivity {
         startTrainingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(MainActivity.this, train.class));
+                startActivity(new Intent(MainActivity.this, TrainActivity.class));
             }
         });
     }
 
-    // Read from user User Max DB
-    private void readFromUserMaxDb() {
-        SQLiteDatabase database = new userMaxesHelper(this).getReadableDatabase();
-
-        int squat;
-        int bench;
-        int deadlift;
-
-        // Get the last user parameter entry
-        String[] columns = {
-                "units",
-                "squat_max",
-                "bench_max",
-                "deadlift_max",
-                "date",
-                "wilks"
-        };
-
-        Cursor cursor = database.query(userData.UserMaxes.TABLE_NAME, columns, null, null, null, null, null);
-        Log.d("CursorCount", "The total cursor count is " + cursor.getColumnCount());
-
-        // Get values from DB cursor
-        if (cursor.moveToLast()) {
-            squat_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.SQUAT_MAX)));
-            bench_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.BENCH_MAX)));
-            deadlift_max = Integer.parseInt(cursor.getString(cursor.getColumnIndex(userData.UserMaxes.DEADLIFT_MAX)));
-        }
-        cursor.close();
-
-        // Write the DB values to text entry fields
-
-        Log.d("Database", "Successfully read user maxes from DB.");
-    }
-
     private double wilksScore(String sex, double bodyWeight, double weightLifted) {
         // Wilk's coefficients. Default to males as they will most likely be the primary user
+        // TODO: Consider moving this into its own class
         double a = -216.0475144;
         double b = 16.2606339;
         double c = -0.002388645;
@@ -407,7 +367,7 @@ public class MainActivity extends AppCompatActivity {
     // Create user parameter DB
     public class userParametersHelper extends SQLiteOpenHelper {
 
-        public static final String DATABASE_NAME = "testing_database";  // TODO: change this
+        public static final String DATABASE_NAME = "SheikoDb";  // TODO: change this
         private static final int DATABASE_VERSION = 1;
 
         public userParametersHelper(Context context) {
@@ -431,7 +391,7 @@ public class MainActivity extends AppCompatActivity {
     // Create user maxes DB
     public class userMaxesHelper extends SQLiteOpenHelper {
 
-        public static final String DATABASE_NAME = "testing_database";  // TODO: change this
+        public static final String DATABASE_NAME = "SheikoDb";  // TODO: change this
         private static final int DATABASE_VERSION = 1;
 
         public userMaxesHelper(Context context) {

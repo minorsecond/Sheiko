@@ -25,7 +25,7 @@ public class RestDurationPicker extends TimeDurationPickerDialogFragment {
         //When the duration is set by the user, notify the listener
 
         try {
-            ((train) getActivity()).onDurationSet(duration);
+            ((TrainActivity) getActivity()).onDurationSet(duration);
         } catch (ClassCastException e) {
             // User probably set time from SettingsActivity
         }

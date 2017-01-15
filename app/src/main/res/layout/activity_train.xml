@@ -1,34 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<com.sothree.slidinguppanel.SlidingUpPanelLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:sothree="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_train"
+    android:id="@+id/sliding_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingBottom="0dp"
-    android:paddingLeft="0dp"
-    android:paddingRight="0dp"
-    android:paddingTop="0dp"
-    tools:context="com.rwardrup.sheiko.train">
+    android:gravity="bottom"
+    sothree:umanoDragView="@+id/dragView"
+    sothree:umanoOverlay="false"
+    sothree:umanoPanelHeight="45dp"
+    sothree:umanoParallaxOffset="100dp"
+    sothree:umanoScrollableView="@+id/list"
+    sothree:umanoShadowHeight="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="1"
+        tools:ignore="RtlHardcoded,UselessParent">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="55dp"
             android:background="@color/primary"
+            android:gravity="center_vertical"
             android:orientation="horizontal">
 
             <ImageView
                 android:id="@+id/imageView6"
                 android:layout_width="56dp"
                 android:layout_height="50dp"
-                app:srcCompat="@drawable/logo"
+                android:layout_weight="0"
+                app:srcCompat="@drawable/logo_blue"
                 tools:ignore="ContentDescription" />
 
             <TextView
@@ -45,148 +53,343 @@
                 android:textSize="40sp" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/currentWorkoutDisplay"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="top|center_horizontal"
+            android:text="Advanced Medium Load (2) - Week 1 Day 2"
+            android:textAppearance="@android:style/TextAppearance.Material.Medium"
+            android:textColor="@color/primary_text"
+            android:textSize="16sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentTop="true"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="bottom|center"
             android:orientation="vertical"
-            android:paddingBottom="@dimen/activity_vertical_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:paddingTop="5dp"
-            android:weightSum="1"
-            tools:ignore="RtlHardcoded,UselessParent">
-
-            <TextView
-                android:id="@+id/currentWorkoutDisplay"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="top|center_horizontal"
-                android:text="Advanced Medium Load (2) - Week 1 Day 2"
-                android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                android:textColor="@color/primary_text"
-                android:textSize="16sp" />
+            android:paddingStart="@dimen/activity_horizontal_margin">
 
             <LinearLayout
+                android:id="@+id/topLayout"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
+                android:layout_gravity="top"
                 android:layout_weight="1"
-                android:gravity="bottom|center"
-                android:orientation="vertical">
+                android:gravity="top"
+                android:orientation="vertical"
+                tools:ignore="NestedWeights">
 
                 <LinearLayout
+                    android:id="@+id/mainLayout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_gravity="top"
                     android:layout_weight="1"
                     android:gravity="top"
-                    android:orientation="vertical"
-                    tools:ignore="NestedWeights">
+                    android:orientation="vertical">
 
                     <LinearLayout
-                        android:id="@+id/mainLayout"
+                        android:id="@+id/TrainMainHeaderLayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp" />
+
+                    <View
+                        android:id="@+id/exerciseDivider"
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_gravity="top|center_horizontal"
+                        android:alpha="0.12"
+                        android:background="@android:color/black" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="5dp" />
+
+                    <TextView
+                        android:id="@+id/liftSelectionInstruction"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_horizontal"
+                        android:text="@string/select_lift"
+                        android:textColor="@color/primary_text" />
+
+                    <LinearLayout
+                        android:id="@+id/exerciseSelection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                        <ImageButton
+                            android:id="@+id/squatSelectButton"
+                            android:layout_width="45dp"
+                            android:layout_height="45dp"
+                            android:layout_gravity="center"
+                            android:adjustViewBounds="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:elevation="25dp"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/squats_inactive" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <ImageButton
+                            android:id="@+id/benchSelectButton"
+                            android:layout_width="50dp"
+                            android:layout_height="65dp"
+                            android:layout_gravity="center"
+                            android:adjustViewBounds="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/bench_press" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <ImageButton
+                            android:id="@+id/deadliftButton"
+                            android:layout_width="45dp"
+                            android:layout_height="40dp"
+                            android:layout_gravity="center"
+                            android:adjustViewBounds="true"
+                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:scaleType="fitCenter"
+                            android:src="@drawable/deadlift_inactive" />
+
+                        <Space
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+
+                        <Spinner
+                            android:id="@+id/accessorySpinner"
+                            android:layout_width="53dp"
+                            android:layout_height="43dp"
+                            android:layout_gravity="center"
+                            android:layout_marginEnd="-10dp"
+                            android:layout_marginStart="-10dp"
+                            android:background="@drawable/dumbell_curls"
+                            android:entries="@array/accessories"
+                            android:gravity="center" />
+
+                    </LinearLayout>
+
+                    <View
+                        android:id="@+id/exerciseDivider1"
+                        android:layout_width="70dp"
+                        android:layout_height="1dp"
+                        android:layout_gravity="top|center_horizontal"
+                        android:alpha="0.12"
+                        android:background="@android:color/black" />
+
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="10dp" />
+
+                    <LinearLayout
+                        android:id="@+id/setsAndWeights"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="top"
-                        android:layout_weight="1"
-                        android:gravity="top"
-                        android:orientation="vertical">
+                        android:layout_gravity="center"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingBottom="2dp">
 
                         <LinearLayout
-                            android:id="@+id/TrainMainHeaderLayout"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:orientation="horizontal">
-
-                        </LinearLayout>
-
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="5dp" />
-
-                        <View
-                            android:id="@+id/exerciseDivider"
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:layout_gravity="top|center_horizontal"
-                            android:alpha="0.12"
-                            android:background="@android:color/black" />
-
-                        <Space
-                            android:layout_width="match_parent"
-                            android:layout_height="5dp" />
-
-                        <TextView
-                            android:id="@+id/liftSelectionInstruction"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center_horizontal"
-                            android:text="@string/select_lift"
-                            android:textColor="@color/primary_text" />
-
-                        <LinearLayout
-                            android:id="@+id/exerciseSelection"
+                            android:id="@+id/setSelectionView"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal">
 
                             <Button
-                                android:id="@+id/squatSelectButton"
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:background="@drawable/squats_inactive"
-                                android:gravity="center"
-                                android:textColor="@color/secondary_text"
-                                android:textSize="14sp" />
-
-                            <Space
-                                android:layout_width="wrap_content"
+                                android:id="@+id/previousSetButton"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+                                android:layout_weight="1"
+                                android:background="@color/primary_dark"
+                                android:elevation="1dp"
+                                android:text="Prev. Set"
+                                android:textAppearance="@android:style/TextAppearance.Material.Button"
+                                android:textColor="@color/icons"
+                                android:textSize="12sp" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:gravity="top|center_horizontal"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/currentActivityText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="top|center_horizontal"
+                                    android:text="Current Lift"
+                                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                                    android:textColor="@color/primary_text" />
+
+                                <TextView
+                                    android:id="@+id/currentExerciseDisplay"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="top|center_horizontal"
+                                    android:text="@string/squat"
+                                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                                    android:textColor="@color/primary_text"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:id="@+id/setsDisplay"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="top|center_horizontal"
+                                    android:text="Set 3 / 11"
+                                    android:textColor="@color/secondary_text"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
 
                             <Button
-                                android:id="@+id/benchSelectButton"
-                                android:layout_width="55dp"
-                                android:layout_height="65dp"
-                                android:background="@drawable/bench_press"
-                                android:gravity="center"
-                                android:textSize="14sp" />
-
-                            <Space
-                                android:layout_width="wrap_content"
+                                android:id="@+id/nextSetButton"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+                                android:layout_weight="1"
+                                android:background="@color/primary_dark"
+                                android:elevation="1dp"
+                                android:text="Next Set"
+                                android:textAppearance="@android:style/TextAppearance.Material.Button"
+                                android:textColor="@color/icons"
+                                android:textSize="12sp" />
+                        </LinearLayout>
 
-                            <Button
-                                android:id="@+id/deadliftButton"
-                                android:layout_width="45dp"
-                                android:layout_height="45dp"
-                                android:background="@drawable/deadlift_inactive"
-                                android:gravity="center"
-                                android:textColor="@color/secondary_text"
-                                android:textSize="14sp" />
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
 
-                            <Space
+                        <LinearLayout
+                            android:id="@+id/weightSelectionView"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"
+                            android:orientation="horizontal">
+
+                            <LinearLayout
+                                android:id="@+id/repsLayout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="?android:attr/windowBackground"
+                                android:gravity="center_horizontal"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/repsPickerText"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:gravity="center"
+                                    android:text="Reps"
+                                    android:textColor="@color/secondary_text" />
+
+                                <com.shawnlin.numberpicker.NumberPicker
+                                    android:id="@+id/repsPicker"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    app:np_dividerColor="@color/primary_dark"
+                                    app:np_dividerDistance="20dp"
+                                    app:np_dividerThickness="1dp"
+                                    app:np_max="20"
+                                    app:np_min="0"
+                                    app:np_textColor="@color/primary_dark"
+                                    app:np_textSize="18sp"
+                                    app:np_wheelItemCount="5" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/liftActionButtons"
                                 android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_weight="1" />
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:clipToPadding="false"
+                                android:orientation="vertical"
+                                android:paddingBottom="9dp">
 
-                            <Spinner
-                                android:id="@+id/accessorySpinner"
-                                android:layout_width="60dp"
-                                android:layout_height="50dp"
-                                android:layout_gravity="center"
-                                android:layout_marginEnd="-10dp"
-                                android:layout_marginStart="-10dp"
-                                android:background="@drawable/dumbell_curls"
-                                android:entries="@array/accessories"
-                                android:gravity="center" />
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/weightLayout"
+                                android:layout_width="0dp"
+                                android:layout_height="match_parent"
+                                android:layout_weight="1"
+                                android:background="?android:attr/windowBackground"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/weightPickerText"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center"
+                                    android:text="Weight" />
+
+                                <com.shawnlin.numberpicker.NumberPicker
+                                    android:id="@+id/weightPicker"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="match_parent"
+                                    android:layout_gravity="center"
+                                    app:np_dividerColor="@color/primary_dark"
+                                    app:np_dividerDistance="20dp"
+                                    app:np_dividerThickness="1dp"
+                                    app:np_textColor="@color/primary_dark"
+                                    app:np_textSize="18sp"
+                                    app:np_wheelItemCount="5" />
+                            </LinearLayout>
 
                         </LinearLayout>
 
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp" />
+
+                        <LinearLayout
+                            android:id="@+id/workoutSelectionView"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="bottom"
+                            android:orientation="horizontal">
+
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                        </LinearLayout>
+
+                        <android.support.v4.widget.Space
+                            android:layout_width="match_parent"
+                            android:layout_height="10dp"
+                            android:layout_weight="0" />
+
                         <View
-                            android:id="@+id/exerciseDivider1"
+                            android:id="@+id/exerciseDivider2"
                             android:layout_width="70dp"
                             android:layout_height="1dp"
                             android:layout_gravity="top|center_horizontal"
@@ -195,280 +398,213 @@
 
                         <Space
                             android:layout_width="match_parent"
-                            android:layout_height="10dp" />
+                            android:layout_height="5dp" />
 
                         <LinearLayout
-                            android:id="@+id/setsAndWeights"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
+                            android:layout_height="425dp"
+                            android:layout_weight="2"
+                            android:clipChildren="false"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
 
-                            <LinearLayout
-                                android:id="@+id/setSelectionView"
-                                android:layout_width="match_parent"
+                            <Button
+                                android:id="@+id/previousWorkoutButton"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:orientation="horizontal">
-
-                                <Button
-                                    android:id="@+id/previousSetButton"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:background="@color/accent"
-                                    android:elevation="1dp"
-                                    android:text="Prev. Set"
-                                    android:textAppearance="@android:style/TextAppearance.Material.Button" />
-
-                                <LinearLayout
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:gravity="top|center_horizontal"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:id="@+id/currentActivityText"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:gravity="top|center_horizontal"
-                                        android:text="Current Lift"
-                                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                                        android:textColor="@color/primary_text" />
-
-                                    <TextView
-                                        android:id="@+id/currentExerciseDisplay"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:gravity="top|center_horizontal"
-                                        android:text="@string/squat"
-                                        android:textAppearance="@android:style/TextAppearance.Material.Medium"
-                                        android:textColor="@color/primary_text"
-                                        android:textSize="12sp" />
-
-                                    <TextView
-                                        android:id="@+id/setsDisplay"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="match_parent"
-                                        android:layout_weight="1"
-                                        android:gravity="top|center_horizontal"
-                                        android:text="Set 3 / 11"
-                                        android:textColor="@color/secondary_text"
-                                        android:textSize="12sp" />
-                                </LinearLayout>
-
-                                <Button
-                                    android:id="@+id/nextSetButton"
-                                    android:layout_width="0dp"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1"
-                                    android:background="@color/accent"
-                                    android:elevation="1dp"
-                                    android:text="Next Set"
-                                    android:textAppearance="@android:style/TextAppearance.Material.Button" />
-                            </LinearLayout>
+                                android:layout_weight="1"
+                                android:background="@color/primary_dark"
+                                android:elevation="1dp"
+                                android:text="Prev. Workout"
+                                android:textAppearance="@android:style/TextAppearance.Material.Button"
+                                android:textColor="@color/icons"
+                                android:textSize="12sp" />
 
                             <Space
-                                android:layout_width="match_parent"
-                                android:layout_height="10dp" />
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
 
-                            <LinearLayout
-                                android:id="@+id/weightSelectionView"
-                                android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                            <android.support.design.widget.FloatingActionButton
+                                android:layout_width="56dp"
+                                android:layout_height="56dp"
+                                android:layout_marginBottom="5dp"
+                                android:layout_marginTop="5dp"
+                                android:scaleType="centerInside"
+                                android:src="@drawable/ic_save_black_24dp"
+                                android:tint="@color/icons" />
+
+                            <Space
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1" />
+
+                            <Button
+                                android:id="@+id/nextWorkoutButton"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:orientation="horizontal">
+                                android:background="@color/primary_dark"
+                                android:elevation="1dp"
+                                android:text="Next Workout"
+                                android:textAppearance="@android:style/TextAppearance.Material.Button"
+                                android:textColor="@color/icons"
+                                android:textSize="12sp" />
 
-                                <LinearLayout
-                                    android:id="@+id/repsLayout"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:background="?android:attr/windowBackground"
-                                    android:gravity="center_horizontal"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:id="@+id/repsPickerText"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="center"
-                                        android:gravity="center"
-                                        android:text="Reps"
-                                        android:textColor="@color/secondary_text" />
-
-                                    <com.shawnlin.numberpicker.NumberPicker
-                                        android:id="@+id/repsPicker"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="150dp"
-                                        android:layout_gravity="center"
-                                        app:np_dividerColor="@color/primary_dark"
-                                        app:np_dividerDistance="20dp"
-                                        app:np_dividerThickness="1dp"
-                                        app:np_max="20"
-                                        app:np_min="0"
-                                        app:np_textColor="@color/primary_dark"
-                                        app:np_textSize="18sp"
-                                        app:np_wheelItemCount="5" />
-                                </LinearLayout>
-
-                                <Space
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:layout_weight="1" />
-
-                                <LinearLayout
-                                    android:id="@+id/weightLayout"
-                                    android:layout_width="0dp"
-                                    android:layout_height="match_parent"
-                                    android:layout_weight="1"
-                                    android:background="?android:attr/windowBackground"
-                                    android:orientation="vertical">
-
-                                    <TextView
-                                        android:id="@+id/weightPickerText"
-                                        android:layout_width="match_parent"
-                                        android:layout_height="wrap_content"
-                                        android:gravity="center"
-                                        android:text="Weight" />
-
-                                    <com.shawnlin.numberpicker.NumberPicker
-                                        android:id="@+id/weightPicker"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="150dp"
-                                        android:layout_gravity="center"
-                                        app:np_dividerColor="@color/primary_dark"
-                                        app:np_dividerDistance="20dp"
-                                        app:np_dividerThickness="1dp"
-                                        app:np_textColor="@color/primary_dark"
-                                        app:np_textSize="18sp"
-                                        app:np_wheelItemCount="5" />
-                                </LinearLayout>
-
-                            </LinearLayout>
                         </LinearLayout>
 
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="5dp" />
 
                     </LinearLayout>
 
                 </LinearLayout>
 
-                <View
-                    android:id="@+id/restTimerDivider"
-                    android:layout_width="fill_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginBottom="5dp"
-                    android:layout_marginTop="20dp"
-                    android:alpha="0.12"
-                    android:background="@android:color/black" />
-
-                <TextView
-                    android:id="@+id/textView6"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/rest_timer"
-                    android:textAlignment="center"
-                    android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
-
-                <LinearLayout
-                    android:id="@+id/timerSpacer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <Button
-                        android:id="@+id/startBreakTimer"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/play"
-                        android:elevation="1dp"
-                        android:fontFamily="sans-serif-medium"
-                        android:textAppearance="@android:style/TextAppearance.Material.Button" />
-
-                    <Space
-                        android:layout_width="15dp"
-                        android:layout_height="wrap_content" />
-
-                    <Button
-                        android:id="@+id/stopBreakButton"
-                        android:layout_width="60dp"
-                        android:layout_height="60dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/stop" />
-
-                    <Space
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1" />
-
-                    <LinearLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:id="@+id/textView3"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="Long-press to edit"
-                            android:textColor="@color/secondary_text"
-                            android:textSize="10sp" />
-
-                        <TextView
-                            android:id="@+id/breakTimerOutput"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:text="05:00"
-                            android:textAlignment="gravity"
-                            android:textAppearance="@android:style/TextAppearance.Material.Display1"
-                            android:textColor="@color/primary_text"
-                            android:textSize="36sp"
-                            tools:gravity="center_horizontal|center" />
-
-                        <Switch
-                            android:id="@+id/autoTimerSwitch"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:layout_weight="1"
-                            android:text="Auto-Timer"
-                            android:textAppearance="@android:style/TextAppearance.Material.Small"
-                            android:textColor="@color/secondary_text"
-                            android:textSize="14sp" />
-                    </LinearLayout>
-
-                </LinearLayout>
             </LinearLayout>
 
-            <Space
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/alarmVolumeLabel"
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/timerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/imageView3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="Volume"
-                android:textColor="@color/secondary_text" />
+                android:layout_gravity="center_vertical|end"
+                android:layout_weight="1"
+                sothree:srcCompat="@drawable/expand_up" />
 
-            <com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar
-                android:id="@+id/volumeController"
+            <TextView
+                android:id="@+id/timerTabTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/rest_timer"
+                android:textAlignment="center"
+                android:textAppearance="@android:style/TextAppearance.Material.Subhead" />
+
+            <ImageView
+                android:id="@+id/imageView7"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:layout_weight="1"
+                sothree:srcCompat="@drawable/expand_up" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/timerSpacer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/startBreakTimer"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@drawable/play"
+                android:elevation="1dp"
+                android:fontFamily="sans-serif-medium"
+                android:textAppearance="@android:style/TextAppearance.Material.Button" />
+
+            <Space
+                android:layout_width="15dp"
+                android:layout_height="wrap_content" />
+
+            <Button
+                android:id="@+id/stopBreakButton"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_gravity="center"
+                android:background="@drawable/stop" />
+
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                app:bar_color="#388e3c"
-                app:bar_highlight_color="#4caf50"
-                app:left_thumb_color="#9e9e9e"
-                app:left_thumb_color_pressed="#4caf50"
-                app:max_value="7"
-                app:min_value="0" />
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="Long-press to edit"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="10sp" />
+
+                <TextView
+                    android:id="@+id/breakTimerOutput"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="05:00"
+                    android:textAlignment="gravity"
+                    android:textAppearance="@android:style/TextAppearance.Material.Display1"
+                    android:textColor="@color/primary_text"
+                    android:textSize="36sp"
+                    tools:gravity="center_horizontal|center" />
+
+                <Switch
+                    android:id="@+id/autoTimerSwitch"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:text="Auto-Timer"
+                    android:textAppearance="@android:style/TextAppearance.Material.Small"
+                    android:textColor="@color/secondary_text"
+                    android:textSize="14sp" />
+            </LinearLayout>
 
         </LinearLayout>
-    </LinearLayout>
 
-</RelativeLayout>
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" />
+
+        <TextView
+            android:id="@+id/alarmVolumeLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="Volume"
+            android:textColor="@color/secondary_text" />
+
+        <com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar
+            android:id="@+id/volumeController"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:bar_color="#388e3c"
+            app:bar_highlight_color="#4caf50"
+            app:left_thumb_color="#9e9e9e"
+            app:left_thumb_color_pressed="#4caf50"
+            app:max_value="7"
+            app:min_value="0" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="10dp" />
+    </LinearLayout>
+</com.sothree.slidinguppanel.SlidingUpPanelLayout>

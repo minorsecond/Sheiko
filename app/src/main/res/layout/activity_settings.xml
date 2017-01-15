@@ -10,7 +10,7 @@
         android:paddingLeft="0dp"
         android:paddingRight="0dp"
         android:paddingTop="0dp"
-        tools:context="com.rwardrup.sheiko.Settings">
+        tools:context="com.rwardrup.sheiko.SettingsActivity">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -30,7 +30,7 @@
                     android:layout_width="56dp"
                     android:layout_height="50dp"
                     android:layout_weight="0"
-                    app:srcCompat="@drawable/logo" />
+                    app:srcCompat="@drawable/logo_blue" />
 
                 <TextView
                     android:id="@+id/textView42"
@@ -40,7 +40,7 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:layout_weight="1"
-                    android:background="#4CAF50"
+                    android:background="@color/primary"
                     android:gravity="left|center"
                     android:paddingLeft="10dp"
                     android:text="@string/app_name"
@@ -192,7 +192,7 @@
                                 android:ems="4"
                                 android:gravity="center_vertical|start"
                                 android:inputType="number"
-                                android:maxLength="4"
+                                android:maxLength="6"
                                 android:textColor="#1B5E20"
                                 android:textSize="12sp" />
 
@@ -226,7 +226,7 @@
                                 android:ems="4"
                                 android:gravity="center_vertical|start"
                                 android:inputType="number"
-                                android:maxLength="4"
+                                android:maxLength="6"
                                 android:textColor="#1B5E20"
                                 android:textSize="12sp" />
 
@@ -260,7 +260,7 @@
                                 android:ems="4"
                                 android:gravity="center_vertical|start"
                                 android:inputType="number"
-                                android:maxLength="4"
+                                android:maxLength="6"
                                 android:textColor="#1B5E20"
                                 android:textSize="12sp" />
 
@@ -331,7 +331,7 @@
                                 android:layout_width="50dp"
                                 android:layout_height="50dp"
                                 android:layout_weight="1"
-                                android:background="@drawable/timer"
+                                android:background="@drawable/timer_green"
                                 android:gravity="center" />
 
                         </LinearLayout>
@@ -374,7 +374,7 @@
                                     android:layout_weight="1"
                                     android:checked="true"
                                     android:gravity="top"
-                                    android:text="Metric"
+                                    android:text="Kilos"
                                     android:textColor="@color/primary_text" />
 
                                 <RadioButton
@@ -387,7 +387,7 @@
                                     android:layout_weight="1"
                                     android:checked="true"
                                     android:gravity="top"
-                                    android:text="Imperial"
+                                    android:text="Pounds"
                                     android:textColor="@color/primary_text" />
 
                             </RadioGroup>
