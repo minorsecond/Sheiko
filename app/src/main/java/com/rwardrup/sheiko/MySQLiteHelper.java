@@ -64,7 +64,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     // Database Version
     private static final int DATABASE_VERSION = 1;
-    // Database Name
+    // Database Name TODO: Remove "Test" when production-ready
     private static final String DATABASE_NAME = "SheikoDbTest";
 
     public MySQLiteHelper(Context context) {
