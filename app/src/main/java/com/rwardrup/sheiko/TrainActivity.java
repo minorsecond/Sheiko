@@ -348,7 +348,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     final int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
                     Log.i("NextSetInHistory", "Moving to row " + currentDbRow);
-                    WorkoutHistory nextSet = db.getWorkoutHistory(currentDbRow);
+                    WorkoutHistory nextSet = db.getWorkoutHistoryAtId(currentDbRow);
                     int reps = nextSet.getReps();
                     int weight = nextSet.getWeight().intValue();
                     current_exercise_string = nextSet.getExercise();
@@ -393,7 +393,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     moveBetweenSetsCounter += 1;
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
-                    nextSet = db.getWorkoutHistory((workoutHistoryRow + 1 - (setNumber - moveBetweenSetsCounter)));
+                    nextSet = db.getWorkoutHistoryAtId((workoutHistoryRow + 1 - (setNumber - moveBetweenSetsCounter)));
                     reps = nextSet.getReps();
                     weight = nextSet.getWeight().intValue();
                     current_exercise_string = nextSet.getExercise();
@@ -441,7 +441,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     // Get previous workout history row
                     int currentDbRow = (workoutHistoryRow + 1) - (setNumber - moveBetweenSetsCounter);
                     Log.i("MoveBetweenSets", "Getting row number " + currentDbRow + " of" + workoutHistoryRow);
-                    WorkoutHistory lastSet = db.getWorkoutHistory(currentDbRow);
+                    WorkoutHistory lastSet = db.getWorkoutHistoryAtId(currentDbRow);
                     Log.i("WorkoutHistory", "Set on set " + currentDbRow + ":" + lastSet.toString());
                     int reps = lastSet.getReps();
                     int weight = lastSet.getWeight().intValue();

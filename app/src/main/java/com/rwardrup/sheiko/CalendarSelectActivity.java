@@ -14,6 +14,9 @@ public class CalendarSelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_workout_calendar);
 
+        // Get previous workouts from DB
+        final MySQLiteHelper db = new MySQLiteHelper(this);
+
         CalendarView workoutCalendar = (CalendarView) findViewById(R.id.selectWorkoutCalendar);
 
         // TODO: Get workout history & populate calendar with previous & future workouts

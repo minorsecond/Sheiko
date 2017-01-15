@@ -171,7 +171,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     }
 
-    public WorkoutHistory getWorkoutHistory(int id) {
+    public WorkoutHistory getWorkoutHistoryAtId(int id) {
         Log.i("WorkoutHistory", "Getting workoutId: " + id);
 
         // 1. Get reference to readable db
@@ -209,6 +209,43 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
         // 6. Return workout
         return workoutHistory;
+    }
+
+    // Get all workout STATS
+    public List<WorkoutHistory> getAllWorkoutHistory() {
+        List<WorkoutHistory> allWorkoutHistory = new LinkedList<WorkoutHistory>();
+
+        // 1. Build the query
+        String query = "SELECT * FROM " + TABLE_HISTORY;
+
+        // 2. Get reference to the writable db
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        // 3. Go over each row. Build workout and add it to list
+        WorkoutHistory workoutHistory = null;
+        if (cursor.moveToFirst()) {
+            do {
+                workoutHistory = new WorkoutHistory();
+                workoutHistory.setWorkoutId(cursor.getString(1));
+                workoutHistory.setDate(cursor.getString(2));
+                workoutHistory.setExercise(cursor.getString(3));
+                workoutHistory.setSets(cursor.getInt(4));
+                workoutHistory.setWeight(cursor.getDouble(5));
+                workoutHistory.setProgramTableName(cursor.getString(6));
+
+
+                // Add workout to workouts
+                allWorkoutHistory.add(workoutHistory);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("getAllWorkouts()", allWorkoutHistory.toString());
+
+        // Close the cursor
+        cursor.close();
+
+        return allWorkoutHistory;
     }
 
     public int changeWorkoutHistoryAtId(int id, WorkoutHistory workoutHistory) {
