@@ -72,7 +72,7 @@ public class CalendarSelectActivity extends FragmentActivity {
         caldroidFragment.setBackgroundDrawableForDates(hm);
         caldroidFragment.refreshView();
 
-        // TODO: Get workout history & populate calendar with previous & future workouts
-        // TODO: Also, show workout summary on bottom portion of activity
+        // TODO: Populate calendar with & future workouts
+        // TODO: Also, show workout summary (stats) on bottom portion of activity
     }
 }
