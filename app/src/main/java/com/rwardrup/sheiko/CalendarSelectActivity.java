@@ -48,29 +48,28 @@ public class CalendarSelectActivity extends FragmentActivity {
         args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
         caldroidFragment.setArguments(args);
 
+        // Add the attributes to the calendar
         android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
         t.replace(R.id.selectWorkoutCalendar, caldroidFragment);
         t.commit();
 
-
-
-
+        // Iterate through the prior workouts and add them to the calendar via a hashmap
         HashMap hm = new HashMap<>();
         for (int i = 0; i < workoutHistory.size(); i++) {
-            String date = workoutHistory.get(i).getDate();
+            String date = workoutHistory.get(i).getDate();  // get workout date
             Log.i("WorkoutCalendar", "Date: " + date);
 
             // Put dates in hashmap
-            hm.put(ParseDate(date), getDrawable(R.color.accent_light));
+            hm.put(ParseDate(date), getDrawable(R.color.accent_light));  // put in map with color
 
             if (i == 0) // set min date
                 caldroidFragment.setMinDate(ParseDate(date));
         }
 
+        // Add the dates and colors to the calendar
         Log.i("WorkoutCalendar", "date hashmap contents: " + hm);
-
         caldroidFragment.setBackgroundDrawableForDates(hm);
-        caldroidFragment.refreshView();
+        caldroidFragment.refreshView(); // refresh calendar view
 
         // TODO: Populate calendar with & future workouts
         // TODO: Also, show workout summary (stats) on bottom portion of activity
