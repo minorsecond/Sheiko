@@ -20,7 +20,7 @@ public class CalendarSelectActivity extends FragmentActivity {
 
     // Date parser to convert date Strings to a format readable by CalDroid
     public Date ParseDate(String date_str) {
-        SimpleDateFormat formatter = new SimpleDateFormat("dd/mm/yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         Date dateStr = null;
         try {
             dateStr = formatter.parse(date_str);
