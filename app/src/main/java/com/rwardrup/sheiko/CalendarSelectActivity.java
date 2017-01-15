@@ -6,6 +6,7 @@ import android.widget.CalendarView;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 public class CalendarSelectActivity extends AppCompatActivity {
 
@@ -16,6 +17,7 @@ public class CalendarSelectActivity extends AppCompatActivity {
 
         // Get previous workouts from DB
         final MySQLiteHelper db = new MySQLiteHelper(this);
+        final List<WorkoutHistory> workoutHistory = db.getAllWorkoutHistory();
 
         CalendarView workoutCalendar = (CalendarView) findViewById(R.id.selectWorkoutCalendar);
 
