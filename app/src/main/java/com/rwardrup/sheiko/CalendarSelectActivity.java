@@ -62,6 +62,9 @@ public class CalendarSelectActivity extends FragmentActivity {
 
             // Put dates in hashmap
             hm.put(ParseDate(date), getDrawable(R.color.accent_light));
+
+            if (i == 0) // set min date
+                caldroidFragment.setMinDate(ParseDate(date));
         }
 
         Log.i("WorkoutCalendar", "date hashmap contents: " + hm);
