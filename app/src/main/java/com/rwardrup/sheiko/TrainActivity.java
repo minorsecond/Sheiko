@@ -137,7 +137,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
          **/
 
         // Get either workout history by date, or todays workout
-        if (rowDate != null) {
+        if (rowDate != null && rowDate.length() > 0) {
             todaysWorkout = db.getWorkoutHistoryByDate(rowDate);
             Toast.makeText(getApplicationContext(), "Workout on " + rowDate,
                     Toast.LENGTH_LONG).show();
