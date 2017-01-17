@@ -92,6 +92,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private WorkoutSet currentSet;
     private boolean repsChanged = false;
     private boolean weightChanged = false;
+    List<WorkoutSet> todaysWorkout;
 
     // Set font
     @Override
@@ -103,6 +104,13 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
+
+        // Get workout row to open up to, if that exists (int).
+        Bundle b = getIntent().getExtras();
+        String rowDate = "";
+        if (b != null)
+            rowDate = b.getString("workoutDate");
+            Log.i("GettingWorkoutHistory", "Workout history date: " + rowDate);
 
         // Set changer prompt
         changeSetPrompt = new AlertDialog.Builder(TrainActivity.this).setNegativeButton("Cancel",
@@ -128,8 +136,15 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
          * CRUD Operations
          **/
 
-        final List<WorkoutSet> todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
-                1, 1, 1);
+        // Get either workout history by date, or todays workout
+        if (rowDate != null) {
+            todaysWorkout = db.getWorkoutHistoryByDate(rowDate);
+            Toast.makeText(getApplicationContext(), "Workout on " + rowDate,
+                    Toast.LENGTH_LONG).show();
+            Log.i("TodaysWorkout", "Workout history: " + todaysWorkout);
+        } else {
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 1, 1, 1);
+        }
 
         Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
 

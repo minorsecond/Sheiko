@@ -25,10 +25,11 @@ import java.util.List;
 public class CalendarSelectActivity extends FragmentActivity {
 
     AlertDialog editCalendarDate;
+    String workoutDate = "";
+    SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
 
     // Date parser to convert date Strings to a format readable by CalDroid
     public Date ParseDate(String date_str) {
-        SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
         Date dateStr = null;
         try {
             dateStr = formatter.parse(date_str);
@@ -44,6 +45,14 @@ public class CalendarSelectActivity extends FragmentActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_workout_calendar);
 
+        // Initialize the CalDroid calendar
+        final CaldroidFragment caldroidFragment = new CaldroidFragment();
+        Bundle args = new Bundle();
+        Calendar cal = Calendar.getInstance();
+        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
+        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
+        caldroidFragment.setArguments(args);
+
         // Calendar selection confirmation dialog
         // TODO: This will take user to TrainActivity where they will be able to adjust
         // previous sets and reps.
@@ -51,17 +60,22 @@ public class CalendarSelectActivity extends FragmentActivity {
                 setNegativeButton("No", null).setPositiveButton("Yes", null).
                 setMessage("Are you sure you want to edit the workout for this date?").create();
 
+        editCalendarDate.setButton(AlertDialog.BUTTON_POSITIVE, "YES", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                Intent trainIntent = new Intent(CalendarSelectActivity.this, TrainActivity.class);
+                Bundle b = new Bundle();    // This bundle will store the workoutRow int,
+                                            // Which refers to the row the TrainActivity should
+                                            // open up to
+                b.putString("workoutDate", workoutDate);
+                trainIntent.putExtras(b);
+                startActivity(trainIntent);
+            }
+        });
+
         // Get previous workouts from DB
         final MySQLiteHelper db = new MySQLiteHelper(this);
         final List<WorkoutHistory> workoutHistory = db.getAllWorkoutHistory();
-
-        // Initialize the CalDroid calendar
-        CaldroidFragment caldroidFragment = new CaldroidFragment();
-        Bundle args = new Bundle();
-        Calendar cal = Calendar.getInstance();
-        args.putInt(CaldroidFragment.MONTH, cal.get(Calendar.MONTH) + 1);
-        args.putInt(CaldroidFragment.YEAR, cal.get(Calendar.YEAR));
-        caldroidFragment.setArguments(args);
 
         // Add the attributes to the calendar
         android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -99,6 +113,11 @@ public class CalendarSelectActivity extends FragmentActivity {
 
         @Override
         public void onLongClickDate(Date date, View view) {
+            try {
+                workoutDate = formatter.format(date);
+            } catch (Exception e) {
+                Log.e("DateParseException", "Date parse exception: "+ e);
+            }
             editCalendarDate.show();
         }
     };
