@@ -146,6 +146,10 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 1, 1, 1);
         }
 
+        if (todaysWorkout.size() == 0) {
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 1, 1, 1);
+        }
+
         Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
 
         currentSet = todaysWorkout.get(setNumber);  // Get first set on load

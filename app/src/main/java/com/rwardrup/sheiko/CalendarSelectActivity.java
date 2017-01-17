@@ -27,6 +27,7 @@ public class CalendarSelectActivity extends FragmentActivity {
     AlertDialog editCalendarDate;
     String workoutDate = "";
     SimpleDateFormat formatter = new SimpleDateFormat("MM/dd/yyyy");
+    List<WorkoutHistory> workoutHistory;
 
     // Date parser to convert date Strings to a format readable by CalDroid
     public Date ParseDate(String date_str) {
@@ -75,7 +76,7 @@ public class CalendarSelectActivity extends FragmentActivity {
 
         // Get previous workouts from DB
         final MySQLiteHelper db = new MySQLiteHelper(this);
-        final List<WorkoutHistory> workoutHistory = db.getAllWorkoutHistory();
+        workoutHistory = db.getAllWorkoutHistory();
 
         // Add the attributes to the calendar
         android.support.v4.app.FragmentTransaction t = getSupportFragmentManager().beginTransaction();
@@ -113,12 +114,26 @@ public class CalendarSelectActivity extends FragmentActivity {
 
         @Override
         public void onLongClickDate(Date date, View view) {
+
             try {
                 workoutDate = formatter.format(date);
+                Log.i("LongPress", "Long pressed on " + workoutDate);
             } catch (Exception e) {
                 Log.e("DateParseException", "Date parse exception: "+ e);
             }
-            editCalendarDate.show();
+
+            Log.i("WorkoutHistory", "Workout history: "+ workoutHistory);
+            int i = 0;
+            boolean dateMatch = false;
+            while (i < workoutHistory.size() && !dateMatch) {
+                Log.i("date", "date=" + workoutHistory.get(i).getDate());
+                if (workoutHistory.get(i).getDate().equals(workoutDate)) {
+                    dateMatch = true;
+                    editCalendarDate.show();
+                    Log.i("MatcheDate", "Matched dates");
+                }
+                i += 1;
+            }
         }
     };
 }
