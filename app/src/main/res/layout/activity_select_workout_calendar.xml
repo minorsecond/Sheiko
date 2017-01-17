@@ -51,7 +51,7 @@
                 android:layout_height="30dp"
                 android:gravity="center"
                 android:background="@color/accent"
-                android:text="Workouts"
+                android:text="Workout History"
                 android:textAppearance="@android:style/TextAppearance.Material.Title" />
         </LinearLayout>
 
@@ -63,9 +63,24 @@
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:orientation="vertical">
 
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="5dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Select previous workout to edit data"
+                android:textSize="16sp"
+                android:gravity="center"/>
+            
+            <Space
+                android:layout_width="wrap_content"
+                android:layout_height="5dp" />
+
             <CalendarView
                 android:layout_width="match_parent"
-                android:layout_height="290dp"
+                android:layout_height="wrap_content"
                 android:id="@+id/selectWorkoutCalendar"
                 android:minDate="01/01/2017"></CalendarView>
 

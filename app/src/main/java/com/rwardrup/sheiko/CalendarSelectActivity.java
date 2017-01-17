@@ -1,13 +1,19 @@
 package com.rwardrup.sheiko;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.CalendarView;
+import android.widget.Toast;
 
 import com.roomorama.caldroid.CaldroidFragment;
+import com.roomorama.caldroid.CaldroidListener;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -17,6 +23,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class CalendarSelectActivity extends FragmentActivity {
+
+    AlertDialog editCalendarDate;
 
     // Date parser to convert date Strings to a format readable by CalDroid
     public Date ParseDate(String date_str) {
@@ -35,6 +43,13 @@ public class CalendarSelectActivity extends FragmentActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_select_workout_calendar);
+
+        // Calendar selection confirmation dialog
+        // TODO: This will take user to TrainActivity where they will be able to adjust
+        // previous sets and reps.
+        editCalendarDate = new AlertDialog.Builder(CalendarSelectActivity.this).
+                setNegativeButton("No", null).setPositiveButton("Yes", null).
+                setMessage("Are you sure you want to edit the workout for this date?").create();
 
         // Get previous workouts from DB
         final MySQLiteHelper db = new MySQLiteHelper(this);
@@ -71,7 +86,20 @@ public class CalendarSelectActivity extends FragmentActivity {
         caldroidFragment.setBackgroundDrawableForDates(hm);
         caldroidFragment.refreshView(); // refresh calendar view
 
-        // TODO: Populate calendar with & future workouts
+        caldroidFragment.setCaldroidListener(listener);
+
         // TODO: Also, show workout summary (stats) on bottom portion of activity
     }
+
+    final CaldroidListener listener = new CaldroidListener() {
+        @Override
+        public void onSelectDate(Date date, View view) {
+            //editCalendarDate.show();
+        }
+
+        @Override
+        public void onLongClickDate(Date date, View view) {
+            editCalendarDate.show();
+        }
+    };
 }
