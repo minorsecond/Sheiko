@@ -46,13 +46,6 @@
                     android:textSize="40sp" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:gravity="center"
-                android:background="@color/accent"
-                android:text="Workout History"
-                android:textAppearance="@android:style/TextAppearance.Material.Title" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,7 +63,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Select previous workout to edit data"
+                android:text="Long-press previous workout date to edit data"
                 android:textSize="16sp"
                 android:gravity="center"/>
             
