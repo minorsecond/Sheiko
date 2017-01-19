@@ -338,8 +338,59 @@
 
                         <Space
                             android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:orientation="vertical"
+                            android:layout_weight="1">
+
+                            <TextView
+                                android:text="Weight Rounding"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:id="@+id/textView2"
+                                android:gravity="center"
+                                android:textColor="@color/primary_text" />
+
+                            <RadioGroup
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:id="@+id/WeightRoundingSelection"/>
+
+                                <RadioButton
+                                    android:id="@+id/noRoundingSelected"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:checked="false"
+                                    android:gravity="top"
+                                    android:text="No Rounding"
+                                    android:textColor="@color/primary_text" />
+
+                                <RadioButton
+                                    android:id="@+id/two_half_rounding"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:checked="false"
+                                    android:gravity="top"
+                                    android:text="2.5 units"
+                                    android:textColor="@color/primary_text" />
+
+                                <RadioButton
+                                    android:id="@+id/five_unit_rounding"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:checked="true"
+                                    android:gravity="top"
+                                    android:text="5 units"
+                                    android:textColor="@color/primary_text"/>
+
+                            </LinearLayout>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
