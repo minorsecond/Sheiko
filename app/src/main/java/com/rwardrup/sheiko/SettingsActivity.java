@@ -79,7 +79,7 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             bodyweight = sharedpref.getLong("bodyweight", -1);
             sex = sharedpref.getString("sex", "unset");
-            sexId = sharedpref.getInt("sexId", 1);
+            sexId = sharedpref.getInt("sexId", 0);
             unit = sharedpref.getString("unit", "kilograms");
             activitySettingsBinding.genderSpinner.setSelection(sexId);
 
