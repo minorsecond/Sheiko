@@ -315,15 +315,16 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:gravity="center">
 
                             <TextView
                                 android:id="@+id/timerSettingsLabel"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="bottom"
-                                android:text="Rest Timer"
+                                android:text="Timer Length"
                                 android:textColor="@color/primary_text" />
 
                             <Button
