@@ -342,10 +342,10 @@
                             android:layout_weight="1"/>
 
                         <LinearLayout
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:orientation="vertical"
-                            android:layout_weight="1">
+                            android:layout_weight="0">
 
                             <TextView
                                 android:text="Weight Rounding"
@@ -391,6 +391,11 @@
                                     android:textColor="@color/primary_text"/>
 
                             </LinearLayout>
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"
