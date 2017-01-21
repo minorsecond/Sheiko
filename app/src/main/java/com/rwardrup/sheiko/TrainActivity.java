@@ -29,6 +29,7 @@ import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
 import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 import com.shawnlin.numberpicker.NumberPicker;
 
+import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -94,6 +95,12 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private boolean weightChanged = false;
     List<WorkoutSet> todaysWorkout;
 
+    // Lift max variables
+    private Double squat_max;
+    private Double bench_max;
+    private Double deadlift_max;
+    private Double currentWeight;
+
     // Set font
     @Override
     protected void attachBaseContext(Context newBase) {
@@ -143,11 +150,11 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     Toast.LENGTH_LONG).show();
             Log.i("TodaysWorkout", "Workout history: " + todaysWorkout);
         } else {
-            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 1, 1, 1);
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 2, 3, 4);
         }
 
         if (todaysWorkout.size() == 0) {
-            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 1, 1, 1);
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 2, 3, 4);
         }
 
         Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
@@ -236,8 +243,25 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // Set the reps and weights
         setRepsWeightPickers();
 
-        // TODO: Get users maxes for weight calculation
-        Double currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+        // Get users maxes for weight calculation
+        UserMaxEntry userMaxEntry = db.getLastUserMaxEntry();
+
+        String [] deadliftWorkout = new String[]{"Deadlift", "1 + 1/2 (X2) Deadlift"};
+        String [] benchWorkout = new String[]{"Bench Press", "Close Grip Bench Press"};
+
+        try {
+            //readFromUserParamDb();  // Load databases
+
+            squat_max = userMaxEntry.getSquatMax();
+            bench_max = userMaxEntry.getBenchMax();
+            deadlift_max = userMaxEntry.getDeadliftMax();
+
+        } catch (NullPointerException e) {
+            Log.d("DbReadError", "User parameter DB read error: " + e);  // First creation of database.
+        }
+
+        //Double currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+        currentWeight = setCurrentWeight();
         Integer reps = currentSet.getReps();
         current_exercise_string = currentSet.getExerciseName();
 
@@ -323,7 +347,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     // 1. Get repPicker current value
                     String workoutId = String.valueOf(db.getWorkoutHistoryRowCount() + 1);
                     int currentReps = repPicker.getValue();
-                    Double currentWeight = Double.valueOf((weightPicker.getValue() + 1) * 5);
+                    //Double currentWeight = Double.valueOf((weightPicker.getValue() + 1) * 5);
+                    currentWeight = setCurrentWeight();
                     Log.i("SetSaved", "Current reps: " + currentReps + ", " +
                             "current weight: " + currentWeight);
 
@@ -352,7 +377,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     currentReps = currentSet.getReps();
 
                     // TODO: Get users maxes for weight calculation
-                    currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+                    //currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+                    currentWeight = setCurrentWeight();
                     current_exercise_string = currentSet.getExerciseName();
 
                     repPicker.setValue(currentReps);
@@ -369,7 +395,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     Log.i("NextSetInHistory", "Moving to row " + currentDbRow);
                     WorkoutHistory nextSet = db.getWorkoutHistoryAtId(currentDbRow);
                     int reps = nextSet.getReps();
-                    int weight = nextSet.getWeight().intValue();
+                    int weight = nextSet.getWeight().intValue()  // TODO: Fix this. It displays incorrect weight because it doesn't update;
                     current_exercise_string = nextSet.getExercise();
 
                     // Do current rep and weight picker values match what's in the table?
@@ -696,5 +722,38 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             textView.setText("");
             return view;
         }
+    }
+
+    private Double setCurrentWeight() {
+        // Set weight according to lift type
+        if (currentSet.getExerciseCategory() == 1) {
+            if (squat_max != null) {
+                currentWeight = new Double(currentSet.getWeightPercentage() * squat_max);
+            } else {
+                currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+            }
+
+        } else if (currentSet.getExerciseCategory() == 2) {
+            if (bench_max != null) {
+                currentWeight = new Double(currentSet.getWeightPercentage() * bench_max);
+            } else {
+                currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+            }
+        } else if (currentSet.getExerciseCategory() == 3) {
+            if (bench_max != null) {
+                currentWeight = new Double(currentSet.getWeightPercentage() * deadlift_max);
+            } else {
+                currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+            }
+        } else if (currentSet.getExerciseCategory() == 4) {
+            currentWeight = new Double(135);
+        }
+
+        else {  // Accessory weight - default to 135
+            currentWeight = new Double(135);
+            Log.e("WorkoutCat!", "Forgot workout cat" + currentSet);
+        }
+
+        return currentWeight;
     }
 }
