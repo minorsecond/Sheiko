@@ -111,38 +111,14 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
-                <Space
+                <com.jjoe64.graphview.GraphView
+                    android:id="@+id/graph"
                     android:layout_width="match_parent"
-                    android:layout_height="5dp" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="center"
-                    android:orientation="horizontal">
-
-                    <android.support.v4.widget.Space
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <com.jjoe64.graphview.GraphView
-                        android:id="@+id/graph"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dip"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="-10dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_weight="0" />
-
-                    <android.support.v4.widget.Space
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
+                    android:layout_height="200dip"/>
             </LinearLayout>
 
             <LinearLayout
@@ -353,6 +329,10 @@
                         android:alpha="0.12"
                         android:background="@android:color/black" />
 
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -370,6 +350,19 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.01" />
+
+                        <Button
+                            android:id="@+id/calendarButton"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/calendar"
+                            android:elevation="2dp"
+                            android:textColor="@color/primary_text"/>
+
+                        <Space
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.01"/>
 
                         <Button
                             android:id="@+id/selectProgramButton"

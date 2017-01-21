@@ -64,7 +64,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     // Database Version
     private static final int DATABASE_VERSION = 1;
-    // Database Name
+    // Database Name TODO: Remove "Test" when production-ready
     private static final String DATABASE_NAME = "SheikoDbTest";
 
     public MySQLiteHelper(Context context) {
@@ -139,6 +139,56 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     }
 
+    public List<WorkoutSet> getWorkoutHistoryByDate(String date) {
+
+        List<WorkoutSet> workoutHistory = new LinkedList<>();
+        // 1. Get reference to readable db
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "date = " + "'" + date + "'";
+
+        Log.i("WorkoutHistoryByDate", "Program DB query: " + query);
+
+        // 2. Build query TODO: make this actually do what I want (get by date integer)
+        Cursor cursor = db.query(TABLE_HISTORY,
+                workoutHistoryColumns,
+                query, // selections
+                null,  // Selection's args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null // h. limit
+        );
+
+        // 3. if we got results, show the first
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        // 3. Go over each row. Build workout and add it to list
+        WorkoutSet _workoutHistory = null;
+        if (cursor.moveToFirst()) {
+            do {
+                _workoutHistory = new WorkoutSet();
+                _workoutHistory.setWorkoutId(cursor.getString(1));
+                _workoutHistory.setExerciseName(cursor.getString(3));
+                _workoutHistory.setReps(cursor.getInt(4));
+                _workoutHistory.setWeightPercentage(cursor.getDouble(5));
+                _workoutHistory.setProgramName(cursor.getString(6));
+
+                // Add workout to workouts
+                workoutHistory.add(_workoutHistory);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("getWorkoutHistoryByDate()", workoutHistory.toString());
+
+        // Close the cursor
+        cursor.close();
+
+        return workoutHistory;
+
+    }
+
     public int getWorkoutHistoryRowCount() {
         String countQuery = "SELECT * FROM " + TABLE_HISTORY;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -171,7 +221,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     }
 
-    public WorkoutHistory getWorkoutHistory(int id) {
+    public WorkoutHistory getWorkoutHistoryAtId(int id) {
         Log.i("WorkoutHistory", "Getting workoutId: " + id);
 
         // 1. Get reference to readable db
@@ -209,6 +259,43 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
         // 6. Return workout
         return workoutHistory;
+    }
+
+    // Get all workout STATS
+    public List<WorkoutHistory> getAllWorkoutHistory() {
+        List<WorkoutHistory> allWorkoutHistory = new LinkedList<WorkoutHistory>();
+
+        // 1. Build the query
+        String query = "SELECT * FROM " + TABLE_HISTORY;
+
+        // 2. Get reference to the writable db
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        // 3. Go over each row. Build workout and add it to list
+        WorkoutHistory workoutHistory = null;
+        if (cursor.moveToFirst()) {
+            do {
+                workoutHistory = new WorkoutHistory();
+                workoutHistory.setWorkoutId(cursor.getString(1));
+                workoutHistory.setDate(cursor.getString(2));
+                workoutHistory.setExercise(cursor.getString(3));
+                workoutHistory.setSets(cursor.getInt(4));
+                workoutHistory.setWeight(cursor.getDouble(5));
+                workoutHistory.setProgramTableName(cursor.getString(6));
+
+
+                // Add workout to workouts
+                allWorkoutHistory.add(workoutHistory);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("getAllWorkouts()", allWorkoutHistory.toString());
+
+        // Close the cursor
+        cursor.close();
+
+        return allWorkoutHistory;
     }
 
     public int changeWorkoutHistoryAtId(int id, WorkoutHistory workoutHistory) {

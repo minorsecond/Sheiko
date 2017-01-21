@@ -92,6 +92,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private WorkoutSet currentSet;
     private boolean repsChanged = false;
     private boolean weightChanged = false;
+    List<WorkoutSet> todaysWorkout;
 
     // Set font
     @Override
@@ -103,6 +104,13 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
+
+        // Get workout row to open up to, if that exists (int).
+        Bundle b = getIntent().getExtras();
+        String rowDate = "";
+        if (b != null)
+            rowDate = b.getString("workoutDate");
+            Log.i("GettingWorkoutHistory", "Workout history date: " + rowDate);
 
         // Set changer prompt
         changeSetPrompt = new AlertDialog.Builder(TrainActivity.this).setNegativeButton("Cancel",
@@ -128,8 +136,19 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
          * CRUD Operations
          **/
 
-        final List<WorkoutSet> todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
-                1, 1, 1);
+        // Get either workout history by date, or todays workout
+        if (rowDate != null && rowDate.length() > 0) {
+            todaysWorkout = db.getWorkoutHistoryByDate(rowDate);
+            Toast.makeText(getApplicationContext(), "Workout on " + rowDate,
+                    Toast.LENGTH_LONG).show();
+            Log.i("TodaysWorkout", "Workout history: " + todaysWorkout);
+        } else {
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 1, 1, 1);
+        }
+
+        if (todaysWorkout.size() == 0) {
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 1, 1, 1);
+        }
 
         Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
 
@@ -348,7 +367,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     final int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
                     Log.i("NextSetInHistory", "Moving to row " + currentDbRow);
-                    WorkoutHistory nextSet = db.getWorkoutHistory(currentDbRow);
+                    WorkoutHistory nextSet = db.getWorkoutHistoryAtId(currentDbRow);
                     int reps = nextSet.getReps();
                     int weight = nextSet.getWeight().intValue();
                     current_exercise_string = nextSet.getExercise();
@@ -393,7 +412,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     moveBetweenSetsCounter += 1;
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
-                    nextSet = db.getWorkoutHistory((workoutHistoryRow + 1 - (setNumber - moveBetweenSetsCounter)));
+                    nextSet = db.getWorkoutHistoryAtId((workoutHistoryRow + 1 - (setNumber - moveBetweenSetsCounter)));
                     reps = nextSet.getReps();
                     weight = nextSet.getWeight().intValue();
                     current_exercise_string = nextSet.getExercise();
@@ -441,7 +460,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     // Get previous workout history row
                     int currentDbRow = (workoutHistoryRow + 1) - (setNumber - moveBetweenSetsCounter);
                     Log.i("MoveBetweenSets", "Getting row number " + currentDbRow + " of" + workoutHistoryRow);
-                    WorkoutHistory lastSet = db.getWorkoutHistory(currentDbRow);
+                    WorkoutHistory lastSet = db.getWorkoutHistoryAtId(currentDbRow);
                     Log.i("WorkoutHistory", "Set on set " + currentDbRow + ":" + lastSet.toString());
                     int reps = lastSet.getReps();
                     int weight = lastSet.getWeight().intValue();
