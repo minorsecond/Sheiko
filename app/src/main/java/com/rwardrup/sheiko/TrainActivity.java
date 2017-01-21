@@ -400,7 +400,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         // Enable the previous set button if it is disabled
                         if (!previousSetButton.isEnabled()) {
                             previousSetButton.setEnabled(true);
-                            Log.d("DisabledButton", "Previous Set button disabled");
+                            Log.d("DisabledButton", "Previous Set button enabled");
                         }
                     }
 
@@ -472,6 +472,12 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         nextSetButton.setEnabled(false);
                         Log.d("DisabledButton", "Next Set button disabled");
                     }
+
+                    // Enable the previous set button if it is disabled
+                    if (!previousSetButton.isEnabled()) {
+                        previousSetButton.setEnabled(true);
+                        Log.d("DisabledButton", "Previous Set button enabled");
+                    }
                 }
 
                 else if (setNumber - 1 == moveBetweenSetsCounter) {  // This runs on the transition from old sets back to the current set
@@ -481,7 +487,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     // Enable the previous set button if it is disabled
                     if (!previousSetButton.isEnabled()) {
                         previousSetButton.setEnabled(true);
-                        Log.d("DisabledButton", "Previous Set button disabled");
+                        Log.d("DisabledButton", "Previous Set button Enabled");
                     }
 
                     // Display set number + 1, since setNumber begins at 0
@@ -521,7 +527,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     // Enable the previous set button if it is disabled
                     if (!nextSetButton.isEnabled()) {
                         nextSetButton.setEnabled(true);
-                        Log.d("DisabledButton", "Next Set button disabled");
+                        Log.d("DisabledButton", "Next Set button enabled");
                     }
 
                     Log.i("MoveToOldSet", "Set number: " + setNumber + " moveBetweenSetsCounter=" + moveBetweenSetsCounter);
