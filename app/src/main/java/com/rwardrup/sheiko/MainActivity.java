@@ -75,6 +75,7 @@ public class MainActivity extends AppCompatActivity {
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
 
         SharedPreferences sharedpref = PreferenceManager.getDefaultSharedPreferences(this);
+
         TextView currentWorkoutDisplay = (TextView) findViewById(R.id.currentWorkoutText);
 
         // Get current workout
@@ -93,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
         // Build the string for current workout display
         String currentWorkoutText = currentProgram + currentCycleText + " - " + "Week " +
                 currentWeek + " " + "Day " + currentDay;
+
+        Log.d("currentWorkoutDisplay", "Current workout Display=" + currentWorkoutDisplay);
 
         currentWorkoutDisplay.setText(currentWorkoutText);
 
@@ -275,7 +278,7 @@ public class MainActivity extends AppCompatActivity {
         graph.getLegendRenderer().setBackgroundColor(Color.argb(50, 157, 157, 157));
 
         // set Title
-        graph.setTitle("Program History");
+        //graph.setTitle("Program History");
         graph.setTitleTextSize(48);
 
         // Handle button clicks that take user to another action.
