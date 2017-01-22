@@ -36,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner sexSpinner;
     private SharedPreferences sharedpref;
     private SharedPreferences.Editor editor;
+    private String roundingSelected = "0.0";
 
     // Set font
     @Override
@@ -54,12 +55,42 @@ public class SettingsActivity extends AppCompatActivity {
 
         final RadioButton lbsButton = (RadioButton) findViewById(R.id.lbsRadiobutton);
         kgButton = (RadioButton) findViewById(R.id.kgsRadioButton);
+        RadioButton noRoundingButton = (RadioButton) findViewById(R.id.noRoundingSelected);
+        RadioButton twoHalfRounding = (RadioButton) findViewById(R.id.two_half_rounding);
+        RadioButton fiveRounding = (RadioButton) findViewById(R.id.five_unit_rounding);
         sexSpinner = (Spinner) findViewById(R.id.genderSpinner);
         sharedpref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedpref.edit();
 
         final ActivitySettingsBinding activitySettingsBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_settings);
+
+        // Set unit rounding
+        activitySettingsBinding.noRoundingSelected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundingSelected = "0.0";
+                Log.i("RoundingSelected", "No rounding");
+            }
+        });
+
+        // Set unit rounding
+        activitySettingsBinding.twoHalfRounding.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundingSelected = "2.5";
+                Log.i("RoundingSelected", "2.5 Units");
+            }
+        });
+
+        // Set unit rounding
+        activitySettingsBinding.fiveUnitRounding.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundingSelected = "5.0";
+                Log.i("RoundingSelected", "5 Units");
+            }
+        });
 
         // Update the Lift Numbers EditText widgets
 
@@ -170,6 +201,7 @@ public class SettingsActivity extends AppCompatActivity {
             editor.putLong("bodyweight", Long.parseLong(binding.weightInput.getText().toString()));
             editor.putString("sex", binding.genderSpinner.getSelectedItem().toString());
             editor.putInt("sexId", binding.genderSpinner.getSelectedItemPosition());
+            editor.putString("unitRounding", roundingSelected);
             editor.commit();
         } catch (Exception e) {
             // User probably tried to save without entering anything

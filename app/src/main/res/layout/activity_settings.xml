@@ -315,8 +315,8 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:gravity="center">
+                            android:gravity="center"
+                            android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/timerSettingsLabel"
@@ -342,24 +342,24 @@
                             android:layout_height="match_parent"
                             android:layout_weight="1"/>
 
-                        <LinearLayout
+                        <RadioGroup
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:orientation="vertical"
-                            android:layout_weight="0">
+                            android:layout_weight="0"
+                            android:orientation="vertical">
 
                             <TextView
-                                android:text="Weight Rounding"
+                                android:id="@+id/textView2"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:id="@+id/textView2"
                                 android:gravity="center"
+                                android:text="Weight Rounding"
                                 android:textColor="@color/primary_text" />
 
                             <RadioGroup
+                                android:id="@+id/WeightRoundingSelection"
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
-                                android:id="@+id/WeightRoundingSelection"/>
+                                android:layout_height="match_parent" />
 
                                 <RadioButton
                                     android:id="@+id/noRoundingSelected"
@@ -391,7 +391,7 @@
                                     android:text="5 units"
                                     android:textColor="@color/primary_text"/>
 
-                            </LinearLayout>
+                        </RadioGroup>
 
                         <Space
                             android:layout_width="match_parent"
