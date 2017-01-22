@@ -530,7 +530,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     int currentReps = currentSet.getReps();
 
                     // TODO: Get users maxes for weight calculation
-                    Double weight = roundDouble(new Double(currentSet.getWeightPercentage() * 100), roundingValue);
+                    Double weight = setCurrentWeight();
                     current_exercise_string = currentSet.getExerciseName();
 
                     repPicker.setValue(currentReps);
