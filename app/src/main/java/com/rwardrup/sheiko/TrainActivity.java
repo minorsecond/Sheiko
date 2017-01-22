@@ -29,11 +29,9 @@ import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
 import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
 import com.shawnlin.numberpicker.NumberPicker;
 
-import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -72,6 +70,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     String current_exercise_string = "squat"; // TODO: Set this depending on first exercise of day
     AlertDialog changeSetPrompt;
     ProgramDbHelper programDbHelper;
+    List<WorkoutSet> todaysWorkout;
     private NumberPicker repPicker;
     private NumberPicker weightPicker;
     private SharedPreferences.Editor editor;
@@ -94,13 +93,13 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private WorkoutSet currentSet;
     private boolean repsChanged = false;
     private boolean weightChanged = false;
-    List<WorkoutSet> todaysWorkout;
-
     // Lift max variables
     private Double squat_max;
     private Double bench_max;
     private Double deadlift_max;
     private Double currentWeight;
+
+    private Double roundingValue; // Unit rounding value
 
     // Set font
     @Override
@@ -170,10 +169,14 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // Shared prefs
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
+        // Get rounding value to use for weight display. Default to 5 units.
+        roundingValue = Double.valueOf(sharedPref.getString("unitRounding", "5.0"));
+        Log.i("SharedPreferences", "Got rounding value " + roundingValue);
+
         // Set up volume control
         alarmVolumeControl = (CrystalSeekbar) findViewById(R.id.volumeController);
         currentVolume = sharedPref.getInt("alarmVolume", 4);  // Try to get last set volume
-        Log.i("VolumeControl", "Initial volume position: " + currentVolume);
+        Log.i("SharedPreferences", "Initial volume position: " + currentVolume);
         alarmVolumeControl.setMinStartValue(currentVolume).apply(); // Set the bar at the last vol position
 
         // Set up the seekbar change listener
@@ -497,7 +500,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     int currentReps = currentSet.getReps();
 
                     // TODO: Get users maxes for weight calculation
-                    Double weight = new Double(currentSet.getWeightPercentage() * 100);
+                    Double weight = roundDouble(new Double(currentSet.getWeightPercentage() * 100), roundingValue);
                     current_exercise_string = currentSet.getExerciseName();
 
                     repPicker.setValue(currentReps);
@@ -703,7 +706,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         weightPicker.setMaxValue(240); //480 * 2.5 == 1200
 
         int length = 500;
-        int step = 5;
+        Double step = roundingValue;
 
         String[] numbers = new String[length];
         for (int i = 0; i < numbers.length; i++) {
@@ -755,6 +758,46 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         }
     }
 
+    private Double roundDouble(Double i, Double v) {
+        Double value = Double.valueOf((Math.round(i / v) * v));
+        Log.i("RoundDouble", "Rounded " + i + " by " + v + " to " + value);
+        return value;
+    }
+
+    private Double setCurrentWeight() {
+        // Set weight according to lift type. Round the weight to whichever value is specified in
+        // SettingsActivity
+        if (currentSet.getExerciseCategory() == 1) {
+            if (squat_max != null) {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * squat_max), roundingValue);
+            } else {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * 100), roundingValue);
+            }
+
+        } else if (currentSet.getExerciseCategory() == 2) {
+            if (bench_max != null) {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * bench_max), roundingValue);
+            } else {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * 100), roundingValue);
+            }
+        } else if (currentSet.getExerciseCategory() == 3) {
+            if (bench_max != null) {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * deadlift_max), roundingValue);
+            } else {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * 100), roundingValue);
+            }
+        } else if (currentSet.getExerciseCategory() == 4) {
+            currentWeight = new Double(135);
+        }
+
+        else {  // Accessory weight - default to 135
+            currentWeight = new Double(135);
+            Log.e("WorkoutCat!", "Forgot workout cat" + currentSet);
+        }
+
+        return currentWeight;
+    }
+
     // Adapter for accessory spinner. Want to hide the display string and dynamically update it
     // when the user changes workouts. Hide the first entry which is an empty string that prevents
     // the currentExercise from being displayed on load.
@@ -770,38 +813,5 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             textView.setText("");
             return view;
         }
-    }
-
-    private Double setCurrentWeight() {
-        // Set weight according to lift type
-        if (currentSet.getExerciseCategory() == 1) {
-            if (squat_max != null) {
-                currentWeight = new Double(currentSet.getWeightPercentage() * squat_max);
-            } else {
-                currentWeight = new Double(currentSet.getWeightPercentage() * 100);
-            }
-
-        } else if (currentSet.getExerciseCategory() == 2) {
-            if (bench_max != null) {
-                currentWeight = new Double(currentSet.getWeightPercentage() * bench_max);
-            } else {
-                currentWeight = new Double(currentSet.getWeightPercentage() * 100);
-            }
-        } else if (currentSet.getExerciseCategory() == 3) {
-            if (bench_max != null) {
-                currentWeight = new Double(currentSet.getWeightPercentage() * deadlift_max);
-            } else {
-                currentWeight = new Double(currentSet.getWeightPercentage() * 100);
-            }
-        } else if (currentSet.getExerciseCategory() == 4) {
-            currentWeight = new Double(135);
-        }
-
-        else {  // Accessory weight - default to 135
-            currentWeight = new Double(135);
-            Log.e("WorkoutCat!", "Forgot workout cat" + currentSet);
-        }
-
-        return currentWeight;
     }
 }

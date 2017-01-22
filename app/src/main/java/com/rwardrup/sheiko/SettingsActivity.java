@@ -65,12 +65,23 @@ public class SettingsActivity extends AppCompatActivity {
         final ActivitySettingsBinding activitySettingsBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_settings);
 
-        // Set unit rounding
+        // Set unit rounding. First, try to get set value, if it exists. Default to 5 units.
+        roundingSelected = sharedpref.getString("unitRounding", "5.0");
+
+        // Set the correct rounding RadioButton.
+        if (roundingSelected.equals("0.0")) {
+            activitySettingsBinding.noRoundingSelected.setChecked(true);
+        } else if (roundingSelected.equals("2.5")) {
+            activitySettingsBinding.twoHalfRounding.setChecked(true);
+        } else {
+            activitySettingsBinding.fiveUnitRounding.setChecked(true);
+        }
+
         activitySettingsBinding.noRoundingSelected.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 roundingSelected = "0.0";
-                Log.i("RoundingSelected", "No rounding");
+                Log.i("RoundingSelected", "0.0");
             }
         });
 
@@ -111,7 +122,7 @@ public class SettingsActivity extends AppCompatActivity {
             bodyweight = sharedpref.getLong("bodyweight", -1);
             sex = sharedpref.getString("sex", "unset");
             sexId = sharedpref.getInt("sexId", 0);
-            unit = sharedpref.getString("unit", "kilograms");
+            unit = sharedpref.getString("unit", "pounds");
             activitySettingsBinding.genderSpinner.setSelection(sexId);
 
             try {
