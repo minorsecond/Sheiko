@@ -100,6 +100,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private Double currentWeight;
 
     private Double roundingValue; // Unit rounding value
+    private Boolean accessoryWeightSet;
+    private Boolean newExercise = false;
+    private Integer currentExerciseNumber = 0;
 
     // Set font
     @Override
@@ -331,7 +334,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             @Override
             public void onClick(View v) {
 
-                if (setNumber == moveBetweenSetsCounter && setNumber < todaysWorkout.size() -1) {  // If user is at current set
+                if (setNumber == moveBetweenSetsCounter && setNumber < todaysWorkout.size()) {  // If user is at current set
                     viewingPastSet = false;
                     Log.i("NewSet", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
@@ -359,9 +362,24 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     //currentWeight = new Double(currentSet.getWeightPercentage() * 100);
                     current_exercise_string = currentSet.getExerciseName();
 
-                    repPicker.setValue(currentReps);
-                    weightPicker.setValue((currentWeight.intValue() - 1) / 5);
-                    currentExercise.setText(current_exercise_string);
+                    if (currentSet.getDayExerciseNumber() != currentExerciseNumber) {
+                        newExercise = true;
+                        currentExerciseNumber = currentSet.getDayExerciseNumber();
+                        Log.i("NewExercise", "moved to next exercise");
+                    } else {
+                        newExercise = false;
+                        Log.i("NewExercise", "Still doing " + current_exercise_string);
+                    }
+
+                    if (newExercise && currentSet.getExerciseCategory() == 4) {
+                        repPicker.setValue(currentReps);
+                        weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                        currentExercise.setText(current_exercise_string);
+                    } else if (currentSet.getExerciseCategory() != 4) {
+                        repPicker.setValue(currentReps);
+                        weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                        currentExercise.setText(current_exercise_string);
+                    }
 
                     if (setNumber < todaysWorkout.size()) {
                         db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
@@ -369,14 +387,17 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                         workoutHistoryRow = db.getWorkoutHistoryRowCount();
                         Log.d("Database", "Committed workout history to database. There are now " + workoutHistoryRow + " rows.");
+                        Log.d("CurrentWorkout", setNumber + " out of " + (todaysWorkout.size()) + " sets");
                     }
 
+                    setNumber += 1;
+                    moveBetweenSetsCounter = setNumber;
+                    Log.i("SetNumber", "New set number = " + setNumber);
+
+                    // Get the next set if we aren't on the last set of the workout
                     if (moveBetweenSetsCounter < todaysWorkout.size() -1) {
 
-                        setNumber += 1;
-                        moveBetweenSetsCounter = setNumber;
-
-                        if (moveBetweenSetsCounter == todaysWorkout.size() - 1) {
+                        if (moveBetweenSetsCounter == todaysWorkout.size()) {
                             // Set nextSet button disabled
                             nextSetButton.setEnabled(false);
                         }
@@ -394,9 +415,18 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         currentWeight = setCurrentWeight();
                         current_exercise_string = currentSet.getExerciseName();
 
-                        repPicker.setValue(currentReps);
-                        weightPicker.setValue((currentWeight.intValue() - 1) / 5);
-                        currentExercise.setText(current_exercise_string);
+                        // TODO: Fix bug where accessory weight is reset each time next set is pressed
+                        if (newExercise && currentSet.getExerciseCategory() == 4) {
+                            repPicker.setValue(currentReps);
+                            weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                            Log.i("NextSet", "Getting new reps & weights");
+                            currentExercise.setText(current_exercise_string);
+                        } else if (currentSet.getExerciseCategory() != 4) {
+                            repPicker.setValue(currentReps);
+                            weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                            currentExercise.setText(current_exercise_string);
+                            Log.i("NextSet", "Getting new reps & weights");
+                        }
 
                         Log.d("NextSet", "Next set: " + currentSet);
 
