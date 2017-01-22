@@ -44,10 +44,10 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private static Integer secondsLeftOnTimer;
     // For display and db retrieval
     String currentProgram;
-    String currentCycle;
+    Integer currentCycle;
     String currentCycleText;
-    String currentWeek;
-    String currentDay;
+    Integer currentWeek;
+    Integer currentDay;
     String currentWorkoutText;
     Spinner workoutSelectionSpinner;
     Button startBreakTimerButton;
@@ -117,6 +117,14 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
+        // Shared prefs
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        currentProgram = sharedPref.getString("selectedProgram", "Advanced Medium Load");
+        currentCycle = Integer.valueOf(sharedPref.getString("selectedCycle", "1"));
+        currentWeek = Integer.valueOf(sharedPref.getString("selectedWeek", "1"));
+        currentDay = Integer.valueOf(sharedPref.getString("selectedDay", "1"));
+
         // Get workout row to open up to, if that exists (int).
         Bundle b = getIntent().getExtras();
         String rowDate = "";
@@ -154,7 +162,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     Toast.LENGTH_LONG).show();
             Log.i("TodaysWorkout", "Workout history: " + todaysWorkout);
         } else {
-            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 2, 3, 4);
+            Log.d("GettingWorkout", "Getting cycle " + currentCycle + ", week " + currentWeek + ", " +
+                    "day " + currentDay);
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle, currentWeek, currentDay);
         }
 
         if (todaysWorkout.size() == 0) {
@@ -163,7 +173,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
 
-        // TODO: get number of sets per workout. Use dayExerciseNumber column to differentiate
         final HashMap<Integer, Integer> setCounts = new HashMap<Integer, Integer>();
 
         for (int i = 0; i < todaysWorkout.size(); i++) {
@@ -180,9 +189,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // Build map containing sets per lift
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
-
-        // Shared prefs
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Get rounding value to use for weight display. Default to 5 units.
         roundingValue = Double.valueOf(sharedPref.getString("unitRounding", "5.0"));
@@ -222,10 +228,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // hasn't been set. Time is stored in milliseconds in sharedPreferences. The time is saved
         // in the sharedPreferences file in RestDurationPicker.
         timerDurationSeconds = (int) (long) (sharedPref.getLong("timerDuration", 90000) / 1000);
-        currentProgram = sharedPref.getString("selectedProgram", "Advanced Medium Load");
-        currentCycle = sharedPref.getString("selectedCycle", "1");
-        currentWeek = sharedPref.getString("selectedWeek", "1");
-        currentDay = sharedPref.getString("selectedDay", "1");
 
         if (Arrays.asList(oldNumberedPrograms).contains(currentProgram)) {
             currentCycleText = "";
@@ -393,7 +395,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                     if (setNumber < todaysWorkout.size()) {
                         db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
-                                currentReps, currentWeight, currentProgram));
+                                currentReps, currentWeight, currentProgram, currentExerciseNumber));
+
+                        Log.i("ExerciseCategory", "Exercise category=" + currentSet.getExerciseCategory());
 
                         workoutHistoryRow = db.getWorkoutHistoryRowCount();
                         Log.d("Database", "Committed workout history to database. There are now " + workoutHistoryRow + " rows.");
@@ -478,7 +482,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         Double new_weight = Double.valueOf((weightPicker.getValue() + 1) * 5);
 
                         final WorkoutHistory changedWorkoutHistory = new WorkoutHistory("0", date,
-                                current_exercise_string, new_reps, new_weight, currentProgram);
+                                current_exercise_string, new_reps, new_weight, currentProgram, nextSet.getExerciseNumber());
 
                         Log.i("ChangedWorkoutHistory", "New row: " + changedWorkoutHistory + " at " +
                                 "row " + currentDbRow);
@@ -569,8 +573,17 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 // TODO: Implement set-change code here too.
                 // Go back to last-entered set if it exists
                 if (moveBetweenSetsCounter >= 1 && moveBetweenSetsCounter <= setNumber) {
-                    viewingPastSet = true;
+
                     moveBetweenSetsCounter -= 1;
+                    int currentDbRow = (workoutHistoryRow + 1) - (setNumber - moveBetweenSetsCounter);
+                    WorkoutHistory lastSet = db.getWorkoutHistoryAtId(currentDbRow);
+
+                    if (!viewingPastSet) {
+                        viewingPastSet = true;
+                        currentSetDisplayNumber = setCounts.get(lastSet.getExerciseNumber());
+                    } else if (currentSetDisplayNumber > 1) {
+                        currentSetDisplayNumber -= 1;
+                    }
 
                     if (moveBetweenSetsCounter == 0) {
                         // Set nextSet button disabled
@@ -586,9 +599,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                     Log.i("MoveToOldSet", "Set number: " + setNumber + " moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     // Get previous workout history row
-                    int currentDbRow = (workoutHistoryRow + 1) - (setNumber - moveBetweenSetsCounter);
                     Log.i("MoveBetweenSets", "Getting row number " + currentDbRow + " of" + workoutHistoryRow);
-                    WorkoutHistory lastSet = db.getWorkoutHistoryAtId(currentDbRow);
                     Log.i("WorkoutHistory", "Set on set " + currentDbRow + ":" + lastSet.toString());
                     int reps = lastSet.getReps();
                     int weight = lastSet.getWeight().intValue();
@@ -596,12 +607,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     weightPicker.setValue((weight - 1) / 5);
                     current_exercise_string = lastSet.getExercise();
 
-                    // TODO: Fix current set display when going backwards across exercises
-                    if (currentSetDisplayNumber > 1) {
-                        currentSetDisplayNumber -= 1;
-                    }
-
-                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(lastSet.getExerciseNumber()));
                     currentExercise.setText(current_exercise_string);
 
                     Log.i("MoveBetweenSets", "Previous set values: reps=" + reps + ", weight=" +
@@ -702,22 +708,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 }
         });
 
-        // Load workout history database here TODO: write this in actual code
-        // lastWorkout = workoutHistoryDb.LastWorkout()
-        // if (lastWorkout > 0 && lastWorkout < 4) {
-        //  nextWorkout = lastWorkout + 1
-        // } else if (lastWorkout == 4 && currentWeek < 4) {
-        //  nextWorkout = 1
-        //  currentWeek += 1
-        // } else if (lastWorkout == 4 && currentWeek == 4 && !currentCycle.equals("Competition")) {
-        //  nextWorkout = 1
-        //  currentWeek = 1
-        //  currentCycle += 1
-        // } else if (lastWorkout == 4 && currentWeek == 4 && currentCycle.equals("Competition")) {
-        //  nextWorkout = 1
-        //  currentWeek = 1
-        //  currentCycle = 1
-        // }
     }
 
     // Break timer long-click set time

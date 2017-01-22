@@ -15,12 +15,13 @@ public class WorkoutHistory {
     private int reps;  // Number reps performed
     private Double weight; // Weight lifted
     private String programTableName;  // Name of table corresponding to program
+    private int exerciseNumber;  // Name of table corresponding to program
 
     public WorkoutHistory() {
     }
 
     public WorkoutHistory(String workoutId, String date, String exercise, int reps,
-                          Double weight, String programTableName) {
+                          Double weight, String programTableName, int exerciseNumber) {
         super();
         this.workoutId = workoutId;
         this.date = date;
@@ -29,6 +30,7 @@ public class WorkoutHistory {
         this.reps = reps;
         this.weight = weight;
         this.programTableName = programTableName;
+        this.exerciseNumber = exerciseNumber;
     }
 
     // Getters
@@ -36,7 +38,8 @@ public class WorkoutHistory {
     public String toString() {
         return "Workout [_id=" + _id + ", workoutId=" + workoutId + ", date=" + date + ", " +
                 "exercise=" + exercise + ", reps=" + reps + ", weight=" +
-                weight + ", programTableName=" + programTableName + "]";
+                weight + ", programTableName=" + programTableName +
+                ", exerciseCategory=" + exerciseNumber + "]";
     }
 
     public String getWorkoutId() {
@@ -93,5 +96,13 @@ public class WorkoutHistory {
 
     public void setProgramTableName(String programTableName) {
         this.programTableName = programTableName;
+    }
+
+    public int getExerciseNumber() {
+        return exerciseNumber;
+    }
+
+    public void setExerciseNumber(int exerciseNumber) {
+        this.exerciseNumber = exerciseNumber;
     }
 }

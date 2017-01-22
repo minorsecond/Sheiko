@@ -53,7 +53,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     private static final String[] statsColumns = {ID, workoutId, date};
 
     private static final String[] workoutHistoryColumns = {ID, workoutId, date, exercise, reps,
-            weight, programTableName};
+            weight, programTableName, dayExerciseNumber};
 
     private static final String[] customProgramColumns = {ID, customWorkoutName, liftName, sets,
             reps, percentage, dayNumber, cycleNumber, weekNumber, exerciseCategory};
@@ -71,7 +71,6 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older books table if existed
         db.execSQL("DROP TABLE IF EXISTS workoutStats");
@@ -174,6 +173,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
                 _workoutHistory.setReps(cursor.getInt(4));
                 _workoutHistory.setWeightPercentage(cursor.getDouble(5));
                 _workoutHistory.setProgramName(cursor.getString(6));
+                _workoutHistory.setExerciseCategory(cursor.getInt(7));
 
                 // Add workout to workouts
                 workoutHistory.add(_workoutHistory);
@@ -212,6 +212,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         values.put(reps, workoutHistory.getReps());
         values.put(weight, workoutHistory.getWeight());
         values.put(programTableName, workoutHistory.getProgramTableName());
+        values.put(dayExerciseNumber, workoutHistory.getExerciseNumber());
 
         db.insert(TABLE_HISTORY,
                 null,
@@ -250,6 +251,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         workoutHistory.setReps(cursor.getInt(4));
         workoutHistory.setWeight(cursor.getDouble(5));
         workoutHistory.setProgramTableName(cursor.getString(6));
+        workoutHistory.setExerciseNumber(cursor.getInt(7));
 
         // Log
         Log.d("getWorkout(" + workoutId + ")", workoutHistory.toString());
