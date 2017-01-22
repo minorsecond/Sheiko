@@ -32,6 +32,7 @@ import com.shawnlin.numberpicker.NumberPicker;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -102,7 +103,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private Double roundingValue; // Unit rounding value
     private Boolean accessoryWeightSet;
     private Boolean newExercise = false;
-    private Integer currentExerciseNumber = 0;
+    private Integer currentExerciseNumber = 1;
+    private Integer currentSetDisplayNumber = 1;
 
     // Set font
     @Override
@@ -161,7 +163,17 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
 
-        setDisplay.setText("Set " + String.valueOf(setNumber + 1) + " of " + todaysWorkout.size());
+        // TODO: get number of sets per workout. Use dayExerciseNumber column to differentiate
+        final HashMap<Integer, Integer> setCounts = new HashMap<Integer, Integer>();
+
+        for (int i = 0; i < todaysWorkout.size(); i++) {
+            Integer frequency = setCounts.get(todaysWorkout.get(i).getDayExerciseNumber());
+            setCounts.put(todaysWorkout.get(i).getDayExerciseNumber(), frequency != null ? frequency + 1 : 1);
+        }
+
+        Log.i("SetCounts", "Set Counts Map = " + setCounts);
+
+        setDisplay.setText("Set " + String.valueOf(currentSetDisplayNumber) + " of " + setCounts.get(currentExerciseNumber));
 
         currentSet = todaysWorkout.get(setNumber);  // Get first set on load
 
@@ -374,11 +386,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     if (newExercise && currentSet.getExerciseCategory() == 4) {
                         repPicker.setValue(currentReps);
                         weightPicker.setValue((currentWeight.intValue() - 1) / 5);
-                        currentExercise.setText(current_exercise_string);
                     } else if (currentSet.getExerciseCategory() != 4) {
                         repPicker.setValue(currentReps);
                         weightPicker.setValue((currentWeight.intValue() - 1) / 5);
-                        currentExercise.setText(current_exercise_string);
                     }
 
                     if (setNumber < todaysWorkout.size()) {
@@ -397,6 +407,12 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     // Get the next set if we aren't on the last set of the workout
                     if (moveBetweenSetsCounter < todaysWorkout.size() -1) {
 
+                        // Update the set display counter on a new exercise for the day
+                        if (todaysWorkout.get(moveBetweenSetsCounter).getDayExerciseNumber() !=
+                                currentExerciseNumber) {
+                            currentSetDisplayNumber = 0;
+                        }
+
                         if (moveBetweenSetsCounter == todaysWorkout.size()) {
                             // Set nextSet button disabled
                             nextSetButton.setEnabled(false);
@@ -404,27 +420,27 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                         Log.i("NewSetNumber", "New set number=" + moveBetweenSetsCounter);
 
-                        // Display set number + 1, since setNumber begins at 0
-                        setDisplay.setText("Set " + (setNumber + 1) + " of " + todaysWorkout.size());
-
                         currentSet = todaysWorkout.get(moveBetweenSetsCounter);
                         currentReps = currentSet.getReps();
+                        currentSetDisplayNumber += 1;
+
+                        // Display set number + 1, since setNumber begins at 0
+                        setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
 
                         // TODO: Get users maxes for weight calculation
                         //currentWeight = new Double(currentSet.getWeightPercentage() * 100);
                         currentWeight = setCurrentWeight();
                         current_exercise_string = currentSet.getExerciseName();
+                        currentExercise.setText(current_exercise_string);
 
                         // TODO: Fix bug where accessory weight is reset each time next set is pressed
                         if (newExercise && currentSet.getExerciseCategory() == 4) {
                             repPicker.setValue(currentReps);
                             weightPicker.setValue((currentWeight.intValue() - 1) / 5);
                             Log.i("NextSet", "Getting new reps & weights");
-                            currentExercise.setText(current_exercise_string);
                         } else if (currentSet.getExerciseCategory() != 4) {
                             repPicker.setValue(currentReps);
                             weightPicker.setValue((currentWeight.intValue() - 1) / 5);
-                            currentExercise.setText(current_exercise_string);
                             Log.i("NextSet", "Getting new reps & weights");
                         }
 
@@ -435,6 +451,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                             previousSetButton.setEnabled(true);
                             Log.d("DisabledButton", "Previous Set button enabled");
                         }
+                    } else {  // The end of the workout session.
+                        Log.i("EndOfWorkout", "End of workout reached");
+                        setDisplay.setText("Set " + (currentSetDisplayNumber + 1) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
                     }
 
                 } else if (setNumber > moveBetweenSetsCounter + 1 && moveBetweenSetsCounter < todaysWorkout.size() - 1) { // Go forward in history
@@ -495,7 +514,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                     repPicker.setValue(reps);
                     weightPicker.setValue((weight - 1) / 5);
-                    setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of " + todaysWorkout.size());
+                    currentSetDisplayNumber += 1;
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
                     currentExercise.setText(current_exercise_string);
 
                     Log.d("NextSetInHistory", "Set Data=" + nextSet);
@@ -524,7 +544,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     }
 
                     // Display set number + 1, since setNumber begins at 0
-                    setDisplay.setText("Set " + (setNumber + 1) + " of " + todaysWorkout.size());
+                    currentSetDisplayNumber += 1;
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
 
                     currentSet = todaysWorkout.get(moveBetweenSetsCounter);
                     int currentReps = currentSet.getReps();
@@ -575,7 +596,12 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     weightPicker.setValue((weight - 1) / 5);
                     current_exercise_string = lastSet.getExercise();
 
-                    setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of " + todaysWorkout.size());
+                    // TODO: Fix current set display when going backwards across exercises
+                    if (currentSetDisplayNumber > 1) {
+                        currentSetDisplayNumber -= 1;
+                    }
+
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
                     currentExercise.setText(current_exercise_string);
 
                     Log.i("MoveBetweenSets", "Previous set values: reps=" + reps + ", weight=" +
