@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -141,6 +142,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 "to save these changes?");
 
         setDisplay = (TextView) findViewById(R.id.setsDisplay);
+        FloatingActionButton saveAllSets = (FloatingActionButton) findViewById(R.id.saveAllSets);
 
         // Get today's date
         Calendar c = Calendar.getInstance();
@@ -395,7 +397,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                     if (setNumber < todaysWorkout.size()) {
                         db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
-                                currentReps, currentWeight, currentProgram, currentExerciseNumber));
+                                currentReps, currentWeight, currentProgram, currentExerciseNumber, 0));
 
                         Log.i("ExerciseCategory", "Exercise category=" + currentSet.getExerciseCategory());
 
@@ -482,7 +484,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         Double new_weight = Double.valueOf((weightPicker.getValue() + 1) * 5);
 
                         final WorkoutHistory changedWorkoutHistory = new WorkoutHistory("0", date,
-                                current_exercise_string, new_reps, new_weight, currentProgram, nextSet.getExerciseNumber());
+                                current_exercise_string, new_reps, new_weight, currentProgram, nextSet.getExerciseNumber(), 0);
 
                         Log.i("ChangedWorkoutHistory", "New row: " + changedWorkoutHistory + " at " +
                                 "row " + currentDbRow);
@@ -706,6 +708,15 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 breakTimerOutput.setText(secondsToString(timerDurationSeconds));
                 breakTimerTab.setText("Rest Timer - " + secondsToString(timerDurationSeconds));
                 }
+        });
+
+        saveAllSets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("SaveAllSets", "Saving all sets on " + date);
+                WorkoutHistory allSetsOnDate = db.getWorkoutHistoryAtDate(date);
+                Log.i("SaveAllSets", "Got workout history " + allSetsOnDate);
+            }
         });
 
     }

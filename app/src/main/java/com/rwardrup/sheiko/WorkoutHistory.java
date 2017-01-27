@@ -16,12 +16,13 @@ public class WorkoutHistory {
     private Double weight; // Weight lifted
     private String programTableName;  // Name of table corresponding to program
     private int exerciseNumber;  // Name of table corresponding to program
+    private int persist;
 
     public WorkoutHistory() {
     }
 
     public WorkoutHistory(String workoutId, String date, String exercise, int reps,
-                          Double weight, String programTableName, int exerciseNumber) {
+                          Double weight, String programTableName, int exerciseNumber, int persist) {
         super();
         this.workoutId = workoutId;
         this.date = date;
@@ -31,6 +32,7 @@ public class WorkoutHistory {
         this.weight = weight;
         this.programTableName = programTableName;
         this.exerciseNumber = exerciseNumber;
+        this.persist = persist;
     }
 
     // Getters
@@ -104,5 +106,13 @@ public class WorkoutHistory {
 
     public void setExerciseNumber(int exerciseNumber) {
         this.exerciseNumber = exerciseNumber;
+    }
+
+    public int getPersist() {
+        return persist;
+    }
+
+    public void setPersist(int persist) {
+        this.persist = persist;
     }
 }

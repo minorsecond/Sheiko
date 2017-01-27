@@ -48,12 +48,13 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     private static final String wilks = "wilks";
     private static final String weightPercentage = "weightPercentage";
     private static final String enabled = "enabled";
+    private static final String persisted = "persist";
 
     // Define columns in each table
     private static final String[] statsColumns = {ID, workoutId, date};
 
     private static final String[] workoutHistoryColumns = {ID, workoutId, date, exercise, reps,
-            weight, programTableName, dayExerciseNumber};
+            weight, programTableName, dayExerciseNumber, persisted};
 
     private static final String[] customProgramColumns = {ID, customWorkoutName, liftName, sets,
             reps, percentage, dayNumber, cycleNumber, weekNumber, exerciseCategory};
@@ -73,8 +74,8 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older books table if existed
-        db.execSQL("DROP TABLE IF EXISTS workoutStats");
-        db.execSQL("DROP TABLE IF EXISTS workoutHistory");
+        //db.execSQL("DROP TABLE IF EXISTS workoutStats");
+        //db.execSQL("DROP TABLE IF EXISTS workoutHistory");
 
         // create fresh tables
         this.onCreate(db);
@@ -175,6 +176,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
                 _workoutHistory.setProgramName(cursor.getString(6));
                 _workoutHistory.setExerciseCategory(cursor.getInt(7));
 
+
                 // Add workout to workouts
                 workoutHistory.add(_workoutHistory);
             } while (cursor.moveToNext());
@@ -213,6 +215,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         values.put(weight, workoutHistory.getWeight());
         values.put(programTableName, workoutHistory.getProgramTableName());
         values.put(dayExerciseNumber, workoutHistory.getExerciseNumber());
+        values.put(persisted, workoutHistory.getPersist());
 
         db.insert(TABLE_HISTORY,
                 null,
@@ -252,6 +255,49 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         workoutHistory.setWeight(cursor.getDouble(5));
         workoutHistory.setProgramTableName(cursor.getString(6));
         workoutHistory.setExerciseNumber(cursor.getInt(7));
+        workoutHistory.setPersist(cursor.getInt(8));
+
+        // Log
+        Log.d("getWorkout(" + workoutId + ")", workoutHistory.toString());
+
+        // 5. Close cursor
+        cursor.close();
+
+        // 6. Return workout
+        return workoutHistory;
+    }
+
+    public WorkoutHistory getWorkoutHistoryAtDate(String date) {
+        Log.i("WorkoutHistory", "Getting workout date: " + date);
+
+        // 1. Get reference to readable db
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // 2. Build query
+        Cursor cursor = db.query(TABLE_HISTORY,
+                workoutHistoryColumns,
+                " date = ?", // selections
+                new String[]{String.valueOf(date)},  // Selection's args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null // h. limit
+        );
+
+        // 3. if we got results, show the first
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        // 4. Build workout object
+        WorkoutHistory workoutHistory = new WorkoutHistory();
+        workoutHistory.setWorkoutId(cursor.getString(1));
+        workoutHistory.setDate(cursor.getString(2));
+        workoutHistory.setExercise(cursor.getString(3));
+        workoutHistory.setReps(cursor.getInt(4));
+        workoutHistory.setWeight(cursor.getDouble(5));
+        workoutHistory.setProgramTableName(cursor.getString(6));
+        workoutHistory.setExerciseNumber(cursor.getInt(7));
+        workoutHistory.setPersist(cursor.getInt(8));
 
         // Log
         Log.d("getWorkout(" + workoutId + ")", workoutHistory.toString());
@@ -285,6 +331,8 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
                 workoutHistory.setSets(cursor.getInt(4));
                 workoutHistory.setWeight(cursor.getDouble(5));
                 workoutHistory.setProgramTableName(cursor.getString(6));
+                workoutHistory.setExerciseNumber(cursor.getInt(7));
+                workoutHistory.setPersist(cursor.getInt(8));
 
 
                 // Add workout to workouts
@@ -315,6 +363,8 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         values.put(reps, workoutHistory.getReps());
         values.put(weight, workoutHistory.getWeight());
         values.put(programTableName, workoutHistory.getProgramTableName());
+        values.put(dayExerciseNumber, workoutHistory.getExerciseNumber());
+        values.put(persisted, workoutHistory.getPersist());
 
         // 3. Update row
         int i = db.update(TABLE_HISTORY,

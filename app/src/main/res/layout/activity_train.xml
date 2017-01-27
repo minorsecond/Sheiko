@@ -426,6 +426,7 @@
                                 android:layout_weight="1" />
 
                             <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/saveAllSets"
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:layout_marginBottom="5dp"
