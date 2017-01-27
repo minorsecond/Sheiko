@@ -106,6 +106,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private Boolean newExercise = false;
     private Integer currentExerciseNumber = 1;
     private Integer currentSetDisplayNumber = 1;
+    private boolean todaysWorkoutLoaded = false;
 
     // Set font
     @Override
@@ -128,10 +129,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         currentWeek = Integer.valueOf(sharedPref.getString("selectedWeek", "3"));
         currentDay = Integer.valueOf(sharedPref.getString("selectedDay", "4"));
         inAWorkout = sharedPref.getBoolean("inAWorkout", false);
-
-        if (inAWorkout) {
-            Log.i("ResumeWorkout", "Resuming previous workout");
-        }
 
         // TODO: Get date of last row in WorkoutHistory table. If that date is not today,
         // prompt user to resume/delete workout.
@@ -174,45 +171,129 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // Get either workout history by date, or todays workout
         if (rowDate != null && rowDate.length() > 0) {
             todaysWorkout = db.getWorkoutHistoryByDate(rowDate);
+            todaysWorkoutLoaded = true;
             Toast.makeText(getApplicationContext(), "Workout on " + rowDate,
                     Toast.LENGTH_LONG).show();
             Log.i("TodaysWorkout", "Workout history: " + todaysWorkout);
-        } else if (!inAWorkout) {
+
+            // Load the day's workout
+        } else {    // TODO: Fix this. this means that the app loads the workout twice, decreasing
+            // performance.
             Log.d("GettingWorkout", "Getting cycle " + currentCycle + ", week " + currentWeek + ", " +
                     "day " + currentDay);
             todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle, currentWeek, currentDay);
+            todaysWorkoutLoaded = true;
         }
 
-        if (todaysWorkout == null && !inAWorkout) {
-            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 2, 3, 4);
-        }
-
+        // If user previously left the app before saving the workout, run this code.
         if (inAWorkout) {  // Get last workout row id and use this as the current set
             workoutHistoryRow = db.getWorkoutHistoryRowCount(); // set last row ID
             // TODO: Get workout id of last set completed and load that as todaysWorkout
-            WorkoutHistory lastWorkoutHistoryRow = db.getLastWorkoutHistoryRow();
-            setNumber = sharedPref.getInt("lastSetNumberCompleted", 1);
-
+            final WorkoutHistory lastWorkoutHistoryRow = db.getLastWorkoutHistoryRow();
             Log.i("ResumeWorkout", "Resuming at set number " + setNumber);
-
             currentProgram = lastWorkoutHistoryRow.getProgramTableName();
-            currentCycle = lastWorkoutHistoryRow.getCycle();
-            currentWeek = lastWorkoutHistoryRow.getWeek();
-            currentDay = lastWorkoutHistoryRow.getDay();
 
-            Log.i("ResumeWorkout", "last workout row id = " + lastWorkoutHistoryRow);
-            Log.i("ResumeWorkout", "last workout row cycle = " + currentCycle);
-            Log.i("ResumeWorkout", "last workout row week = " + currentWeek);
-            Log.i("ResumeWorkout", "last workout day = " + currentDay);
+            // If the last unentered row was from today, run this block
+            if (lastWorkoutHistoryRow.getDate().equals(date)) {
+                // This was probably today's workout. Ask user if they want to resume, delete or
+                // save.
+                Log.i("ResumeWorkout", "Found previous sets completed today. Prompting user for action");
+                // Set up resumeWorkoutDialog
+                AlertDialog resumeWorkoutDialog = new AlertDialog.Builder(TrainActivity.this).create();
+                resumeWorkoutDialog.setTitle("Previous Workout Found");
+                resumeWorkoutDialog.setMessage("Action to take on previous unsaved sets:");
+
+                // set buttons
+                resumeWorkoutDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save & Start New",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO: Call saveAllSets code
+
+                                // Load new workout
+                                todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
+                                        currentCycle, currentWeek, currentDay);
+                                todaysWorkoutLoaded = true;
+                            }
+                        });
+
+                resumeWorkoutDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Resume Workout",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                currentCycle = lastWorkoutHistoryRow.getCycle();
+                                currentWeek = lastWorkoutHistoryRow.getWeek();
+                                currentDay = lastWorkoutHistoryRow.getDay();
+
+                                Log.i("ResumeWorkout", "last workout row id = " + lastWorkoutHistoryRow);
+                                Log.i("ResumeWorkout", "last workout row cycle = " + currentCycle);
+                                Log.i("ResumeWorkout", "last workout row week = " + currentWeek);
+                                Log.i("ResumeWorkout", "last workout day = " + currentDay);
 
 
-            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle, currentWeek, currentDay);
-            currentSetDisplayNumber = setNumber + 1;  // get the last set in table
+                                todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle,
+                                        currentWeek, currentDay);
 
-            Log.i("ResumeWorkout", "got set " + setNumber);
+                                todaysWorkoutLoaded = true;
 
+                                setNumber = sharedPref.getInt("lastSetNumberCompleted", 1);
+                                currentSetDisplayNumber = setNumber + 1;  // get the last set in table
+
+                                Log.i("ResumeWorkout", "got set " + setNumber);
+                            }
+                        });
+
+                resumeWorkoutDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Delete Workout",
+                        new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                // TODO: Call function to delete workouts with ID matching
+                                // that of the last workout row
+
+                                db.deleteNonPersistedRows();
+
+                                // Load new workout
+                                todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
+                                        currentCycle, currentWeek, currentDay);
+                                todaysWorkoutLoaded = true;
+                            }
+                        });
+
+                resumeWorkoutDialog.show();
+            }
         }
 
+        // Just in case something happens, take the nuclear approach and load todaysWorkout if
+        // nothing is loaded yet.
+
+        // TODO: This should not appear before the resume workout dialog just above this one.
+        if (todaysWorkout == null) {
+            String errorMessage = "Warning: Nothing was loaded. Took the nuclear approach & force-" +
+                    "loaded the workout.";
+
+            Log.e("TodaysWorkout", errorMessage);
+            FirebaseCrash.report(new Exception(errorMessage));
+
+            AlertDialog.Builder warningDialogBuilder = new AlertDialog.Builder(this);
+            warningDialogBuilder.setTitle("Warning");
+            warningDialogBuilder.setMessage("Something went wrong when attempting to load your previous" +
+                    " workouts. The developer has been notified and will fix it ASAP. " +
+                    "\n\nIt would be extremely helpful if you were to email him and let him know " +
+                    "what you were doing when this happened.");
+
+            warningDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog warningDialog = warningDialogBuilder.create();
+            warningDialog.show();
+
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 2, 3, 4);
+            todaysWorkoutLoaded = true;
+        }
         Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
 
         final HashMap<Integer, Integer> setCounts = new HashMap<Integer, Integer>();

@@ -441,6 +441,17 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     }
 
+    // Delete non-persisted rows
+    public void deleteNonPersistedRows() {
+
+        Log.i("DeleteRows", "Deleting non-persisted rows in DB");
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = "persist=?";
+        String[] whereArgs = new String[]{String.valueOf(0)};
+        db.delete(TABLE_HISTORY, whereClause, whereArgs);
+        db.close();
+    }
+
     // Add workout stats
     public void addWorkoutStats(WorkoutStats workoutStatistics) {
         // For logging
