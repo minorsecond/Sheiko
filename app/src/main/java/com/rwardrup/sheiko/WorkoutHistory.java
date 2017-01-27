@@ -114,5 +114,6 @@ public class WorkoutHistory {
 
     public void setPersist(int persist) {
         this.persist = persist;
+
     }
 }

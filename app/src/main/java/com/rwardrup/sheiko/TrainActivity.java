@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
 import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
+import com.google.firebase.crash.FirebaseCrash;
 import com.shawnlin.numberpicker.NumberPicker;
 
 import java.text.SimpleDateFormat;
@@ -142,7 +143,11 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 "to save these changes?");
 
         setDisplay = (TextView) findViewById(R.id.setsDisplay);
-        FloatingActionButton saveAllSets = (FloatingActionButton) findViewById(R.id.saveAllSets);
+        final FloatingActionButton saveAllSets = (FloatingActionButton) findViewById(R.id.saveAllSets);
+
+        // SaveAllSets button is hidden on app load. It is only needed once user does their first
+        // set
+        saveAllSets.setVisibility(View.INVISIBLE);
 
         // Get today's date
         Calendar c = Calendar.getInstance();
@@ -349,6 +354,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         this.nextSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                // Show the save all sets button
+                saveAllSets.setVisibility(View.VISIBLE);
 
                 if (setNumber == moveBetweenSetsCounter && setNumber < todaysWorkout.size()) {  // If user is at current set
                     viewingPastSet = false;
@@ -714,8 +722,29 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             @Override
             public void onClick(View v) {
                 Log.i("SaveAllSets", "Saving all sets on " + date);
-                WorkoutHistory allSetsOnDate = db.getWorkoutHistoryAtDate(date);
+
+                // The following needs to return a list of all workouts matching date. Then, for
+                // each id in the list, change the "persist" column to 1.
+                List<WorkoutHistory> allSetsOnDate = db.getWorkoutHistoryAtDate(date);
                 Log.i("SaveAllSets", "Got workout history " + allSetsOnDate);
+                Toast.makeText(getApplicationContext(), "Saved workout", Toast.LENGTH_LONG).show();
+
+                for (int i = 0; i < allSetsOnDate.size(); i++) {
+                    if (allSetsOnDate.get(i).getPersist() == 0) {
+                        WorkoutHistory persistedWorkoutHistory = allSetsOnDate.get(i);
+                        persistedWorkoutHistory.setPersist(1);
+                        Integer id = Integer.valueOf(persistedWorkoutHistory.getWorkoutId());
+
+                        try {
+                            db.changeWorkoutHistoryAtId(id, persistedWorkoutHistory);
+                            Log.i("SaveAllSets", "Found unsaved set " + allSetsOnDate.get(i));
+                        } catch (Exception e) {
+                            Log.e("SaveAllSets", "Error saving sets: " + e);
+                            FirebaseCrash.report(new Exception("Could not save all sets. " +
+                                    "Threw error" + e));
+                        }
+                    }
+                }
             }
         });
 
