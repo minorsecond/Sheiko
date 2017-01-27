@@ -74,9 +74,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     AlertDialog changeSetPrompt;
     ProgramDbHelper programDbHelper;
     List<WorkoutSet> todaysWorkout;
+    boolean inAWorkout = false;
     private NumberPicker repPicker;
     private NumberPicker weightPicker;
-    private SharedPreferences.Editor editor;
     private boolean viewingPastSet = false;
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
@@ -101,7 +101,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private Double bench_max;
     private Double deadlift_max;
     private Double currentWeight;
-
     private Double roundingValue; // Unit rounding value
     private Boolean accessoryWeightSet;
     private Boolean newExercise = false;
@@ -121,11 +120,21 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         // Shared prefs
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = sharedPref.edit();
 
+        // TODO: Change these defaults
         currentProgram = sharedPref.getString("selectedProgram", "Advanced Medium Load");
-        currentCycle = Integer.valueOf(sharedPref.getString("selectedCycle", "1"));
-        currentWeek = Integer.valueOf(sharedPref.getString("selectedWeek", "1"));
-        currentDay = Integer.valueOf(sharedPref.getString("selectedDay", "1"));
+        currentCycle = Integer.valueOf(sharedPref.getString("selectedCycle", "2"));
+        currentWeek = Integer.valueOf(sharedPref.getString("selectedWeek", "3"));
+        currentDay = Integer.valueOf(sharedPref.getString("selectedDay", "4"));
+        inAWorkout = sharedPref.getBoolean("inAWorkout", false);
+
+        if (inAWorkout) {
+            Log.i("ResumeWorkout", "Resuming previous workout");
+        }
+
+        // TODO: Get date of last row in WorkoutHistory table. If that date is not today,
+        // prompt user to resume/delete workout.
 
         // Get workout row to open up to, if that exists (int).
         Bundle b = getIntent().getExtras();
@@ -168,14 +177,40 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             Toast.makeText(getApplicationContext(), "Workout on " + rowDate,
                     Toast.LENGTH_LONG).show();
             Log.i("TodaysWorkout", "Workout history: " + todaysWorkout);
-        } else {
+        } else if (!inAWorkout) {
             Log.d("GettingWorkout", "Getting cycle " + currentCycle + ", week " + currentWeek + ", " +
                     "day " + currentDay);
             todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle, currentWeek, currentDay);
         }
 
-        if (todaysWorkout.size() == 0) {
+        if (todaysWorkout == null && !inAWorkout) {
             todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 2, 3, 4);
+        }
+
+        if (inAWorkout) {  // Get last workout row id and use this as the current set
+            workoutHistoryRow = db.getWorkoutHistoryRowCount(); // set last row ID
+            // TODO: Get workout id of last set completed and load that as todaysWorkout
+            WorkoutHistory lastWorkoutHistoryRow = db.getLastWorkoutHistoryRow();
+            setNumber = sharedPref.getInt("lastSetNumberCompleted", 1);
+
+            Log.i("ResumeWorkout", "Resuming at set number " + setNumber);
+
+            currentProgram = lastWorkoutHistoryRow.getProgramTableName();
+            currentCycle = lastWorkoutHistoryRow.getCycle();
+            currentWeek = lastWorkoutHistoryRow.getWeek();
+            currentDay = lastWorkoutHistoryRow.getDay();
+
+            Log.i("ResumeWorkout", "last workout row id = " + lastWorkoutHistoryRow);
+            Log.i("ResumeWorkout", "last workout row cycle = " + currentCycle);
+            Log.i("ResumeWorkout", "last workout row week = " + currentWeek);
+            Log.i("ResumeWorkout", "last workout day = " + currentDay);
+
+
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle, currentWeek, currentDay);
+            currentSetDisplayNumber = setNumber + 1;  // get the last set in table
+
+            Log.i("ResumeWorkout", "got set " + setNumber);
+
         }
 
         Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
@@ -357,6 +392,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                 // Show the save all sets button
                 saveAllSets.setVisibility(View.VISIBLE);
+                editor.putBoolean("inAWorkout", true);
+                editor.commit();
 
                 if (setNumber == moveBetweenSetsCounter && setNumber < todaysWorkout.size()) {  // If user is at current set
                     viewingPastSet = false;
@@ -404,8 +441,10 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     }
 
                     if (setNumber < todaysWorkout.size()) {
-                        db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
-                                currentReps, currentWeight, currentProgram, currentExerciseNumber, 0));
+                        db.addWorkoutHistory(new WorkoutHistory(workoutId, date,
+                                current_exercise_string, currentSetDisplayNumber, currentReps,
+                                currentWeight, currentProgram, currentCycle, currentWeek,
+                                currentDay, currentExerciseNumber, 0));
 
                         Log.i("ExerciseCategory", "Exercise category=" + currentSet.getExerciseCategory());
 
@@ -417,6 +456,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     setNumber += 1;
                     moveBetweenSetsCounter = setNumber;
                     Log.i("SetNumber", "New set number = " + setNumber);
+
+                    editor.putInt("lastSetNumberCompleted", setNumber);
+                    editor.commit();
 
                     // Get the next set if we aren't on the last set of the workout
                     if (moveBetweenSetsCounter < todaysWorkout.size() -1) {
@@ -492,7 +534,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         Double new_weight = Double.valueOf((weightPicker.getValue() + 1) * 5);
 
                         final WorkoutHistory changedWorkoutHistory = new WorkoutHistory("0", date,
-                                current_exercise_string, new_reps, new_weight, currentProgram, nextSet.getExerciseNumber(), 0);
+                                current_exercise_string, currentSetDisplayNumber, new_reps,
+                                new_weight, currentProgram, currentCycle, currentWeek, currentDay,
+                                nextSet.getExerciseNumber(), 0);
 
                         Log.i("ChangedWorkoutHistory", "New row: " + changedWorkoutHistory + " at " +
                                 "row " + currentDbRow);
@@ -737,6 +781,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
                         try {
                             db.changeWorkoutHistoryAtId(id, persistedWorkoutHistory);
+                            inAWorkout = false;
+                            editor.putBoolean("inAWorkout", inAWorkout);
+                            editor.commit();
                             Log.i("SaveAllSets", "Found unsaved set " + allSetsOnDate.get(i));
                         } catch (Exception e) {
                             Log.e("SaveAllSets", "Error saving sets: " + e);

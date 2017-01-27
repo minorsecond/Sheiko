@@ -48,13 +48,15 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     private static final String wilks = "wilks";
     private static final String weightPercentage = "weightPercentage";
     private static final String enabled = "enabled";
+    private static final String setNumber = "setNumber";
     private static final String persisted = "persist";
 
     // Define columns in each table
     private static final String[] statsColumns = {ID, workoutId, date};
 
-    private static final String[] workoutHistoryColumns = {ID, workoutId, date, exercise, reps,
-            weight, programTableName, dayExerciseNumber, persisted};
+    private static final String[] workoutHistoryColumns = {ID, workoutId, date, exercise, setNumber,
+            reps, weight, programTableName, cycleNumber, weekNumber, dayNumber, dayExerciseNumber,
+            persisted};
 
     private static final String[] customProgramColumns = {ID, customWorkoutName, liftName, sets,
             reps, percentage, dayNumber, cycleNumber, weekNumber, exerciseCategory};
@@ -216,6 +218,9 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         values.put(programTableName, workoutHistory.getProgramTableName());
         values.put(dayExerciseNumber, workoutHistory.getExerciseNumber());
         values.put(persisted, workoutHistory.getPersist());
+        values.put(cycleNumber, workoutHistory.getCycle());
+        values.put(weekNumber, workoutHistory.getWeek());
+        values.put(dayNumber, workoutHistory.getDay());
 
         db.insert(TABLE_HISTORY,
                 null,
@@ -254,8 +259,11 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         workoutHistory.setReps(cursor.getInt(4));
         workoutHistory.setWeight(cursor.getDouble(5));
         workoutHistory.setProgramTableName(cursor.getString(6));
-        workoutHistory.setExerciseNumber(cursor.getInt(7));
-        workoutHistory.setPersist(cursor.getInt(8));
+        workoutHistory.setCycle(cursor.getInt(7));
+        workoutHistory.setWeek(cursor.getInt(8));
+        workoutHistory.setDay(cursor.getInt(9));
+        workoutHistory.setExerciseNumber(cursor.getInt(10));
+        workoutHistory.setPersist(cursor.getInt(11));
 
         // Log
         Log.d("getWorkout(" + workoutId + ")", workoutHistory.toString());
@@ -293,11 +301,15 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
                 workoutHistory.setWorkoutId(cursor.getString(1));
                 workoutHistory.setDate(cursor.getString(2));
                 workoutHistory.setExercise(cursor.getString(3));
-                workoutHistory.setSets(cursor.getInt(4));
+                workoutHistory.setSetNumber(cursor.getInt(4));
+                workoutHistory.setReps(cursor.getInt(5));
                 workoutHistory.setWeight(cursor.getDouble(5));
                 workoutHistory.setProgramTableName(cursor.getString(6));
-                workoutHistory.setExerciseNumber(cursor.getInt(7));
-                workoutHistory.setPersist(cursor.getInt(8));
+                workoutHistory.setCycle(cursor.getInt(7));
+                workoutHistory.setWeek(cursor.getInt(8));
+                workoutHistory.setDay(cursor.getInt(9));
+                workoutHistory.setExerciseNumber(cursor.getInt(10));
+                workoutHistory.setPersist(cursor.getInt(11));
 
                 // Add workout to workouts
                 workoutHistoryOnDate.add(workoutHistory);
@@ -333,11 +345,15 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
                 workoutHistory.setWorkoutId(cursor.getString(1));
                 workoutHistory.setDate(cursor.getString(2));
                 workoutHistory.setExercise(cursor.getString(3));
-                workoutHistory.setSets(cursor.getInt(4));
-                workoutHistory.setWeight(cursor.getDouble(5));
-                workoutHistory.setProgramTableName(cursor.getString(6));
-                workoutHistory.setExerciseNumber(cursor.getInt(7));
-                workoutHistory.setPersist(cursor.getInt(8));
+                workoutHistory.setSetNumber(cursor.getInt(4));
+                workoutHistory.setReps(cursor.getInt(5));
+                workoutHistory.setWeight(cursor.getDouble(6));
+                workoutHistory.setProgramTableName(cursor.getString(7));
+                workoutHistory.setCycle(cursor.getInt(7));
+                workoutHistory.setWeek(cursor.getInt(8));
+                workoutHistory.setDay(cursor.getInt(9));
+                workoutHistory.setExerciseNumber(cursor.getInt(10));
+                workoutHistory.setPersist(cursor.getInt(11));
 
 
                 // Add workout to workouts
@@ -365,9 +381,13 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         //values.put(workoutId = workoutHistory.getWorkoutId());
         values.put(date, workoutHistory.getDate());
         values.put(exercise, workoutHistory.getExercise());
+        values.put(setNumber, workoutHistory.getSetNumber());
         values.put(reps, workoutHistory.getReps());
         values.put(weight, workoutHistory.getWeight());
         values.put(programTableName, workoutHistory.getProgramTableName());
+        values.put(cycleNumber, workoutHistory.getCycle());
+        values.put(weekNumber, workoutHistory.getWeek());
+        values.put(dayNumber, workoutHistory.getDay());
         values.put(dayExerciseNumber, workoutHistory.getExerciseNumber());
         values.put(persisted, workoutHistory.getPersist());
 
@@ -396,9 +416,13 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         //values.put(workoutId = workoutHistory.getWorkoutId());
         values.put(date, workoutHistory.getDate());
         values.put(exercise, workoutHistory.getExercise());
+        values.put(setNumber, workoutHistory.getSetNumber());
         values.put(reps, workoutHistory.getReps());
         values.put(weight, workoutHistory.getWeight());
         values.put(programTableName, workoutHistory.getProgramTableName());
+        values.put(cycleNumber, workoutHistory.getCycle());
+        values.put(weekNumber, workoutHistory.getWeek());
+        values.put(dayNumber, workoutHistory.getDay());
         values.put(dayExerciseNumber, workoutHistory.getExerciseNumber());
         values.put(persisted, workoutHistory.getPersist());
 
@@ -578,6 +602,38 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
         // 4. Close
         db.close();
+    }
+
+    public WorkoutHistory getLastWorkoutHistoryRow() {
+        // 1. Get reference to readable DB
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // 2. Build query
+        String query = "SELECT * FROM " + TABLE_HISTORY;
+        Cursor cursor = db.rawQuery(query, null);
+
+        // 3. Make the query
+        WorkoutHistory workoutHistory = null;
+
+        if (cursor.moveToLast()) {
+            workoutHistory = new WorkoutHistory();
+            workoutHistory.setWorkoutId(cursor.getString(1));
+            workoutHistory.setDate(cursor.getString(2));
+            workoutHistory.setExercise(cursor.getString(3));
+            workoutHistory.setSetNumber(cursor.getInt(4));
+            workoutHistory.setReps(cursor.getInt(5));
+            workoutHistory.setWeight(cursor.getDouble(6));
+            workoutHistory.setProgramTableName(cursor.getString(7));
+            workoutHistory.setCycle(cursor.getInt(8));
+            workoutHistory.setWeek(cursor.getInt(9));
+            workoutHistory.setDay(cursor.getInt(10));
+            workoutHistory.setExerciseNumber(cursor.getInt(11));
+            workoutHistory.setPersist(cursor.getInt(12));
+        }
+
+        cursor.close();
+        Log.i("LastWorkoutHistoryRow", "Got last workout history row: " + workoutHistory);
+        return workoutHistory;
     }
 
     public UserMaxEntry getLastUserMaxEntry() {
