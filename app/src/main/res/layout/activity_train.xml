@@ -129,13 +129,13 @@
                         android:layout_height="wrap_content"
                         android:orientation="horizontal">
 
-                        <ImageButton
+                        <Spinner
                             android:id="@+id/squatSelectButton"
                             android:layout_width="45dp"
                             android:layout_height="45dp"
                             android:layout_gravity="center"
                             android:adjustViewBounds="true"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:background="@drawable/squat_inactive"
                             android:elevation="25dp"
                             android:scaleType="fitCenter"
                             android:src="@drawable/squat_inactive" />
@@ -145,13 +145,13 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
-                        <ImageButton
+                        <Spinner
                             android:id="@+id/benchSelectButton"
                             android:layout_width="50dp"
                             android:layout_height="65dp"
                             android:layout_gravity="center"
                             android:adjustViewBounds="true"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:background="@drawable/bench_press_inactive"
                             android:scaleType="fitCenter"
                             android:src="@drawable/bench_press_inactive" />
 
@@ -160,13 +160,13 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1" />
 
-                        <ImageButton
+                        <Spinner
                             android:id="@+id/deadliftButton"
                             android:layout_width="45dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center"
                             android:adjustViewBounds="true"
-                            android:background="?attr/selectableItemBackgroundBorderless"
+                            android:background="@drawable/deadlift_inactive"
                             android:scaleType="fitCenter"
                             android:src="@drawable/deadlift_inactive" />
 

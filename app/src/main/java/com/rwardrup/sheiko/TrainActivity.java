@@ -20,7 +20,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -35,6 +34,7 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -58,9 +58,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     Button nextSetButton;
     Button previousSetButton;
     // Activity buttons
-    ImageButton squatSelectButton;
-    ImageButton deadliftSelectButton;
-    ImageButton benchSelectButton;
+    Spinner squatSelectButton;
+    Spinner deadliftSelectButton;
+    Spinner benchSelectButton;
     Spinner accessorySpinner;
     Switch autoTimerSwitch;
     Boolean autoTimerEnabled = false;  // TODO: get this from shared preferences
@@ -122,9 +122,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // Exercise select buttons
         // TODO: Change these to spinners if there are more than 1 exercise per workout
         // category (is this possible?) Also, change the names to exercise1, 2 & 3.
-        squatSelectButton = (ImageButton) findViewById(R.id.squatSelectButton);
-        benchSelectButton = (ImageButton) findViewById(R.id.benchSelectButton);
-        deadliftSelectButton = (ImageButton) findViewById(R.id.deadliftButton);
+        squatSelectButton = (Spinner) findViewById(R.id.squatSelectButton);
+        benchSelectButton = (Spinner) findViewById(R.id.benchSelectButton);
+        deadliftSelectButton = (Spinner) findViewById(R.id.deadliftButton);
         accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
 
         // Shared prefs
@@ -331,9 +331,19 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         final HashMap<Integer, Integer> setCounts = new HashMap<Integer, Integer>();
 
+        // Hashset of todays accessories. Will be converted to String array for the accessories
+        // Spinner.
+        HashSet<String> _todaysAccessories = new HashSet<String>();
+
         for (int i = 0; i < todaysWorkout.size(); i++) {
             Integer frequency = setCounts.get(todaysWorkout.get(i).getDayExerciseNumber());
             setCounts.put(todaysWorkout.get(i).getDayExerciseNumber(), frequency != null ? frequency + 1 : 1);
+
+            // Add today's accessories to the spinner
+            if (todaysWorkout.get(i).getExerciseCategory() == 4) {
+                String exercise = todaysWorkout.get(i).getExerciseName();
+                _todaysAccessories.add(exercise);
+            }
 
             // Set buttons inactive by default
             squatSelectButton.setEnabled(false);
@@ -344,37 +354,37 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             if (todaysWorkout.get(i).getDayExerciseNumber() == 1) {
 
                 if (todaysWorkout.get(i).getExerciseCategory() == 1)
-                    squatSelectButton.setImageResource(R.drawable.squats);
+                    squatSelectButton.setBackgroundResource(R.drawable.squats);
                 else if (todaysWorkout.get(i).getExerciseCategory() == 2)
-                    squatSelectButton.setImageResource(R.drawable.bench_press);
+                    squatSelectButton.setBackgroundResource(R.drawable.bench_press);
                 else if (todaysWorkout.get(i).getExerciseCategory() == 3)
-                    squatSelectButton.setImageResource(R.drawable.deadlift);
+                    squatSelectButton.setBackgroundResource(R.drawable.deadlift);
                 else
-                    squatSelectButton.setImageResource(R.drawable.dumbell_curls);
+                    squatSelectButton.setBackgroundResource(R.drawable.dumbell_curls);
             }
 
             if (todaysWorkout.get(i).getDayExerciseNumber() == 2) {
 
                 if (todaysWorkout.get(i).getExerciseCategory() == 1)
-                    benchSelectButton.setImageResource(R.drawable.squats);
+                    benchSelectButton.setBackgroundResource(R.drawable.squats);
                 else if (todaysWorkout.get(i).getExerciseCategory() == 2)
-                    benchSelectButton.setImageResource(R.drawable.bench_press);
+                    benchSelectButton.setBackgroundResource(R.drawable.bench_press);
                 else if (todaysWorkout.get(i).getExerciseCategory() == 3)
-                    benchSelectButton.setImageResource(R.drawable.deadlift);
+                    benchSelectButton.setBackgroundResource(R.drawable.deadlift);
                 else
-                    benchSelectButton.setImageResource(R.drawable.dumbell_curls);
+                    benchSelectButton.setBackgroundResource(R.drawable.dumbell_curls);
             }
 
             if (todaysWorkout.get(i).getDayExerciseNumber() == 3) {
 
                 if (todaysWorkout.get(i).getExerciseCategory() == 1)
-                    deadliftSelectButton.setImageResource(R.drawable.squats);
+                    deadliftSelectButton.setBackgroundResource(R.drawable.squats);
                 else if (todaysWorkout.get(i).getExerciseCategory() == 2)
-                    deadliftSelectButton.setImageResource(R.drawable.bench_press);
+                    deadliftSelectButton.setBackgroundResource(R.drawable.bench_press);
                 else if (todaysWorkout.get(i).getExerciseCategory() == 3)
-                    deadliftSelectButton.setImageResource(R.drawable.deadlift);
+                    deadliftSelectButton.setBackgroundResource(R.drawable.deadlift);
                 else
-                    deadliftSelectButton.setImageResource(R.drawable.dumbell_curls);
+                    deadliftSelectButton.setBackgroundResource(R.drawable.dumbell_curls);
             }
 
             if (todaysWorkout.get(i).getDayExerciseNumber() == 4) {
@@ -426,11 +436,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
 
-        // TODO: Programmatically set the array of today's accessories based on the sqlite db row
-        String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
-                "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
-
-        // Hide the accessory spinner text
+        // Convert _todaysAccessories ArrayList to String Array todaysAccessories for the Spinner.
+        String[] todaysAccessories = _todaysAccessories.toArray(new String[_todaysAccessories.size()]);
         CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, todaysAccessories);
         accessorySpinner.setAdapter(accessorySpinnerAdapter);
@@ -523,32 +530,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             }
         });
 
-        // This is an example of how changing images to active/inactive versions
-        // will be done programmatically
-
-        this.squatSelectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                current_exercise_string = "squat";
-                currentExercise.setText(R.string.squat);
-            }
-        });
-
-        this.benchSelectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentExercise.setText(R.string.bench);
-                current_exercise_string = "bench";
-            }
-        });
-
-        this.deadliftSelectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentExercise.setText(R.string.deadlift);
-                current_exercise_string = "deadlift";
-            }
-        });
+        // TODO: Exercise selection button code here
 
         // Run the nextSet button alongside the autotimer listener.
         this.nextSetButton.setOnClickListener(new View.OnClickListener() {
