@@ -210,7 +210,10 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     // Set up resumeWorkoutDialog
                     AlertDialog resumeWorkoutDialog = new AlertDialog.Builder(TrainActivity.this).create();
                     resumeWorkoutDialog.setTitle("Previous Workout Found");
-                    resumeWorkoutDialog.setMessage("Action to take on previous unsaved sets:");
+
+                    // The prompt itself. TODO: Make this 'prettier'
+                    resumeWorkoutDialog.setMessage("Action to take on previous unsaved sets from " +
+                            lastWorkoutHistoryRow.getDate());
 
                     // set buttons
                     resumeWorkoutDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save & Start New",
