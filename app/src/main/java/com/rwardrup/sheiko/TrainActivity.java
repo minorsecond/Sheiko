@@ -119,6 +119,14 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
+        // Exercise select buttons
+        // TODO: Change these to spinners if there are more than 1 exercise per workout
+        // category (is this possible?)
+        squatSelectButton = (ImageButton) findViewById(R.id.squatSelectButton);
+        benchSelectButton = (ImageButton) findViewById(R.id.benchSelectButton);
+        deadliftSelectButton = (ImageButton) findViewById(R.id.deadliftButton);
+        accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
+
         // Shared prefs
         final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         final SharedPreferences.Editor editor = sharedPref.edit();
@@ -303,6 +311,60 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         for (int i = 0; i < todaysWorkout.size(); i++) {
             Integer frequency = setCounts.get(todaysWorkout.get(i).getDayExerciseNumber());
             setCounts.put(todaysWorkout.get(i).getDayExerciseNumber(), frequency != null ? frequency + 1 : 1);
+
+            // Set buttons inactive by default
+            squatSelectButton.setEnabled(false);
+            benchSelectButton.setEnabled(false);
+            deadliftSelectButton.setEnabled(false);
+
+            // Set the active/inactive workout buttons depending on which workouts are present
+            if (todaysWorkout.get(i).getDayExerciseNumber() == 1) {
+
+                if (todaysWorkout.get(i).getExerciseCategory() == 1)
+                    squatSelectButton.setImageResource(R.drawable.squats);
+                else if (todaysWorkout.get(i).getExerciseCategory() == 2)
+                    squatSelectButton.setImageResource(R.drawable.bench_press);
+                else if (todaysWorkout.get(i).getExerciseCategory() == 3)
+                    squatSelectButton.setImageResource(R.drawable.deadlift);
+                else
+                    squatSelectButton.setImageResource(R.drawable.dumbell_curls);
+            }
+
+            if (todaysWorkout.get(i).getDayExerciseNumber() == 2) {
+
+                if (todaysWorkout.get(i).getExerciseCategory() == 1)
+                    benchSelectButton.setImageResource(R.drawable.squats);
+                else if (todaysWorkout.get(i).getExerciseCategory() == 2)
+                    benchSelectButton.setImageResource(R.drawable.bench_press);
+                else if (todaysWorkout.get(i).getExerciseCategory() == 3)
+                    benchSelectButton.setImageResource(R.drawable.deadlift);
+                else
+                    benchSelectButton.setImageResource(R.drawable.dumbell_curls);
+            }
+
+            if (todaysWorkout.get(i).getDayExerciseNumber() == 3) {
+
+                if (todaysWorkout.get(i).getExerciseCategory() == 1)
+                    deadliftSelectButton.setImageResource(R.drawable.squats);
+                else if (todaysWorkout.get(i).getExerciseCategory() == 2)
+                    deadliftSelectButton.setImageResource(R.drawable.bench_press);
+                else if (todaysWorkout.get(i).getExerciseCategory() == 3)
+                    deadliftSelectButton.setImageResource(R.drawable.deadlift);
+                else
+                    deadliftSelectButton.setImageResource(R.drawable.dumbell_curls);
+            }
+
+            if (todaysWorkout.get(i).getDayExerciseNumber() == 4) {
+
+                if (todaysWorkout.get(i).getExerciseCategory() == 1)
+                    accessorySpinner.setBackgroundResource(R.drawable.squats);
+                else if (todaysWorkout.get(i).getExerciseCategory() == 2)
+                    accessorySpinner.setBackgroundResource(R.drawable.bench_press);
+                else if (todaysWorkout.get(i).getExerciseCategory() == 3)
+                    accessorySpinner.setBackgroundResource(R.drawable.deadlift);
+                else
+                    accessorySpinner.setBackgroundResource(R.drawable.dumbell_curls);
+            }
         }
 
         Log.i("SetCounts", "Set Counts Map = " + setCounts);
@@ -344,7 +406,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
 
         // Hide the accessory spinner text
-        accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
         CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
                 android.R.layout.simple_spinner_dropdown_item, todaysAccessories);
         accessorySpinner.setAdapter(accessorySpinnerAdapter);
@@ -371,9 +432,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         startBreakTimerButton = (Button) findViewById(R.id.startBreakTimer);
         stopBreakTimerButton = (Button) findViewById(R.id.stopBreakButton);
         pauseBreakTimerButton = (Button) findViewById(R.id.pauseBreakButton);
-        squatSelectButton = (ImageButton) findViewById(R.id.squatSelectButton);
-        benchSelectButton = (ImageButton) findViewById(R.id.benchSelectButton);
-        deadliftSelectButton = (ImageButton) findViewById(R.id.deadliftButton);
         autoTimerSwitch = (Switch) findViewById(R.id.autoTimerSwitch);
         nextSetButton = (Button) findViewById(R.id.nextSetButton);
         previousSetButton = (Button) findViewById(R.id.previousSetButton);
@@ -442,7 +500,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         // This is an example of how changing images to active/inactive versions
         // will be done programmatically
-        squatSelectButton.setImageResource(R.drawable.squats);
 
         this.squatSelectButton.setOnClickListener(new View.OnClickListener() {
             @Override
