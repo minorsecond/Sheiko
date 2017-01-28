@@ -121,7 +121,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         // Exercise select buttons
         // TODO: Change these to spinners if there are more than 1 exercise per workout
-        // category (is this possible?)
+        // category (is this possible?) Also, change the names to exercise1, 2 & 3.
         squatSelectButton = (ImageButton) findViewById(R.id.squatSelectButton);
         benchSelectButton = (ImageButton) findViewById(R.id.benchSelectButton);
         deadliftSelectButton = (ImageButton) findViewById(R.id.deadliftButton);
@@ -203,7 +203,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 currentProgram = lastWorkoutHistoryRow.getProgramTableName();
 
                 // If the last unentered row was from today, run this block
-                if (lastWorkoutHistoryRow.getDate().equals(date)) {
+                if (!lastWorkoutHistoryRow.getDate().equals(date)) {
                     // This was probably today's workout. Ask user if they want to resume, delete or
                     // save.
                     Log.i("ResumeWorkout", "Found previous sets completed today. Prompting user for action");
@@ -269,6 +269,26 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                             });
 
                     resumeWorkoutDialog.show();
+                } else { // Resume workout if it's from the same day
+                    currentCycle = lastWorkoutHistoryRow.getCycle();
+                    currentWeek = lastWorkoutHistoryRow.getWeek();
+                    currentDay = lastWorkoutHistoryRow.getDay();
+
+                    Log.i("ResumeWorkout", "last workout row id = " + lastWorkoutHistoryRow);
+                    Log.i("ResumeWorkout", "last workout row cycle = " + currentCycle);
+                    Log.i("ResumeWorkout", "last workout row week = " + currentWeek);
+                    Log.i("ResumeWorkout", "last workout day = " + currentDay);
+
+                    todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle,
+                            currentWeek, currentDay);
+
+                    todaysWorkoutLoaded = true;
+
+                    setNumber = sharedPref.getInt("lastSetNumberCompleted", 1);
+                    currentSetDisplayNumber = setNumber + 1;  // get the last set in table
+                    setDisplay.setText(String.valueOf(currentSetDisplayNumber));
+
+                    Log.i("ResumeWorkout", "got set " + setNumber + " done today.");
                 }
             }
         }
@@ -370,6 +390,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         Log.i("SetCounts", "Set Counts Map = " + setCounts);
 
         setDisplay.setText("Set " + String.valueOf(currentSetDisplayNumber) + " of " + setCounts.get(currentExerciseNumber));
+
+        Log.i("TodaysWorkout", "Today's workout size = " + todaysWorkout.size());
 
         currentSet = todaysWorkout.get(setNumber);  // Get first set on load
 
