@@ -135,9 +135,8 @@
                             android:layout_height="45dp"
                             android:layout_gravity="center"
                             android:adjustViewBounds="true"
-                            android:background="@drawable/squat_inactive"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:elevation="25dp"
-                            android:entries="@array/accessories"
                             android:scaleType="fitCenter"
                             android:src="@drawable/squat_inactive" />
 
@@ -152,8 +151,7 @@
                             android:layout_height="65dp"
                             android:layout_gravity="center"
                             android:adjustViewBounds="true"
-                            android:background="@drawable/bench_press_inactive"
-                            android:entries="@array/accessories"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter"
                             android:src="@drawable/bench_press_inactive" />
 
@@ -168,8 +166,7 @@
                             android:layout_height="40dp"
                             android:layout_gravity="center"
                             android:adjustViewBounds="true"
-                            android:background="@drawable/deadlift_inactive"
-                            android:entries="@array/accessories"
+                            android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter"
                             android:src="@drawable/deadlift_inactive" />
 
