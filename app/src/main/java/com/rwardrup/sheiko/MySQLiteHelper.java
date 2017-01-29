@@ -93,7 +93,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
                 + cycleNumber + " AND week_number = " + weekNumber + " AND day_number = " +
                 dayNumber;
 
-        Log.i("TodaysWorkout", "Program DB query: " + query);
+        Log.i("DbTransaction", "Program DB query: " + query);
 
         // 2. Build query TODO: make this actually do what I want (get by date integer)
         Cursor cursor = db.query(TABLE_PROGRAMS,
@@ -132,7 +132,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("getTodaysWorkout()", todaysWorkout.toString());
+        Log.d("DbTransaction", todaysWorkout.toString());
 
         // Close the cursor
         cursor.close();
@@ -149,7 +149,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
         String query = "date = " + "'" + date + "'";
 
-        Log.i("WorkoutHistoryByDate", "Program DB query: " + query);
+        Log.i("DbTransaction", "Program DB query: " + query);
 
         // 2. Build query TODO: make this actually do what I want (get by date integer)
         Cursor cursor = db.query(TABLE_HISTORY,
@@ -184,7 +184,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("getWorkoutHistoryByDate()", workoutHistory.toString());
+        Log.d("DbTransaction", workoutHistory.toString());
 
         // Close the cursor
         cursor.close();
@@ -203,7 +203,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     public void addWorkoutHistory(WorkoutHistory workoutHistory) {
         // For logging
-        Log.d("addWorkout", workoutHistory.toString());
+        Log.d("DbTransaction", workoutHistory.toString());
 
         // 1. Get writable Db
         SQLiteDatabase db = this.getWritableDatabase();
@@ -231,7 +231,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     }
 
     public WorkoutHistory getWorkoutHistoryAtId(int id) {
-        Log.i("WorkoutHistory", "Getting workoutId: " + id);
+        Log.i("DbTransaction", "Getting workoutId: " + id);
 
         // 1. Get reference to readable db
         SQLiteDatabase db = this.getReadableDatabase();
@@ -266,7 +266,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         workoutHistory.setPersist(cursor.getInt(11));
 
         // Log
-        Log.d("getWorkout(" + workoutId + ")", workoutHistory.toString());
+        Log.d("DbTransaction" + workoutId + ")", workoutHistory.toString());
 
         // 5. Close cursor
         cursor.close();
@@ -276,7 +276,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     }
 
     public List<WorkoutHistory> getWorkoutHistoryAtDate(String date) {
-        Log.i("WorkoutHistory", "Getting workout date: " + date);
+        Log.i("DbTransaction", "Getting workout date: " + date);
 
         List<WorkoutHistory> workoutHistoryOnDate = new LinkedList<WorkoutHistory>();
 
@@ -316,7 +316,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("workoutsOnDate()", workoutHistoryOnDate.toString());
+        Log.d("DbTransaction", workoutHistoryOnDate.toString());
 
         // Close the cursor
         cursor.close();
@@ -361,7 +361,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("getAllWorkouts()", allWorkoutHistory.toString());
+        Log.d("DbTransaction", allWorkoutHistory.toString());
 
         // Close the cursor
         cursor.close();
@@ -370,8 +370,8 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     }
 
     public int changeWorkoutHistoryAtId(int id, WorkoutHistory workoutHistory) {
-        Log.i("WorkoutHistory", "Changing workout history row " + id);
-        Log.d("WorkoutHistoryId", workoutHistory.getWorkoutId());
+        Log.i("DbTransaction", "Changing workout history row " + id);
+        Log.d("DbTransaction", workoutHistory.getWorkoutId());
 
         // 1. Get writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -405,8 +405,8 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     }
 
     public int changeWorkoutHistoryAtDate(String _date, WorkoutHistory workoutHistory) {
-        Log.i("WorkoutHistory", "Changing workout history row " + _date);
-        Log.d("WorkoutHistoryId", workoutHistory.getWorkoutId());
+        Log.i("DbTransaction", "Changing workout history row " + _date);
+        Log.d("DbTransaction", workoutHistory.getWorkoutId());
 
         // 1. Get writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -435,7 +435,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         // 4. Close DB
         db.close();
 
-        Log.i("Savedworkout", "Set persist column to 1 = " + i);
+        Log.i("DbTransaction", "Set persist column to 1 = " + i);
 
         return i;
 
@@ -444,7 +444,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     // Delete non-persisted rows
     public void deleteNonPersistedRows() {
 
-        Log.i("DeleteRows", "Deleting non-persisted rows in DB");
+        Log.i("DbTransaction", "Deleting non-persisted rows in DB");
         SQLiteDatabase db = this.getWritableDatabase();
         String whereClause = "persist=?";
         String[] whereArgs = new String[]{String.valueOf(0)};
@@ -455,7 +455,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     // Add workout stats
     public void addWorkoutStats(WorkoutStats workoutStatistics) {
         // For logging
-        Log.d("addWorkout", workoutStatistics.toString());
+        Log.d("DbTransaction", workoutStatistics.toString());
 
         // 1. Get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -501,7 +501,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         workoutStatistics.setDate(cursor.getString(2));
 
         // Log
-        Log.d("getWorkout(" + date + ")", workoutStatistics.toString());
+        Log.d("DbTransaction(" + date + ")", workoutStatistics.toString());
 
         // 5. Close cursor
         cursor.close();
@@ -544,7 +544,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("getAllWorkouts()", workoutStatisticses.toString());
+        Log.d("DbTransaction", workoutStatisticses.toString());
 
         // Close the cursor
         cursor.close();
@@ -586,13 +586,13 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         db.close();
 
         // log
-        Log.d("DeleteWorkout", workoutStatistics.toString());
+        Log.d("DbTransaction", workoutStatistics.toString());
     }
 
     // Add user max
     public void addUserMaxEntry(UserMaxEntry userMaxEntry) {
         // For logging
-        Log.d("addUserMaxEntry()", userMaxEntry.toString());
+        Log.d("DbTransaction", "read user max entry data " + userMaxEntry.toString());
 
         // 1. Get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -665,7 +665,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             userMaxEntry.setDeadliftMax(cursor.getDouble(4));
             userMaxEntry.setWilks(cursor.getDouble(5));
             userMaxEntry.setDate(cursor.getString(6));
-            Log.d("getLastUserMaxEntry()", userMaxEntry.toString());
+            Log.d("DbTransaction", userMaxEntry.toString());
         }
         cursor.close();
         return userMaxEntry;

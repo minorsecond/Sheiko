@@ -31,6 +31,7 @@ import com.google.firebase.crash.FirebaseCrash;
 import com.shawnlin.numberpicker.NumberPicker;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -107,6 +108,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private Integer currentExerciseNumber = 1;
     private Integer currentSetDisplayNumber = 1;
     private boolean todaysWorkoutLoaded = false;
+    private boolean dupeBench = false;
+    private boolean dupeSquats = false;
+    private boolean dupeDeadlifts = false;
 
     // Set font
     @Override
@@ -331,75 +335,188 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         final HashMap<Integer, Integer> setCounts = new HashMap<Integer, Integer>();
 
+        // Lists of the day's exercises per category. These will populate the Spinner dropdowns.
+        // Use ArrayList vs. Sets because we don't want to combine exercises if the workout calls
+        // For the user to do two squat sessions, etc.
+        ArrayList<String> squatExercises = new ArrayList<String>();
+        ArrayList<String> benchExercises = new ArrayList<String>();
+        ArrayList<String> deadliftExercises = new ArrayList<String>();
+
         // Hashset of todays accessories. Will be converted to String array for the accessories
         // Spinner.
         HashSet<String> _todaysAccessories = new HashSet<String>();
+        HashSet<String> duplicateTester = new HashSet<String>();
+        int dayExerciseNumber = -1;
 
         for (int i = 0; i < todaysWorkout.size(); i++) {
+            WorkoutSet _set = todaysWorkout.get(i);
             Integer frequency = setCounts.get(todaysWorkout.get(i).getDayExerciseNumber());
             setCounts.put(todaysWorkout.get(i).getDayExerciseNumber(), frequency != null ? frequency + 1 : 1);
 
-            // Add today's accessories to the spinner
-            if (todaysWorkout.get(i).getExerciseCategory() == 4) {
-                String exercise = todaysWorkout.get(i).getExerciseName();
-                _todaysAccessories.add(exercise);
+            while (dayExerciseNumber != _set.getDayExerciseNumber()) {
+                // Add today's squats to the spinner
+                if (_set.getExerciseCategory() == 1) {
+                    String exercise = _set.getExerciseName();
+                    squatExercises.add(exercise);
+                }
+
+                // Add today's benches to the spinner
+                if (_set.getExerciseCategory() == 2) {
+                    String exercise = _set.getExerciseName();
+                    benchExercises.add(exercise);
+                }
+
+                // Add today's deadlifts to the spinner
+                if (_set.getExerciseCategory() == 3) {
+                    String exercise = _set.getExerciseName();
+                    deadliftExercises.add(exercise);
+                }
+
+                // Add today's accessories to the spinner
+                if (_set.getExerciseCategory() == 4) {
+                    String exercise = _set.getExerciseName();
+                    _todaysAccessories.add(exercise);
+                }
+
+                dayExerciseNumber = _set.getDayExerciseNumber();
             }
 
             // Set buttons inactive by default
-            squatSelectButton.setEnabled(false);
-            benchSelectButton.setEnabled(false);
-            deadliftSelectButton.setEnabled(false);
+            squatSelectButton.setEnabled(true);
+            benchSelectButton.setEnabled(true);
+            deadliftSelectButton.setEnabled(true);
+
 
             // Set the active/inactive workout buttons depending on which workouts are present
             if (todaysWorkout.get(i).getDayExerciseNumber() == 1) {
-
-                if (todaysWorkout.get(i).getExerciseCategory() == 1)
+                squatSelectButton.setEnabled(true);
+                if (todaysWorkout.get(i).getExerciseCategory() == 1) {
                     squatSelectButton.setBackgroundResource(R.drawable.squats);
-                else if (todaysWorkout.get(i).getExerciseCategory() == 2)
+                    setExerciseButtons(squatSelectButton, "squat", squatExercises);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 2) {
                     squatSelectButton.setBackgroundResource(R.drawable.bench_press);
-                else if (todaysWorkout.get(i).getExerciseCategory() == 3)
+                    setExerciseButtons(squatSelectButton, "bench", benchExercises);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 3) {
                     squatSelectButton.setBackgroundResource(R.drawable.deadlift);
-                else
-                    squatSelectButton.setBackgroundResource(R.drawable.dumbell_curls);
+                    setExerciseButtons(squatSelectButton, "deadlift", deadliftExercises);
+                } else {
+                    squatSelectButton.setBackgroundResource(R.drawable.dumbell_curls);  // TODO: Test this
+                    setExerciseButtons(squatSelectButton, "accessories", new ArrayList<String>(_todaysAccessories));
+                }
             }
 
             if (todaysWorkout.get(i).getDayExerciseNumber() == 2) {
+                benchSelectButton.setEnabled(true);
 
-                if (todaysWorkout.get(i).getExerciseCategory() == 1)
+                if (todaysWorkout.get(i).getExerciseCategory() == 1) {
                     benchSelectButton.setBackgroundResource(R.drawable.squats);
-                else if (todaysWorkout.get(i).getExerciseCategory() == 2)
+                    setExerciseButtons(benchSelectButton, "squat", squatExercises);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 2) {
                     benchSelectButton.setBackgroundResource(R.drawable.bench_press);
-                else if (todaysWorkout.get(i).getExerciseCategory() == 3)
+                    setExerciseButtons(benchSelectButton, "bench", benchExercises);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 3) {
                     benchSelectButton.setBackgroundResource(R.drawable.deadlift);
-                else
+                    setExerciseButtons(benchSelectButton, "deadlift", deadliftExercises);
+                } else {
                     benchSelectButton.setBackgroundResource(R.drawable.dumbell_curls);
+                    setExerciseButtons(benchSelectButton, "accessories", new ArrayList<String>(_todaysAccessories));
+                }
             }
 
             if (todaysWorkout.get(i).getDayExerciseNumber() == 3) {
+                deadliftSelectButton.setEnabled(true);
 
-                if (todaysWorkout.get(i).getExerciseCategory() == 1)
+                if (todaysWorkout.get(i).getExerciseCategory() == 1) {
                     deadliftSelectButton.setBackgroundResource(R.drawable.squats);
-                else if (todaysWorkout.get(i).getExerciseCategory() == 2)
+                    setExerciseButtons(deadliftSelectButton, "squat", squatExercises);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 2) {
                     deadliftSelectButton.setBackgroundResource(R.drawable.bench_press);
-                else if (todaysWorkout.get(i).getExerciseCategory() == 3)
+                    setExerciseButtons(deadliftSelectButton, "bench", benchExercises);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 3) {
                     deadliftSelectButton.setBackgroundResource(R.drawable.deadlift);
-                else
+                    Log.d("DeadliftExercises", "Found=" + deadliftExercises);
+                    setExerciseButtons(deadliftSelectButton, "deadlift", deadliftExercises);
+                } else {
                     deadliftSelectButton.setBackgroundResource(R.drawable.dumbell_curls);
+                    setExerciseButtons(deadliftSelectButton, "accessories", new ArrayList<String>(_todaysAccessories));
+                }
             }
 
-            if (todaysWorkout.get(i).getDayExerciseNumber() == 4) {
+            if (todaysWorkout.get(i).getDayExerciseNumber() == 4 ||
+                    todaysWorkout.get(i).getExerciseCategory() == 4) {
 
-                if (todaysWorkout.get(i).getExerciseCategory() == 1)
+                if (todaysWorkout.get(i).getExerciseCategory() == 1) {
                     accessorySpinner.setBackgroundResource(R.drawable.squats);
-                else if (todaysWorkout.get(i).getExerciseCategory() == 2)
+                    setExerciseButtons(accessorySpinner, "squat", squatExercises);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 2) {
                     accessorySpinner.setBackgroundResource(R.drawable.bench_press);
-                else if (todaysWorkout.get(i).getExerciseCategory() == 3)
+                    setExerciseButtons(accessorySpinner, "bench", benchExercises);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 3) {
                     accessorySpinner.setBackgroundResource(R.drawable.deadlift);
-                else
+                    setExerciseButtons(accessorySpinner, "deadlift", deadliftExercises);
+                } else {
                     accessorySpinner.setBackgroundResource(R.drawable.dumbell_curls);
+                    setExerciseButtons(accessorySpinner, "accessories", new ArrayList<String>(_todaysAccessories));
+                }
             }
         }
 
+        Log.i("SquatExercises", "original state = " + squatExercises);
+        // Test squats for duplicates && add a counter number before exercise if so.
+        for (String name : squatExercises) {
+            dupeSquats = !duplicateTester.add(name);
+        }
+
+        // Test bench for duplicates && add a counter number before exercise if so.
+        Log.i("ExerciseList", "Bench sessions: " + benchExercises);
+        for (String name : benchExercises) {
+            if (!duplicateTester.add(name)) {
+                // do nothing
+            } else {
+                dupeBench = true;
+            }
+        }
+
+        for (String name : deadliftExercises) {
+            if (!duplicateTester.add(name)) {
+                // do nothing
+            } else {
+                dupeDeadlifts = true;
+            }
+        }
+
+        if (dupeSquats == true) {
+            Log.i("ExerciseList", "Creating listed version of squats for spinner");
+            // Append counter number
+            for (int i = 0; i < squatExercises.size(); i++) {
+                String name = squatExercises.get(i);
+                String replacementName = String.valueOf(i + 1) + ". " + name;
+                squatExercises.set(i, replacementName);
+            }
+        }
+
+        if (dupeBench) {
+            // Append counter number
+            for (int i = 0; i < benchExercises.size(); i++) {
+                String name = benchExercises.get(i);
+                Log.i("ExerciseCounts", "bench name = " + name);
+                String replacementName = String.valueOf(i + 1) + ". " + name;
+                benchExercises.set(i, replacementName);
+            }
+        }
+
+        if (dupeDeadlifts) {
+            // Append counter number
+            for (int i = 0; i < deadliftExercises.size(); i++) {
+                String name = deadliftExercises.get(i);
+                String replacementName = String.valueOf(i + 1) + ". " + name;
+                deadliftExercises.set(i, replacementName);
+            }
+        }
+
+        Log.i("ExerciseList", "Built squats: " + squatExercises);
+        Log.i("ExerciseList", "Built bench: " + benchExercises);
+        Log.i("ExerciseList", "Built deadlifts: " + deadliftExercises);
         Log.i("SetCounts", "Set Counts Map = " + setCounts);
 
         setDisplay.setText("Set " + String.valueOf(currentSetDisplayNumber) + " of " + setCounts.get(currentExerciseNumber));
@@ -435,12 +552,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         });
 
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
-
-        // Convert _todaysAccessories ArrayList to String Array todaysAccessories for the Spinner.
-        String[] todaysAccessories = _todaysAccessories.toArray(new String[_todaysAccessories.size()]);
-        CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, todaysAccessories);
-        accessorySpinner.setAdapter(accessorySpinnerAdapter);
 
         // Try to get the timer duration from shared preferences, defaulting to 1.5 minutes if it
         // hasn't been set. Time is stored in milliseconds in sharedPreferences. The time is saved
@@ -817,6 +928,42 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             }
         });
 
+        this.squatSelectButton.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                Log.i("ExerciseSelect", "The squat select button was pressed");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // Do nothing
+            }
+        });
+
+        this.benchSelectButton.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                Log.i("ExerciseSelect", "The bench select button was pressed");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // Do nothing
+            }
+        });
+
+        this.deadliftSelectButton.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+                Log.i("ExerciseSelect", "The deadlift select button was pressed");
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) {
+                // Do nothing
+            }
+        });
+
         this.accessorySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -1076,6 +1223,43 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         }
 
         return currentWeight;
+    }
+
+    private void setExerciseButtons(Spinner exerciseSpinner, String exerciseName, ArrayList<String> exercises) {
+        // TODO: Put the lists in the correct Spinners. Since they change dynamically, this
+        // will have to as well.
+
+        if (exerciseName == "squat") {
+            String[] todaysSquats = exercises.toArray(new String[exercises.size()]);
+
+            CustomAdapter<String> squatSpinnerAdapter = new CustomAdapter<String>(this,
+                    android.R.layout.simple_spinner_dropdown_item, todaysSquats);
+
+            Log.i("AddExercise", "Adding squats" + exercises);
+
+            exerciseSpinner.setAdapter(squatSpinnerAdapter);
+        } else if (exerciseName == "bench") {
+            String[] todaysBench = exercises.toArray(new String[exercises.size()]);
+            CustomAdapter<String> benchSpinnerAdapter = new CustomAdapter<String>(this,
+                    android.R.layout.simple_spinner_dropdown_item, todaysBench);
+            Log.i("AddExercise", "Adding bench" + exercises);
+            exerciseSpinner.setAdapter(benchSpinnerAdapter);
+        } else if (exerciseName == "deadlift") {
+            String[] todaysDeadlifts = exercises.toArray(new String[exercises.size()]);
+            CustomAdapter<String> deadliftSpinnerAdapter = new CustomAdapter<String>(this,
+                    android.R.layout.simple_spinner_dropdown_item, todaysDeadlifts);
+            Log.i("AddExercise", "Adding deadlift" + exercises);
+            exerciseSpinner.setAdapter(deadliftSpinnerAdapter);
+        } else if (exerciseName == "accessories") {
+            // Convert _todaysAccessories ArrayList to String Array todaysAccessories for the Spinner.
+            String[] todaysAccessories = exercises.toArray(new String[exercises.size()]);
+            CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
+                    android.R.layout.simple_spinner_dropdown_item, todaysAccessories);
+            Log.i("AddExercise", "Adding accessories" + exercises);
+            exerciseSpinner.setAdapter(accessorySpinnerAdapter);
+        } else {
+            throw new RuntimeException("Incorrect exercise name passed to setExerciseButtons()");
+        }
     }
 
     // Adapter for accessory spinner. Want to hide the display string and dynamically update it
