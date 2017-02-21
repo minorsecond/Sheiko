@@ -971,7 +971,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
             @Override
             public boolean onLongClick(View v) {
-                startActivity(new Intent(TrainActivity.this, selectProgram.class));
+                startActivity(new Intent(TrainActivity.this, selectProgramActivity.class));
                 return true;
             }
         });
