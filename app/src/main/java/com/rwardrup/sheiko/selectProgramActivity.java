@@ -17,7 +17,7 @@ import java.util.Arrays;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-public class selectProgram extends AppCompatActivity {
+public class selectProgramActivity extends AppCompatActivity {
 
     String selectedProgram;
     Integer selectedProgramId;
@@ -64,7 +64,7 @@ public class selectProgram extends AppCompatActivity {
         setLiftsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(selectProgram.this, SettingsActivity.class));
+                startActivity(new Intent(selectProgramActivity.this, SettingsActivity.class));
             }
         });
 

@@ -9,7 +9,7 @@
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
     android:paddingTop="0dp"
-    tools:context="com.rwardrup.sheiko.selectProgram">
+    tools:context="com.rwardrup.sheiko.selectProgramActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
