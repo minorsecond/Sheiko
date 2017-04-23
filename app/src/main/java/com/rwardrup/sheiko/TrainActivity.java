@@ -440,8 +440,11 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     deadliftSelectButton.setImageResource(R.drawable.deadlift);
                     Log.d("DeadliftExercises", "Found=" + deadliftExercises);
                 } else {
-                    deadliftSelectButton.setBackgroundResource(R.drawable.dumbell_curls);
-                    throw new RuntimeException("Invalid exercise 3");
+                    deadliftSelectButton.setImageResource(R.drawable.deadlift_inactive);
+                    deadliftSelectButton.setEnabled(false);
+                    // Sometimes, there won't really be a third exercise. Just set it to inactive.
+                    // TODO: Find an "inactive" icon. Maybe an 'X' or something.
+                    //throw new RuntimeException("Invalid exercise 3");
                 }
             }
 

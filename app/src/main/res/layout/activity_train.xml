@@ -138,7 +138,7 @@
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:elevation="25dp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/squat_inactive" />
+                            android:src="@drawable/squats_inactive" />
 
                         <Space
                             android:layout_width="wrap_content"
