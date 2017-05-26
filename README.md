@@ -4,7 +4,7 @@ An Open-Source and free Android implementation of the Sheiko Powerlifting progra
 
 # Screenshots
 
-![Alt text](/screenshots/sheiko_home_page.png?raw=true "Optional Title")
+![Alt text](screenshots/sheiko_home_page.png?raw=true "Optional Title")
 
 
 ### Prerequisites
