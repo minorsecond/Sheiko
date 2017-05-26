@@ -2,6 +2,10 @@
 
 An Open-Source and free Android implementation of the Sheiko Powerlifting program. 
 
+# Screenshots
+
+![Alt text](/screenshots/sheiko_home_page.png?raw=true "Optional Title")
+
 
 ### Prerequisites
 
