@@ -36,6 +36,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Spinner sexSpinner;
     private SharedPreferences sharedpref;
     private SharedPreferences.Editor editor;
+    private String roundingSelected = "0.0";
 
     // Set font
     @Override
@@ -54,12 +55,53 @@ public class SettingsActivity extends AppCompatActivity {
 
         final RadioButton lbsButton = (RadioButton) findViewById(R.id.lbsRadiobutton);
         kgButton = (RadioButton) findViewById(R.id.kgsRadioButton);
+        RadioButton noRoundingButton = (RadioButton) findViewById(R.id.noRoundingSelected);
+        RadioButton twoHalfRounding = (RadioButton) findViewById(R.id.two_half_rounding);
+        RadioButton fiveRounding = (RadioButton) findViewById(R.id.five_unit_rounding);
         sexSpinner = (Spinner) findViewById(R.id.genderSpinner);
         sharedpref = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedpref.edit();
 
         final ActivitySettingsBinding activitySettingsBinding = DataBindingUtil.setContentView(
                 this, R.layout.activity_settings);
+
+        // Set unit rounding. First, try to get set value, if it exists. Default to 5 units.
+        roundingSelected = sharedpref.getString("unitRounding", "5.0");
+
+        // Set the correct rounding RadioButton.
+        if (roundingSelected.equals("0.0")) {
+            activitySettingsBinding.noRoundingSelected.setChecked(true);
+        } else if (roundingSelected.equals("2.5")) {
+            activitySettingsBinding.twoHalfRounding.setChecked(true);
+        } else {
+            activitySettingsBinding.fiveUnitRounding.setChecked(true);
+        }
+
+        activitySettingsBinding.noRoundingSelected.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundingSelected = "0.0";
+                Log.i("RoundingSelected", "0.0");
+            }
+        });
+
+        // Set unit rounding
+        activitySettingsBinding.twoHalfRounding.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundingSelected = "2.5";
+                Log.i("RoundingSelected", "2.5 Units");
+            }
+        });
+
+        // Set unit rounding
+        activitySettingsBinding.fiveUnitRounding.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                roundingSelected = "5.0";
+                Log.i("RoundingSelected", "5 Units");
+            }
+        });
 
         // Update the Lift Numbers EditText widgets
 
@@ -79,8 +121,8 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             bodyweight = sharedpref.getLong("bodyweight", -1);
             sex = sharedpref.getString("sex", "unset");
-            sexId = sharedpref.getInt("sexId", 1);
-            unit = sharedpref.getString("unit", "kilograms");
+            sexId = sharedpref.getInt("sexId", 0);
+            unit = sharedpref.getString("unit", "pounds");
             activitySettingsBinding.genderSpinner.setSelection(sexId);
 
             try {
@@ -170,6 +212,7 @@ public class SettingsActivity extends AppCompatActivity {
             editor.putLong("bodyweight", Long.parseLong(binding.weightInput.getText().toString()));
             editor.putString("sex", binding.genderSpinner.getSelectedItem().toString());
             editor.putInt("sexId", binding.genderSpinner.getSelectedItemPosition());
+            editor.putString("unitRounding", roundingSelected);
             editor.commit();
         } catch (Exception e) {
             // User probably tried to save without entering anything

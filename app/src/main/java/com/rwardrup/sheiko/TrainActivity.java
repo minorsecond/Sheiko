@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.media.AudioManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -27,11 +28,15 @@ import android.widget.Toast;
 
 import com.crystal.crystalrangeseekbar.interfaces.OnSeekbarFinalValueListener;
 import com.crystal.crystalrangeseekbar.widgets.CrystalSeekbar;
+import com.google.firebase.crash.FirebaseCrash;
 import com.shawnlin.numberpicker.NumberPicker;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -43,10 +48,10 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private static Integer secondsLeftOnTimer;
     // For display and db retrieval
     String currentProgram;
-    String currentCycle;
+    Integer currentCycle;
     String currentCycleText;
-    String currentWeek;
-    String currentDay;
+    Integer currentWeek;
+    Integer currentDay;
     String currentWorkoutText;
     Spinner workoutSelectionSpinner;
     Button startBreakTimerButton;
@@ -70,9 +75,10 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     String current_exercise_string = "squat"; // TODO: Set this depending on first exercise of day
     AlertDialog changeSetPrompt;
     ProgramDbHelper programDbHelper;
+    List<WorkoutSet> todaysWorkout;
+    boolean inAWorkout = false;
     private NumberPicker repPicker;
     private NumberPicker weightPicker;
-    private SharedPreferences.Editor editor;
     private boolean viewingPastSet = false;
     // Timer stuff
     private Integer timerDurationSeconds;  // 3 minutes is a good default value
@@ -92,6 +98,20 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
     private WorkoutSet currentSet;
     private boolean repsChanged = false;
     private boolean weightChanged = false;
+    // Lift max variables
+    private Double squat_max;
+    private Double bench_max;
+    private Double deadlift_max;
+    private Double currentWeight;
+    private Double roundingValue; // Unit rounding value
+    private Boolean accessoryWeightSet;
+    private Boolean newExercise = false;
+    private Integer currentExerciseNumber = 1;
+    private Integer currentSetDisplayNumber = 1;
+    private boolean todaysWorkoutLoaded = false;
+    private boolean dupeBench = false;
+    private boolean dupeSquats = false;
+    private boolean dupeDeadlifts = false;
 
     // Set font
     @Override
@@ -104,6 +124,35 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_train);
 
+        // Exercise select buttons
+        // TODO: Change these to spinners if there are more than 1 exercise per workout
+        // category (is this possible?) Also, change the names to exercise1, 2 & 3.
+        squatSelectButton = (ImageButton) findViewById(R.id.squatSelectButton);
+        benchSelectButton = (ImageButton) findViewById(R.id.benchSelectButton);
+        deadliftSelectButton = (ImageButton) findViewById(R.id.deadliftButton);
+        accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
+
+        // Shared prefs
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        final SharedPreferences.Editor editor = sharedPref.edit();
+
+        // TODO: Change these defaults
+        currentProgram = sharedPref.getString("selectedProgram", "Advanced Medium Load");
+        currentCycle = Integer.valueOf(sharedPref.getString("selectedCycle", "2"));
+        currentWeek = Integer.valueOf(sharedPref.getString("selectedWeek", "3"));
+        currentDay = Integer.valueOf(sharedPref.getString("selectedDay", "4"));
+        inAWorkout = sharedPref.getBoolean("inAWorkout", false);
+
+        // TODO: Get date of last row in WorkoutHistory table. If that date is not today,
+        // prompt user to resume/delete workout.
+
+        // Get workout row to open up to, if that exists (int).
+        Bundle b = getIntent().getExtras();
+        String rowDate = "";
+        if (b != null)
+            rowDate = b.getString("workoutDate");
+            Log.i("GettingWorkoutHistory", "Workout history date: " + rowDate);
+
         // Set changer prompt
         changeSetPrompt = new AlertDialog.Builder(TrainActivity.this).setNegativeButton("Cancel",
                 null).create();
@@ -113,7 +162,11 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 "to save these changes?");
 
         setDisplay = (TextView) findViewById(R.id.setsDisplay);
-        setDisplay.setText("Set " + String.valueOf(setNumber + 1) + " of 14");
+        final FloatingActionButton saveAllSets = (FloatingActionButton) findViewById(R.id.saveAllSets);
+
+        // SaveAllSets button is hidden on app load. It is only needed once user does their first
+        // set
+        saveAllSets.setVisibility(View.INVISIBLE);
 
         // Get today's date
         Calendar c = Calendar.getInstance();
@@ -128,26 +181,367 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
          * CRUD Operations
          **/
 
-        final List<WorkoutSet> todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
-                1, 1, 1);
+        // Get either workout history by date, or todays workout
+        if (rowDate != null && rowDate.length() > 0) {
+            todaysWorkout = db.getWorkoutHistoryByDate(rowDate);
+            todaysWorkoutLoaded = true;
+            Toast.makeText(getApplicationContext(), "Workout on " + rowDate,
+                    Toast.LENGTH_LONG).show();
+            Log.i("TodaysWorkout", "Workout history: " + todaysWorkout);
 
+            // Load the day's workout
+        } else {    // TODO: Fix this. this means that the app loads the workout twice, decreasing
+            // performance.
+            Log.d("GettingWorkout", "Getting cycle " + currentCycle + ", week " + currentWeek + ", " +
+                    "day " + currentDay);
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle, currentWeek, currentDay);
+            todaysWorkoutLoaded = true;
+        }
+
+        // If user previously left the app before saving the workout, run this code.
+        if (inAWorkout) {  // Get last workout row id and use this as the current set
+            workoutHistoryRow = db.getWorkoutHistoryRowCount(); // set last row ID
+            // TODO: Get workout id of last set completed and load that as todaysWorkout
+            final WorkoutHistory lastWorkoutHistoryRow = db.getLastWorkoutHistoryRow();
+            if (lastWorkoutHistoryRow.getPersist() == 0) {
+                Log.i("ResumeWorkout", "Resuming at set number " + setNumber);
+                currentProgram = lastWorkoutHistoryRow.getProgramTableName();
+
+                // If the last unentered row was from today, run this block
+                if (!lastWorkoutHistoryRow.getDate().equals(date)) {
+                    // This was probably today's workout. Ask user if they want to resume, delete or
+                    // save.
+                    Log.i("ResumeWorkout", "Found previous sets completed today. Prompting user for action");
+                    // Set up resumeWorkoutDialog
+                    AlertDialog resumeWorkoutDialog = new AlertDialog.Builder(TrainActivity.this).create();
+                    resumeWorkoutDialog.setTitle("Previous Workout Found");
+
+                    // The prompt itself. TODO: Make this 'prettier'
+                    resumeWorkoutDialog.setMessage("Action to take on previous unsaved sets from " +
+                            lastWorkoutHistoryRow.getDate());
+
+                    // set buttons
+                    resumeWorkoutDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Save & Start New",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO: Call saveAllSets code
+
+                                    // Load new workout
+                                    todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
+                                            currentCycle, currentWeek, currentDay);
+                                    todaysWorkoutLoaded = true;
+                                }
+                            });
+
+                    resumeWorkoutDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Resume Workout",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    currentCycle = lastWorkoutHistoryRow.getCycle();
+                                    currentWeek = lastWorkoutHistoryRow.getWeek();
+                                    currentDay = lastWorkoutHistoryRow.getDay();
+
+                                    Log.i("ResumeWorkout", "last workout row id = " + lastWorkoutHistoryRow);
+                                    Log.i("ResumeWorkout", "last workout row cycle = " + currentCycle);
+                                    Log.i("ResumeWorkout", "last workout row week = " + currentWeek);
+                                    Log.i("ResumeWorkout", "last workout day = " + currentDay);
+
+
+                                    todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle,
+                                            currentWeek, currentDay);
+
+                                    todaysWorkoutLoaded = true;
+
+                                    setNumber = sharedPref.getInt("lastSetNumberCompleted", 1);
+                                    currentSetDisplayNumber = setNumber + 1;  // get the last set in table
+
+                                    Log.i("ResumeWorkout", "got set " + setNumber);
+                                }
+                            });
+
+                    resumeWorkoutDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Delete Workout",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    // TODO: Call function to delete workouts with ID matching
+                                    // that of the last workout row
+
+                                    db.deleteNonPersistedRows();
+
+                                    // Load new workout
+                                    todaysWorkout = db.getTodaysWorkout("Advanced Medium Load",
+                                            currentCycle, currentWeek, currentDay);
+                                    todaysWorkoutLoaded = true;
+                                }
+                            });
+
+                    resumeWorkoutDialog.show();
+                } else { // Resume workout if it's from the same day
+                    currentCycle = lastWorkoutHistoryRow.getCycle();
+                    currentWeek = lastWorkoutHistoryRow.getWeek();
+                    currentDay = lastWorkoutHistoryRow.getDay();
+
+                    Log.i("ResumeWorkout", "last workout row id = " + lastWorkoutHistoryRow);
+                    Log.i("ResumeWorkout", "last workout row cycle = " + currentCycle);
+                    Log.i("ResumeWorkout", "last workout row week = " + currentWeek);
+                    Log.i("ResumeWorkout", "last workout day = " + currentDay);
+
+                    todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", currentCycle,
+                            currentWeek, currentDay);
+
+                    todaysWorkoutLoaded = true;
+
+                    setNumber = sharedPref.getInt("lastSetNumberCompleted", 1);
+                    currentSetDisplayNumber = setNumber + 1;  // get the last set in table
+                    setDisplay.setText(String.valueOf(currentSetDisplayNumber));
+
+                    Log.i("ResumeWorkout", "got set " + setNumber + " done today.");
+                }
+            }
+        }
+
+        // Just in case something happens, take the nuclear approach and load todaysWorkout if
+        // nothing is loaded yet.
+
+        // TODO: This should not appear before the resume workout dialog just above this one.
+        if (todaysWorkout == null) {
+            String errorMessage = "Warning: Nothing was loaded. Took the nuclear approach & force-" +
+                    "loaded the workout.";
+
+            Log.e("TodaysWorkout", errorMessage);
+            FirebaseCrash.report(new Exception(errorMessage));
+
+            AlertDialog.Builder warningDialogBuilder = new AlertDialog.Builder(this);
+            warningDialogBuilder.setTitle("Warning");
+            warningDialogBuilder.setMessage("Something went wrong when attempting to load your previous" +
+                    " workouts. The developer has been notified and will fix it ASAP. " +
+                    "\n\nIt would be extremely helpful if you were to email him and let him know " +
+                    "what you were doing when this happened.");
+
+            warningDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.dismiss();
+                }
+            });
+
+            AlertDialog warningDialog = warningDialogBuilder.create();
+            warningDialog.show();
+
+            todaysWorkout = db.getTodaysWorkout("Advanced Medium Load", 2, 3, 4);
+            todaysWorkoutLoaded = true;
+        }
         Log.d("TodaysWorkout", "Todays workout=" + todaysWorkout);
+
+        final HashMap<Integer, Integer> setCounts = new HashMap<Integer, Integer>();
+
+        // Lists of the day's exercises per category. These will populate the Spinner dropdowns.
+        // Use ArrayList vs. Sets because we don't want to combine exercises if the workout calls
+        // For the user to do two squat sessions, etc.
+        final ArrayList<String> todaysExercises = new ArrayList<String>();
+        ArrayList<String> squatExercises = new ArrayList<String>();
+        ArrayList<String> benchExercises = new ArrayList<String>();
+        ArrayList<String> deadliftExercises = new ArrayList<String>();
+
+        // Hashset of todays accessories. Will be converted to String array for the accessories
+        // Spinner.
+        final List<String> exercisesForButtons = new ArrayList<String>();
+        HashSet<String> _todaysAccessories = new HashSet<String>();
+        HashSet<String> duplicateTester = new HashSet<String>();
+        int dayExerciseNumber = -1;
+
+        String Exercise = "";
+
+        for (int i = 0; i < todaysWorkout.size(); i++) {
+            WorkoutSet _set = todaysWorkout.get(i);
+            Integer frequency = setCounts.get(todaysWorkout.get(i).getDayExerciseNumber());
+            setCounts.put(todaysWorkout.get(i).getDayExerciseNumber(), frequency != null ? frequency + 1 : 1);
+
+            // Create a list of today's exercises for the exercise selection buttons to call by
+            // index
+
+            while (!Exercise.equals(_set.getExerciseName()) && _set.getExerciseCategory() != 4) {
+                Exercise = _set.getExerciseName();
+                exercisesForButtons.add(Exercise);
+            }
+
+            while (dayExerciseNumber != _set.getDayExerciseNumber()) {
+                // Add today's squats to the spinner
+                if (_set.getExerciseCategory() == 1) {
+                    String exercise = _set.getExerciseName();
+                    squatExercises.add(exercise);
+                }
+
+                // Add today's benches to the spinner
+                if (_set.getExerciseCategory() == 2) {
+                    String exercise = _set.getExerciseName();
+                    benchExercises.add(exercise);
+                }
+
+                // Add today's deadlifts to the spinner
+                if (_set.getExerciseCategory() == 3) {
+                    String exercise = _set.getExerciseName();
+                    deadliftExercises.add(exercise);
+                }
+
+                // Add today's accessories to the spinner
+                if (_set.getExerciseCategory() == 4) {
+                    String exercise = _set.getExerciseName();
+                    _todaysAccessories.add(exercise);
+                }
+
+                dayExerciseNumber = _set.getDayExerciseNumber();
+            }
+
+            // Set buttons inactive by default
+            squatSelectButton.setEnabled(true);
+            benchSelectButton.setEnabled(true);
+            deadliftSelectButton.setEnabled(true);
+
+
+            // Set the active/inactive workout buttons depending on which workouts are present
+            if (todaysWorkout.get(i).getDayExerciseNumber() == 1) {
+                squatSelectButton.setEnabled(true);
+                if (todaysWorkout.get(i).getExerciseCategory() == 1) {
+                    squatSelectButton.setImageResource(R.drawable.squats);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 2) {
+                    squatSelectButton.setImageResource(R.drawable.bench_press);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 3) {
+                    squatSelectButton.setImageResource(R.drawable.deadlift);
+                } else {
+                    throw new RuntimeException("Invalid exercise 1");
+                }
+            }
+
+            if (todaysWorkout.get(i).getDayExerciseNumber() == 2) {
+                benchSelectButton.setEnabled(true);
+
+                if (todaysWorkout.get(i).getExerciseCategory() == 1) {
+                    benchSelectButton.setImageResource(R.drawable.squats);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 2) {
+                    benchSelectButton.setImageResource(R.drawable.bench_press);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 3) {
+                    benchSelectButton.setImageResource(R.drawable.deadlift);
+                } else {
+                    benchSelectButton.setBackgroundResource(R.drawable.dumbell_curls);
+                    throw new RuntimeException("Invalid exercise 2");
+                }
+            }
+
+            if (todaysWorkout.get(i).getDayExerciseNumber() == 3) {
+                deadliftSelectButton.setEnabled(true);
+
+                if (todaysWorkout.get(i).getExerciseCategory() == 1) {
+                    deadliftSelectButton.setImageResource(R.drawable.squats);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 2) {
+                    deadliftSelectButton.setImageResource(R.drawable.bench_press);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 3) {
+                    deadliftSelectButton.setImageResource(R.drawable.deadlift);
+                    Log.d("DeadliftExercises", "Found=" + deadliftExercises);
+                } else {
+                    deadliftSelectButton.setImageResource(R.drawable.deadlift_inactive);
+                    deadliftSelectButton.setEnabled(false);
+                    // Sometimes, there won't really be a third exercise. Just set it to inactive.
+                    // TODO: Find an "inactive" icon. Maybe an 'X' or something.
+                    //throw new RuntimeException("Invalid exercise 3");
+                }
+            }
+
+            if (todaysWorkout.get(i).getDayExerciseNumber() == 4 ||
+                    todaysWorkout.get(i).getExerciseCategory() == 4) {
+
+                if (todaysWorkout.get(i).getExerciseCategory() == 1) {
+                    accessorySpinner.setBackgroundResource(R.drawable.squats);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 2) {
+                    accessorySpinner.setBackgroundResource(R.drawable.bench_press);
+                } else if (todaysWorkout.get(i).getExerciseCategory() == 3) {
+                    accessorySpinner.setBackgroundResource(R.drawable.deadlift);
+                } else {
+                    accessorySpinner.setBackgroundResource(R.drawable.dumbell_curls);
+                    setExerciseButtons(accessorySpinner, new ArrayList<String>(_todaysAccessories));
+                }
+            }
+        }
+
+        Log.i("ButtonValues", "Exercise selection button values = " + exercisesForButtons);
+
+        Log.i("SquatExercises", "original state = " + squatExercises);
+        // Test squats for duplicates && add a counter number before exercise if so.
+        for (String name : squatExercises) {
+            dupeSquats = !duplicateTester.add(name);
+        }
+
+        // Test bench for duplicates && add a counter number before exercise if so.
+        Log.i("ExerciseList", "Bench sessions: " + benchExercises);
+        for (String name : benchExercises) {
+            if (!duplicateTester.add(name)) {
+                // do nothing
+            } else {
+                dupeBench = true;
+            }
+        }
+
+        for (String name : deadliftExercises) {
+            if (!duplicateTester.add(name)) {
+                // do nothing
+            } else {
+                dupeDeadlifts = true;
+            }
+        }
+
+        if (dupeSquats == true) {
+            Log.i("ExerciseList", "Creating listed version of squats for spinner");
+            // Append counter number
+            for (int i = 0; i < squatExercises.size(); i++) {
+                String name = squatExercises.get(i);
+                String replacementName = String.valueOf(i + 1) + ". " + name;
+                squatExercises.set(i, replacementName);
+            }
+        }
+
+        if (dupeBench) {
+            // Append counter number
+            for (int i = 0; i < benchExercises.size(); i++) {
+                String name = benchExercises.get(i);
+                Log.i("ExerciseCounts", "bench name = " + name);
+                String replacementName = String.valueOf(i + 1) + ". " + name;
+                benchExercises.set(i, replacementName);
+            }
+        }
+
+        if (dupeDeadlifts) {
+            // Append counter number
+            for (int i = 0; i < deadliftExercises.size(); i++) {
+                String name = deadliftExercises.get(i);
+                String replacementName = String.valueOf(i + 1) + ". " + name;
+                deadliftExercises.set(i, replacementName);
+            }
+        }
+
+        Log.i("ExerciseList", "Built squats: " + squatExercises);
+        Log.i("ExerciseList", "Built bench: " + benchExercises);
+        Log.i("ExerciseList", "Built deadlifts: " + deadliftExercises);
+        Log.i("SetCounts", "Set Counts Map = " + setCounts);
+
+        setDisplay.setText("Set " + String.valueOf(currentSetDisplayNumber) + " of " + setCounts.get(currentExerciseNumber));
+
+        Log.i("TodaysWorkout", "Today's workout size = " + todaysWorkout.size());
 
         currentSet = todaysWorkout.get(setNumber);  // Get first set on load
 
-        for (int i = 0; i < todaysWorkout.size(); i++) {
-            Log.i("TodaysWorkout", "Set: " + todaysWorkout.get(i));
-        }
+        // Build map containing sets per lift
 
         audioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
 
-        // Shared prefs
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        // Get rounding value to use for weight display. Default to 5 units.
+        roundingValue = Double.valueOf(sharedPref.getString("unitRounding", "5.0"));
+        Log.i("SharedPreferences", "Got rounding value " + roundingValue);
 
         // Set up volume control
         alarmVolumeControl = (CrystalSeekbar) findViewById(R.id.volumeController);
         currentVolume = sharedPref.getInt("alarmVolume", 4);  // Try to get last set volume
-        Log.i("VolumeControl", "Initial volume position: " + currentVolume);
+        Log.i("SharedPreferences", "Initial volume position: " + currentVolume);
         alarmVolumeControl.setMinStartValue(currentVolume).apply(); // Set the bar at the last vol position
 
         // Set up the seekbar change listener
@@ -164,24 +558,10 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
         final String[] oldNumberedPrograms = new String[]{"29", "30", "31", "32", "37", "39", "40"};
 
-        // TODO: Programmatically set the array of today's accessories based on the sqlite db row
-        String[] todaysAccessories = new String[]{"French Press", "Pullups", "Abs", "Bent-Over Rows",
-                "Seated Good Mornings", "Good Mornings", "Hyperextensions", "Dumbell Flys"};
-
-        // Hide the accessory spinner text
-        accessorySpinner = (Spinner) findViewById(R.id.accessorySpinner);
-        CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
-                android.R.layout.simple_spinner_dropdown_item, todaysAccessories);
-        accessorySpinner.setAdapter(accessorySpinnerAdapter);
-
         // Try to get the timer duration from shared preferences, defaulting to 1.5 minutes if it
         // hasn't been set. Time is stored in milliseconds in sharedPreferences. The time is saved
         // in the sharedPreferences file in RestDurationPicker.
         timerDurationSeconds = (int) (long) (sharedPref.getLong("timerDuration", 90000) / 1000);
-        currentProgram = sharedPref.getString("selectedProgram", "Advanced Medium Load");
-        currentCycle = sharedPref.getString("selectedCycle", "1");
-        currentWeek = sharedPref.getString("selectedWeek", "1");
-        currentDay = sharedPref.getString("selectedDay", "1");
 
         if (Arrays.asList(oldNumberedPrograms).contains(currentProgram)) {
             currentCycleText = "";
@@ -200,9 +580,6 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         startBreakTimerButton = (Button) findViewById(R.id.startBreakTimer);
         stopBreakTimerButton = (Button) findViewById(R.id.stopBreakButton);
         pauseBreakTimerButton = (Button) findViewById(R.id.pauseBreakButton);
-        squatSelectButton = (ImageButton) findViewById(R.id.squatSelectButton);
-        benchSelectButton = (ImageButton) findViewById(R.id.benchSelectButton);
-        deadliftSelectButton = (ImageButton) findViewById(R.id.deadliftButton);
         autoTimerSwitch = (Switch) findViewById(R.id.autoTimerSwitch);
         nextSetButton = (Button) findViewById(R.id.nextSetButton);
         previousSetButton = (Button) findViewById(R.id.previousSetButton);
@@ -217,8 +594,25 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         // Set the reps and weights
         setRepsWeightPickers();
 
-        // TODO: Get users maxes for weight calculation
-        Double currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+        // Get users maxes for weight calculation
+        UserMaxEntry userMaxEntry = db.getLastUserMaxEntry();
+
+        String [] deadliftWorkout = new String[]{"Deadlift", "1 + 1/2 (X2) Deadlift"};
+        String [] benchWorkout = new String[]{"Bench Press", "Close Grip Bench Press"};
+
+        try {
+            //readFromUserParamDb();  // Load databases
+
+            squat_max = userMaxEntry.getSquatMax();
+            bench_max = userMaxEntry.getBenchMax();
+            deadlift_max = userMaxEntry.getDeadliftMax();
+
+        } catch (NullPointerException e) {
+            Log.d("DbReadError", "User parameter DB read error: " + e);  // First creation of database.
+        }
+
+        //Double currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+        currentWeight = setCurrentWeight();
         Integer reps = currentSet.getReps();
         current_exercise_string = currentSet.getExerciseName();
 
@@ -252,40 +646,19 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             }
         });
 
-        // This is an example of how changing images to active/inactive versions
-        // will be done programmatically
-        squatSelectButton.setImageResource(R.drawable.squats);
-
-        this.squatSelectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                current_exercise_string = "squat";
-                currentExercise.setText(R.string.squat);
-            }
-        });
-
-        this.benchSelectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentExercise.setText(R.string.bench);
-                current_exercise_string = "bench";
-            }
-        });
-
-        this.deadliftSelectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                currentExercise.setText(R.string.deadlift);
-                current_exercise_string = "deadlift";
-            }
-        });
+        // TODO: Exercise selection button code here
 
         // Run the nextSet button alongside the autotimer listener.
         this.nextSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                if (setNumber == moveBetweenSetsCounter && setNumber < todaysWorkout.size() - 1) {  // If user is at current set
+                // Show the save all sets button
+                saveAllSets.setVisibility(View.VISIBLE);
+                editor.putBoolean("inAWorkout", true);
+                editor.commit();
+
+                if (setNumber == moveBetweenSetsCounter && setNumber < todaysWorkout.size()) {  // If user is at current set
                     viewingPastSet = false;
                     Log.i("NewSet", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
@@ -304,7 +677,8 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     // 1. Get repPicker current value
                     String workoutId = String.valueOf(db.getWorkoutHistoryRowCount() + 1);
                     int currentReps = repPicker.getValue();
-                    Double currentWeight = Double.valueOf((weightPicker.getValue() + 1) * 5);
+                    //Double currentWeight = Double.valueOf((weightPicker.getValue() + 1) * 5);
+                    currentWeight = setCurrentWeight();
                     Log.i("SetSaved", "Current reps: " + currentReps + ", " +
                             "current weight: " + currentWeight);
 
@@ -312,45 +686,104 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     //currentWeight = new Double(currentSet.getWeightPercentage() * 100);
                     current_exercise_string = currentSet.getExerciseName();
 
-                    repPicker.setValue(currentReps);
-                    weightPicker.setValue((currentWeight.intValue() - 1) / 5);
-                    currentExercise.setText(current_exercise_string);
+                    if (currentSet.getDayExerciseNumber() != currentExerciseNumber) {
+                        newExercise = true;
+                        currentExerciseNumber = currentSet.getDayExerciseNumber();
+                        Log.i("NewExercise", "moved to next exercise");
+                    } else {
+                        newExercise = false;
+                        Log.i("NewExercise", "Still doing " + current_exercise_string);
+                    }
 
-                    db.addWorkoutHistory(new WorkoutHistory(workoutId, date, current_exercise_string,
-                            currentReps, currentWeight, currentProgram));
+                    if (newExercise && currentSet.getExerciseCategory() == 4) {
+                        repPicker.setValue(currentReps);
+                        weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                    } else if (currentSet.getExerciseCategory() != 4) {
+                        repPicker.setValue(currentReps);
+                        weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                    }
 
-                    workoutHistoryRow = db.getWorkoutHistoryRowCount();
+                    if (setNumber < todaysWorkout.size()) {
+                        db.addWorkoutHistory(new WorkoutHistory(workoutId, date,
+                                current_exercise_string, currentSetDisplayNumber, currentReps,
+                                currentWeight, currentProgram, currentCycle, currentWeek,
+                                currentDay, currentExerciseNumber, 0));
 
-                    Log.d("Database", "Committed workout history to database. There are now " + workoutHistoryRow + " rows.");
+                        Log.i("ExerciseCategory", "Exercise category=" + currentSet.getExerciseCategory());
+
+                        workoutHistoryRow = db.getWorkoutHistoryRowCount();
+                        Log.d("Database", "Committed workout history to database. There are now " + workoutHistoryRow + " rows.");
+                        Log.d("CurrentWorkout", setNumber + " out of " + (todaysWorkout.size()) + " sets");
+                    }
+
                     setNumber += 1;
                     moveBetweenSetsCounter = setNumber;
-                    Log.i("NewSetNumber", "New set number=" + moveBetweenSetsCounter);
+                    Log.i("SetNumber", "New set number = " + setNumber);
 
-                    // Display set number + 1, since setNumber begins at 0
-                    setDisplay.setText("Set " + (setNumber + 1) + " of 14");
+                    editor.putInt("lastSetNumberCompleted", setNumber);
+                    editor.commit();
 
-                    currentSet = todaysWorkout.get(moveBetweenSetsCounter);
-                    currentReps = currentSet.getReps();
+                    // Get the next set if we aren't on the last set of the workout
+                    if (moveBetweenSetsCounter < todaysWorkout.size() -1) {
 
-                    // TODO: Get users maxes for weight calculation
-                    currentWeight = new Double(currentSet.getWeightPercentage() * 100);
-                    current_exercise_string = currentSet.getExerciseName();
+                        // Update the set display counter on a new exercise for the day
+                        if (todaysWorkout.get(moveBetweenSetsCounter).getDayExerciseNumber() !=
+                                currentExerciseNumber) {
+                            currentSetDisplayNumber = 0;
+                        }
 
-                    repPicker.setValue(currentReps);
-                    weightPicker.setValue((currentWeight.intValue() - 1) / 5);
-                    currentExercise.setText(current_exercise_string);
+                        if (moveBetweenSetsCounter == todaysWorkout.size()) {
+                            // Set nextSet button disabled
+                            nextSetButton.setEnabled(false);
+                        }
 
-                    Log.d("NextSet", "Next set: " + currentSet);
+                        Log.i("NewSetNumber", "New set number=" + moveBetweenSetsCounter);
 
-                } else if (setNumber > moveBetweenSetsCounter + 1 && setNumber < todaysWorkout.size() - 1) { // Go forward in history
+                        currentSet = todaysWorkout.get(moveBetweenSetsCounter);
+                        currentReps = currentSet.getReps();
+                        currentSetDisplayNumber += 1;
+
+                        // Display set number + 1, since setNumber begins at 0
+                        setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
+
+                        // TODO: Get users maxes for weight calculation
+                        //currentWeight = new Double(currentSet.getWeightPercentage() * 100);
+                        currentWeight = setCurrentWeight();
+                        current_exercise_string = currentSet.getExerciseName();
+                        currentExercise.setText(current_exercise_string);
+
+                        // TODO: Fix bug where accessory weight is reset each time next set is pressed
+                        if (newExercise && currentSet.getExerciseCategory() == 4) {
+                            repPicker.setValue(currentReps);
+                            weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                            Log.i("NextSet", "Getting new reps & weights");
+                        } else if (currentSet.getExerciseCategory() != 4) {
+                            repPicker.setValue(currentReps);
+                            weightPicker.setValue((currentWeight.intValue() - 1) / 5);
+                            Log.i("NextSet", "Getting new reps & weights");
+                        }
+
+                        Log.d("NextSet", "Next set: " + currentSet);
+
+                        // Enable the previous set button if it is disabled
+                        if (!previousSetButton.isEnabled()) {
+                            previousSetButton.setEnabled(true);
+                            Log.d("DisabledButton", "Previous Set button enabled");
+                        }
+                    } else {  // The end of the workout session.
+                        Log.i("EndOfWorkout", "End of workout reached");
+                        setDisplay.setText("Set " + (currentSetDisplayNumber + 1) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
+                    }
+
+                } else if (setNumber > moveBetweenSetsCounter + 1 && moveBetweenSetsCounter < todaysWorkout.size() - 1) { // Go forward in history
 
                     // First, get values for current set in view to check if they've been changed
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     final int currentDbRow = (workoutHistoryRow - (setNumber - moveBetweenSetsCounter));
                     Log.i("NextSetInHistory", "Moving to row " + currentDbRow);
-                    WorkoutHistory nextSet = db.getWorkoutHistory(currentDbRow);
+                    WorkoutHistory nextSet = db.getWorkoutHistoryAtId(currentDbRow);
                     int reps = nextSet.getReps();
-                    int weight = nextSet.getWeight().intValue();
+                    int weight = nextSet.getWeight().intValue();  // TODO: Fix this. It displays incorrect weight because it doesn't update;
                     current_exercise_string = nextSet.getExercise();
 
                     // Do current rep and weight picker values match what's in the table?
@@ -364,7 +797,9 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                         Double new_weight = Double.valueOf((weightPicker.getValue() + 1) * 5);
 
                         final WorkoutHistory changedWorkoutHistory = new WorkoutHistory("0", date,
-                                current_exercise_string, new_reps, new_weight, currentProgram);
+                                current_exercise_string, currentSetDisplayNumber, new_reps,
+                                new_weight, currentProgram, currentCycle, currentWeek, currentDay,
+                                nextSet.getExerciseNumber(), 0);
 
                         Log.i("ChangedWorkoutHistory", "New row: " + changedWorkoutHistory + " at " +
                                 "row " + currentDbRow);
@@ -393,31 +828,51 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     moveBetweenSetsCounter += 1;
                     Log.i("NextSetInHistory", "SetNumber=" + setNumber + ", moveBetweenSetsCounter=" + moveBetweenSetsCounter);
 
-                    nextSet = db.getWorkoutHistory((workoutHistoryRow + 1 - (setNumber - moveBetweenSetsCounter)));
+                    nextSet = db.getWorkoutHistoryAtId((workoutHistoryRow + 1 - (setNumber - moveBetweenSetsCounter)));
                     reps = nextSet.getReps();
                     weight = nextSet.getWeight().intValue();
                     current_exercise_string = nextSet.getExercise();
 
                     repPicker.setValue(reps);
                     weightPicker.setValue((weight - 1) / 5);
-                    setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of 14");
+                    currentSetDisplayNumber += 1;
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
                     currentExercise.setText(current_exercise_string);
 
                     Log.d("NextSetInHistory", "Set Data=" + nextSet);
+
+                    if (moveBetweenSetsCounter == todaysWorkout.size() - 1) {
+                        // Set nextSet button disabled
+                        nextSetButton.setEnabled(false);
+                        Log.d("DisabledButton", "Next Set button disabled");
+                    }
+
+                    // Enable the previous set button if it is disabled
+                    if (!previousSetButton.isEnabled()) {
+                        previousSetButton.setEnabled(true);
+                        Log.d("DisabledButton", "Previous Set button enabled");
+                    }
                 }
 
                 else if (setNumber - 1 == moveBetweenSetsCounter) {  // This runs on the transition from old sets back to the current set
                     moveBetweenSetsCounter = setNumber;
                     Log.i("BackAtCurrentSet", "Set number=" + moveBetweenSetsCounter);
 
+                    // Enable the previous set button if it is disabled
+                    if (!previousSetButton.isEnabled()) {
+                        previousSetButton.setEnabled(true);
+                        Log.d("DisabledButton", "Previous Set button Enabled");
+                    }
+
                     // Display set number + 1, since setNumber begins at 0
-                    setDisplay.setText("Set " + (setNumber + 1) + " of 14");
+                    currentSetDisplayNumber += 1;
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(currentSet.getDayExerciseNumber()));
 
                     currentSet = todaysWorkout.get(moveBetweenSetsCounter);
                     int currentReps = currentSet.getReps();
 
                     // TODO: Get users maxes for weight calculation
-                    Double weight = new Double(currentSet.getWeightPercentage() * 100);
+                    Double weight = setCurrentWeight();
                     current_exercise_string = currentSet.getExerciseName();
 
                     repPicker.setValue(currentReps);
@@ -435,13 +890,33 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 // TODO: Implement set-change code here too.
                 // Go back to last-entered set if it exists
                 if (moveBetweenSetsCounter >= 1 && moveBetweenSetsCounter <= setNumber) {
-                    viewingPastSet = true;
+
                     moveBetweenSetsCounter -= 1;
+                    int currentDbRow = (workoutHistoryRow + 1) - (setNumber - moveBetweenSetsCounter);
+                    WorkoutHistory lastSet = db.getWorkoutHistoryAtId(currentDbRow);
+
+                    if (!viewingPastSet) {
+                        viewingPastSet = true;
+                        currentSetDisplayNumber = setCounts.get(lastSet.getExerciseNumber());
+                    } else if (currentSetDisplayNumber > 1) {
+                        currentSetDisplayNumber -= 1;
+                    }
+
+                    if (moveBetweenSetsCounter == 0) {
+                        // Set nextSet button disabled
+                        previousSetButton.setEnabled(false);
+                        Log.d("DisabledButton", "Previous Set button disabled");
+                    }
+
+                    // Enable the previous set button if it is disabled
+                    if (!nextSetButton.isEnabled()) {
+                        nextSetButton.setEnabled(true);
+                        Log.d("DisabledButton", "Next Set button enabled");
+                    }
+
                     Log.i("MoveToOldSet", "Set number: " + setNumber + " moveBetweenSetsCounter=" + moveBetweenSetsCounter);
                     // Get previous workout history row
-                    int currentDbRow = (workoutHistoryRow + 1) - (setNumber - moveBetweenSetsCounter);
                     Log.i("MoveBetweenSets", "Getting row number " + currentDbRow + " of" + workoutHistoryRow);
-                    WorkoutHistory lastSet = db.getWorkoutHistory(currentDbRow);
                     Log.i("WorkoutHistory", "Set on set " + currentDbRow + ":" + lastSet.toString());
                     int reps = lastSet.getReps();
                     int weight = lastSet.getWeight().intValue();
@@ -449,7 +924,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                     weightPicker.setValue((weight - 1) / 5);
                     current_exercise_string = lastSet.getExercise();
 
-                    setDisplay.setText("Set " + (moveBetweenSetsCounter + 1) + " of 14");
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " + setCounts.get(lastSet.getExerciseNumber()));
                     currentExercise.setText(current_exercise_string);
 
                     Log.i("MoveBetweenSets", "Previous set values: reps=" + reps + ", weight=" +
@@ -499,7 +974,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
 
             @Override
             public boolean onLongClick(View v) {
-                startActivity(new Intent(TrainActivity.this, selectProgram.class));
+                startActivity(new Intent(TrainActivity.this, selectProgramActivity.class));
                 return true;
             }
         });
@@ -550,22 +1025,168 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
                 }
         });
 
-        // Load workout history database here TODO: write this in actual code
-        // lastWorkout = workoutHistoryDb.LastWorkout()
-        // if (lastWorkout > 0 && lastWorkout < 4) {
-        //  nextWorkout = lastWorkout + 1
-        // } else if (lastWorkout == 4 && currentWeek < 4) {
-        //  nextWorkout = 1
-        //  currentWeek += 1
-        // } else if (lastWorkout == 4 && currentWeek == 4 && !currentCycle.equals("Competition")) {
-        //  nextWorkout = 1
-        //  currentWeek = 1
-        //  currentCycle += 1
-        // } else if (lastWorkout == 4 && currentWeek == 4 && currentCycle.equals("Competition")) {
-        //  nextWorkout = 1
-        //  currentWeek = 1
-        //  currentCycle = 1
-        // }
+        saveAllSets.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.i("SaveAllSets", "Saving all sets on " + date);
+
+                // The following needs to return a list of all workouts matching date. Then, for
+                // each id in the list, change the "persist" column to 1.
+                List<WorkoutHistory> allSetsOnDate = db.getWorkoutHistoryAtDate(date);
+                Log.i("SaveAllSets", "Got workout history " + allSetsOnDate);
+                Toast.makeText(getApplicationContext(), "Saved workout", Toast.LENGTH_LONG).show();
+
+                for (int i = 0; i < allSetsOnDate.size(); i++) {
+                    if (allSetsOnDate.get(i).getPersist() == 0) {
+                        WorkoutHistory persistedWorkoutHistory = allSetsOnDate.get(i);
+                        persistedWorkoutHistory.setPersist(1);
+                        Integer id = Integer.valueOf(persistedWorkoutHistory.getWorkoutId());
+
+                        try {
+                            db.changeWorkoutHistoryAtId(id, persistedWorkoutHistory);
+                            inAWorkout = false;
+                            editor.putBoolean("inAWorkout", inAWorkout);
+                            editor.commit();
+                            Log.i("SaveAllSets", "Found unsaved set " + allSetsOnDate.get(i));
+                        } catch (Exception e) {
+                            Log.e("SaveAllSets", "Error saving sets: " + e);
+                            FirebaseCrash.report(new Exception("Could not save all sets. " +
+                                    "Threw error" + e));
+                        }
+                    }
+                }
+            }
+        });
+
+        squatSelectButton.setOnClickListener(new View.OnClickListener() {
+            private int firstExerciseFirstSetNumber;
+            private boolean foundExerciseString = false;  // Set to true when first set is found
+
+            @Override
+            public void onClick(View v) {
+                // TODO: write code to change to exercise in excerciseSelectionButton 1
+                try {
+                    current_exercise_string = exercisesForButtons.get(0);  // Get string
+                    Log.i("ExcerciseSelection", "User selected " + current_exercise_string);
+                    currentExercise.setText(current_exercise_string);
+                    currentSetDisplayNumber = 1;
+
+                    // find first setnumber of this exercise
+                    for (int i = 0; i < todaysWorkout.size(); i++) {
+                        if (!foundExerciseString) {
+                            if (todaysWorkout.get(i).getExerciseName().equals(current_exercise_string)) {
+                                foundExerciseString = true;
+                                firstExerciseFirstSetNumber = todaysWorkout.get(i).get_id();
+                                Log.i("ExerciseSelection", "Got exercise "
+                                        + current_exercise_string + " at set " +
+                                        firstExerciseFirstSetNumber);
+                            }
+                        }
+                    }
+
+                    // TODO: Get current set at index=firstExerciseFirstSetNumber
+                    currentSet = todaysWorkout.get(firstExerciseFirstSetNumber);
+                    Log.i("ExerciseSelection", "Got " + current_exercise_string + " set " +
+                            currentSet);
+                    Log.d("ExerciseSelection", "The size of the todaysWorkout list is " + todaysWorkout.size());
+
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " +
+                            setCounts.get(1));
+                } catch (IndexOutOfBoundsException e) {
+                    // Somehow user selected a button that was inactive??
+                    Log.e("ExerciseSelection", "User selected exercise button 1, " +
+                            "which was out of bounds. The error was '" + e + ".'");
+                }
+            }
+        });
+
+        benchSelectButton.setOnClickListener(new View.OnClickListener() {
+            private boolean foundExerciseString = false;
+            private int secondExerciseFirstSet;
+
+            @Override
+            public void onClick(View v) {
+                // TODO: write code to change to exercise in excerciseSelectionButton 1
+                try {
+                    current_exercise_string = exercisesForButtons.get(1);
+                    Log.i("ExcerciseSelection", "User selected " + current_exercise_string);
+                    currentExercise.setText(current_exercise_string);
+                    currentSetDisplayNumber = 1;
+
+                    // find first setnumber of this exercise
+                    for (int i = 0; i < todaysWorkout.size(); i++) {
+                        if (!foundExerciseString) {
+                            if (todaysWorkout.get(i).getExerciseName().equals(current_exercise_string)) {
+                                foundExerciseString = true;
+                                secondExerciseFirstSet = todaysWorkout.get(i).get_id();
+                                Log.i("ExerciseSelection", "Got exercise "
+                                        + current_exercise_string + " at set " +
+                                        secondExerciseFirstSet);
+                            }
+                        }
+                    }
+
+                    // TODO: Get current set at index=firstExerciseFirstSetNumber
+                    currentSet = todaysWorkout.get(secondExerciseFirstSet);
+                    Log.i("ExerciseSelection", "Got " + current_exercise_string + " set " +
+                            currentSet);
+                    Log.d("ExerciseSelection", "The size of the todaysWorkout list is " + todaysWorkout.size());
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " +
+                            setCounts.get(2));
+
+                } catch (IndexOutOfBoundsException e) {
+                    // Somehow user selected a button that was inactive??
+                    Log.e("ExerciseSelection", "User selected exercise button 2, which was out of bounds");
+                }
+            }
+        });
+
+        deadliftSelectButton.setOnClickListener(new View.OnClickListener() {
+            private boolean foundExerciseString = false;
+            private int thirdExerciseFirstSet;
+
+            @Override
+            public void onClick(View v) {
+                // TODO: write code to change to exercise in excerciseSelectionButton 1
+                try {
+                    current_exercise_string = exercisesForButtons.get(2);
+                    Log.i("ExcerciseSelection", "User selected " + current_exercise_string);
+                    currentExercise.setText(current_exercise_string);
+                    currentSetDisplayNumber = 1;
+                    currentSetDisplayNumber = 1;
+                    setDisplay.setText(String.valueOf(currentSetDisplayNumber));
+
+                    // find first setnumber of this exercise
+                    for (int i = 0; i < todaysWorkout.size(); i++) {
+                        if (!foundExerciseString) {
+                            if (todaysWorkout.get(i).getExerciseName().equals(current_exercise_string)) {
+                                foundExerciseString = true;
+                                thirdExerciseFirstSet = todaysWorkout.get(i).get_id();
+                                Log.i("ExerciseSelection", "Got exercise "
+                                        + current_exercise_string + " at set " +
+                                        thirdExerciseFirstSet);
+                            }
+                        }
+                    }
+
+                    // TODO: Get current set at index=firstExerciseFirstSetNumber
+                    currentSet = todaysWorkout.get(thirdExerciseFirstSet);
+                    Log.i("ExerciseSelection", "Got " + current_exercise_string + " set " +
+                            currentSet);
+                    Log.d("ExerciseSelection", "The size of the todaysWorkout list is " + todaysWorkout.size());
+
+                    // Get first set for this exercise
+                    Log.i("ExerciseSelection", "Got set " + todaysWorkout);
+
+                    setDisplay.setText("Set " + (currentSetDisplayNumber) + " of " +
+                            setCounts.get(3));
+                } catch (IndexOutOfBoundsException e) {
+                    // Somehow user selected a button that was inactive??
+                    Log.e("ExerciseSelection", "User selected exercise button 3, which was out of bounds");
+                }
+            }
+        });
+
     }
 
     // Break timer long-click set time
@@ -610,7 +1231,7 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
         weightPicker.setMaxValue(240); //480 * 2.5 == 1200
 
         int length = 500;
-        int step = 5;
+        Double step = roundingValue;
 
         String[] numbers = new String[length];
         for (int i = 0; i < numbers.length; i++) {
@@ -660,6 +1281,58 @@ public class TrainActivity extends AppCompatActivity implements RestDurationPick
             breakTimerTab.setText("Rest Timer - " + secondsToString(secondsLeftOnTimer));
             Log.i("UpdatingGui", "Countdown seconds remaining: " + millisUntilFinished / 1000);
         }
+    }
+
+    private Double roundDouble(Double i, Double v) {
+        Double value = Double.valueOf((Math.round(i / v) * v));
+        Log.i("RoundDouble", "Rounded " + i + " by " + v + " to " + value);
+        return value;
+    }
+
+    private Double setCurrentWeight() {
+        // Set weight according to lift type. Round the weight to whichever value is specified in
+        // SettingsActivity
+        if (currentSet.getExerciseCategory() == 1) {
+            if (squat_max != null) {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * squat_max), roundingValue);
+            } else {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * 100), roundingValue);
+            }
+
+        } else if (currentSet.getExerciseCategory() == 2) {
+            if (bench_max != null) {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * bench_max), roundingValue);
+            } else {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * 100), roundingValue);
+            }
+        } else if (currentSet.getExerciseCategory() == 3) {
+            if (bench_max != null) {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * deadlift_max), roundingValue);
+            } else {
+                currentWeight = roundDouble(new Double(currentSet.getWeightPercentage() * 100), roundingValue);
+            }
+        } else if (currentSet.getExerciseCategory() == 4) {
+            currentWeight = new Double(135);
+        }
+
+        else {  // Accessory weight - default to 135
+            currentWeight = new Double(135);
+            Log.e("WorkoutCat!", "Forgot workout cat" + currentSet);
+        }
+
+        return currentWeight;
+    }
+
+    private void setExerciseButtons(Spinner exerciseSpinner, ArrayList<String> exercises) {
+        // TODO: Put the lists in the correct Spinners. Since they change dynamically, this
+        // will have to as well.
+
+        // Convert _todaysAccessories ArrayList to String Array todaysAccessories for the Spinner.
+        String[] todaysAccessories = exercises.toArray(new String[exercises.size()]);
+        CustomAdapter<String> accessorySpinnerAdapter = new CustomAdapter<String>(this,
+                android.R.layout.simple_spinner_dropdown_item, todaysAccessories);
+        Log.i("AddExercise", "Adding accessories" + exercises);
+        exerciseSpinner.setAdapter(accessorySpinnerAdapter);
     }
 
     // Adapter for accessory spinner. Want to hide the display string and dynamically update it

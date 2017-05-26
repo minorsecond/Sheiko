@@ -48,12 +48,15 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
     private static final String wilks = "wilks";
     private static final String weightPercentage = "weightPercentage";
     private static final String enabled = "enabled";
+    private static final String setNumber = "setNumber";
+    private static final String persisted = "persist";
 
     // Define columns in each table
     private static final String[] statsColumns = {ID, workoutId, date};
 
-    private static final String[] workoutHistoryColumns = {ID, workoutId, date, exercise, reps,
-            weight, programTableName};
+    private static final String[] workoutHistoryColumns = {ID, workoutId, date, exercise, setNumber,
+            reps, weight, programTableName, cycleNumber, weekNumber, dayNumber, dayExerciseNumber,
+            persisted};
 
     private static final String[] customProgramColumns = {ID, customWorkoutName, liftName, sets,
             reps, percentage, dayNumber, cycleNumber, weekNumber, exerciseCategory};
@@ -64,18 +67,17 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     // Database Version
     private static final int DATABASE_VERSION = 1;
-    // Database Name
+    // Database Name TODO: Remove "Test" when production-ready
     private static final String DATABASE_NAME = "SheikoDbTest";
 
     public MySQLiteHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 
-    @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older books table if existed
-        db.execSQL("DROP TABLE IF EXISTS workoutStats");
-        db.execSQL("DROP TABLE IF EXISTS workoutHistory");
+        //db.execSQL("DROP TABLE IF EXISTS workoutStats");
+        //db.execSQL("DROP TABLE IF EXISTS workoutHistory");
 
         // create fresh tables
         this.onCreate(db);
@@ -91,7 +93,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
                 + cycleNumber + " AND week_number = " + weekNumber + " AND day_number = " +
                 dayNumber;
 
-        Log.i("TodaysWorkout", "Program DB query: " + query);
+        Log.i("DbTransaction", "Program DB query: " + query);
 
         // 2. Build query TODO: make this actually do what I want (get by date integer)
         Cursor cursor = db.query(TABLE_PROGRAMS,
@@ -130,12 +132,64 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("getTodaysWorkout()", todaysWorkout.toString());
+        Log.d("DbTransaction", todaysWorkout.toString());
 
         // Close the cursor
         cursor.close();
 
         return todaysWorkout;
+
+    }
+
+    public List<WorkoutSet> getWorkoutHistoryByDate(String date) {
+
+        List<WorkoutSet> workoutHistory = new LinkedList<>();
+        // 1. Get reference to readable db
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "date = " + "'" + date + "'";
+
+        Log.i("DbTransaction", "Program DB query: " + query);
+
+        // 2. Build query TODO: make this actually do what I want (get by date integer)
+        Cursor cursor = db.query(TABLE_HISTORY,
+                workoutHistoryColumns,
+                query, // selections
+                null,  // Selection's args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null // h. limit
+        );
+
+        // 3. if we got results, show the first
+        if (cursor != null)
+            cursor.moveToFirst();
+
+        // 3. Go over each row. Build workout and add it to list
+        WorkoutSet _workoutHistory = null;
+        if (cursor.moveToFirst()) {
+            do {
+                _workoutHistory = new WorkoutSet();
+                _workoutHistory.setWorkoutId(cursor.getString(1));
+                _workoutHistory.setExerciseName(cursor.getString(3));
+                _workoutHistory.setReps(cursor.getInt(4));
+                _workoutHistory.setWeightPercentage(cursor.getDouble(5));
+                _workoutHistory.setProgramName(cursor.getString(6));
+                _workoutHistory.setExerciseCategory(cursor.getInt(7));
+
+
+                // Add workout to workouts
+                workoutHistory.add(_workoutHistory);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("DbTransaction", workoutHistory.toString());
+
+        // Close the cursor
+        cursor.close();
+
+        return workoutHistory;
 
     }
 
@@ -149,7 +203,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     public void addWorkoutHistory(WorkoutHistory workoutHistory) {
         // For logging
-        Log.d("addWorkout", workoutHistory.toString());
+        Log.d("DbTransaction", workoutHistory.toString());
 
         // 1. Get writable Db
         SQLiteDatabase db = this.getWritableDatabase();
@@ -162,6 +216,11 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         values.put(reps, workoutHistory.getReps());
         values.put(weight, workoutHistory.getWeight());
         values.put(programTableName, workoutHistory.getProgramTableName());
+        values.put(dayExerciseNumber, workoutHistory.getExerciseNumber());
+        values.put(persisted, workoutHistory.getPersist());
+        values.put(cycleNumber, workoutHistory.getCycle());
+        values.put(weekNumber, workoutHistory.getWeek());
+        values.put(dayNumber, workoutHistory.getDay());
 
         db.insert(TABLE_HISTORY,
                 null,
@@ -171,8 +230,8 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     }
 
-    public WorkoutHistory getWorkoutHistory(int id) {
-        Log.i("WorkoutHistory", "Getting workoutId: " + id);
+    public WorkoutHistory getWorkoutHistoryAtId(int id) {
+        Log.i("DbTransaction", "Getting workoutId: " + id);
 
         // 1. Get reference to readable db
         SQLiteDatabase db = this.getReadableDatabase();
@@ -200,9 +259,14 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         workoutHistory.setReps(cursor.getInt(4));
         workoutHistory.setWeight(cursor.getDouble(5));
         workoutHistory.setProgramTableName(cursor.getString(6));
+        workoutHistory.setCycle(cursor.getInt(7));
+        workoutHistory.setWeek(cursor.getInt(8));
+        workoutHistory.setDay(cursor.getInt(9));
+        workoutHistory.setExerciseNumber(cursor.getInt(10));
+        workoutHistory.setPersist(cursor.getInt(11));
 
         // Log
-        Log.d("getWorkout(" + workoutId + ")", workoutHistory.toString());
+        Log.d("DbTransaction" + workoutId + ")", workoutHistory.toString());
 
         // 5. Close cursor
         cursor.close();
@@ -211,9 +275,103 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         return workoutHistory;
     }
 
+    public List<WorkoutHistory> getWorkoutHistoryAtDate(String date) {
+        Log.i("DbTransaction", "Getting workout date: " + date);
+
+        List<WorkoutHistory> workoutHistoryOnDate = new LinkedList<WorkoutHistory>();
+
+        // 1. Get reference to readable db
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // 2. Build query
+        Cursor cursor = db.query(TABLE_HISTORY,
+                workoutHistoryColumns,
+                " date = ?", // selections
+                new String[]{String.valueOf(date)},  // Selection's args
+                null, // e. group by
+                null, // f. having
+                null, // g. order by
+                null // h. limit
+        );
+
+        WorkoutHistory workoutHistory = null;
+        if (cursor.moveToFirst()) {
+            do {
+                workoutHistory = new WorkoutHistory();
+                workoutHistory.setWorkoutId(cursor.getString(1));
+                workoutHistory.setDate(cursor.getString(2));
+                workoutHistory.setExercise(cursor.getString(3));
+                workoutHistory.setSetNumber(cursor.getInt(4));
+                workoutHistory.setReps(cursor.getInt(5));
+                workoutHistory.setWeight(cursor.getDouble(5));
+                workoutHistory.setProgramTableName(cursor.getString(6));
+                workoutHistory.setCycle(cursor.getInt(7));
+                workoutHistory.setWeek(cursor.getInt(8));
+                workoutHistory.setDay(cursor.getInt(9));
+                workoutHistory.setExerciseNumber(cursor.getInt(10));
+                workoutHistory.setPersist(cursor.getInt(11));
+
+                // Add workout to workouts
+                workoutHistoryOnDate.add(workoutHistory);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("DbTransaction", workoutHistoryOnDate.toString());
+
+        // Close the cursor
+        cursor.close();
+
+
+        // 6. Return workout
+        return workoutHistoryOnDate;
+    }
+
+    // Get all workout STATS
+    public List<WorkoutHistory> getAllWorkoutHistory() {
+        List<WorkoutHistory> allWorkoutHistory = new LinkedList<WorkoutHistory>();
+
+        // 1. Build the query
+        String query = "SELECT * FROM " + TABLE_HISTORY;
+
+        // 2. Get reference to the writable db
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(query, null);
+
+        // 3. Go over each row. Build workout and add it to list
+        WorkoutHistory workoutHistory = null;
+        if (cursor.moveToFirst()) {
+            do {
+                workoutHistory = new WorkoutHistory();
+                workoutHistory.setWorkoutId(cursor.getString(1));
+                workoutHistory.setDate(cursor.getString(2));
+                workoutHistory.setExercise(cursor.getString(3));
+                workoutHistory.setSetNumber(cursor.getInt(4));
+                workoutHistory.setReps(cursor.getInt(5));
+                workoutHistory.setWeight(cursor.getDouble(6));
+                workoutHistory.setProgramTableName(cursor.getString(7));
+                workoutHistory.setCycle(cursor.getInt(7));
+                workoutHistory.setWeek(cursor.getInt(8));
+                workoutHistory.setDay(cursor.getInt(9));
+                workoutHistory.setExerciseNumber(cursor.getInt(10));
+                workoutHistory.setPersist(cursor.getInt(11));
+
+
+                // Add workout to workouts
+                allWorkoutHistory.add(workoutHistory);
+            } while (cursor.moveToNext());
+        }
+
+        Log.d("DbTransaction", allWorkoutHistory.toString());
+
+        // Close the cursor
+        cursor.close();
+
+        return allWorkoutHistory;
+    }
+
     public int changeWorkoutHistoryAtId(int id, WorkoutHistory workoutHistory) {
-        Log.i("WorkoutHistory", "Changing workout history row " + id);
-        Log.d("WorkoutHistoryId", workoutHistory.getWorkoutId());
+        Log.i("DbTransaction", "Changing workout history row " + id);
+        Log.d("DbTransaction", workoutHistory.getWorkoutId());
 
         // 1. Get writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -223,9 +381,15 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         //values.put(workoutId = workoutHistory.getWorkoutId());
         values.put(date, workoutHistory.getDate());
         values.put(exercise, workoutHistory.getExercise());
+        values.put(setNumber, workoutHistory.getSetNumber());
         values.put(reps, workoutHistory.getReps());
         values.put(weight, workoutHistory.getWeight());
         values.put(programTableName, workoutHistory.getProgramTableName());
+        values.put(cycleNumber, workoutHistory.getCycle());
+        values.put(weekNumber, workoutHistory.getWeek());
+        values.put(dayNumber, workoutHistory.getDay());
+        values.put(dayExerciseNumber, workoutHistory.getExerciseNumber());
+        values.put(persisted, workoutHistory.getPersist());
 
         // 3. Update row
         int i = db.update(TABLE_HISTORY,
@@ -240,10 +404,58 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
 
     }
 
+    public int changeWorkoutHistoryAtDate(String _date, WorkoutHistory workoutHistory) {
+        Log.i("DbTransaction", "Changing workout history row " + _date);
+        Log.d("DbTransaction", workoutHistory.getWorkoutId());
+
+        // 1. Get writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        // 2. Create ContentValues
+        ContentValues values = new ContentValues();
+        //values.put(workoutId = workoutHistory.getWorkoutId());
+        values.put(date, workoutHistory.getDate());
+        values.put(exercise, workoutHistory.getExercise());
+        values.put(setNumber, workoutHistory.getSetNumber());
+        values.put(reps, workoutHistory.getReps());
+        values.put(weight, workoutHistory.getWeight());
+        values.put(programTableName, workoutHistory.getProgramTableName());
+        values.put(cycleNumber, workoutHistory.getCycle());
+        values.put(weekNumber, workoutHistory.getWeek());
+        values.put(dayNumber, workoutHistory.getDay());
+        values.put(dayExerciseNumber, workoutHistory.getExerciseNumber());
+        values.put(persisted, workoutHistory.getPersist());
+
+        // 3. Update row
+        int i = db.update(TABLE_HISTORY,
+                values,
+                "date=" + _date,
+                null);
+
+        // 4. Close DB
+        db.close();
+
+        Log.i("DbTransaction", "Set persist column to 1 = " + i);
+
+        return i;
+
+    }
+
+    // Delete non-persisted rows
+    public void deleteNonPersistedRows() {
+
+        Log.i("DbTransaction", "Deleting non-persisted rows in DB");
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = "persist=?";
+        String[] whereArgs = new String[]{String.valueOf(0)};
+        db.delete(TABLE_HISTORY, whereClause, whereArgs);
+        db.close();
+    }
+
     // Add workout stats
     public void addWorkoutStats(WorkoutStats workoutStatistics) {
         // For logging
-        Log.d("addWorkout", workoutStatistics.toString());
+        Log.d("DbTransaction", workoutStatistics.toString());
 
         // 1. Get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -289,7 +501,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         workoutStatistics.setDate(cursor.getString(2));
 
         // Log
-        Log.d("getWorkout(" + date + ")", workoutStatistics.toString());
+        Log.d("DbTransaction(" + date + ")", workoutStatistics.toString());
 
         // 5. Close cursor
         cursor.close();
@@ -332,7 +544,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             } while (cursor.moveToNext());
         }
 
-        Log.d("getAllWorkouts()", workoutStatisticses.toString());
+        Log.d("DbTransaction", workoutStatisticses.toString());
 
         // Close the cursor
         cursor.close();
@@ -374,13 +586,13 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         db.close();
 
         // log
-        Log.d("DeleteWorkout", workoutStatistics.toString());
+        Log.d("DbTransaction", workoutStatistics.toString());
     }
 
     // Add user max
     public void addUserMaxEntry(UserMaxEntry userMaxEntry) {
         // For logging
-        Log.d("addUserMaxEntry()", userMaxEntry.toString());
+        Log.d("DbTransaction", "read user max entry data " + userMaxEntry.toString());
 
         // 1. Get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
@@ -403,6 +615,38 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
         db.close();
     }
 
+    public WorkoutHistory getLastWorkoutHistoryRow() {
+        // 1. Get reference to readable DB
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        // 2. Build query
+        String query = "SELECT * FROM " + TABLE_HISTORY;
+        Cursor cursor = db.rawQuery(query, null);
+
+        // 3. Make the query
+        WorkoutHistory workoutHistory = null;
+
+        if (cursor.moveToLast()) {
+            workoutHistory = new WorkoutHistory();
+            workoutHistory.setWorkoutId(cursor.getString(1));
+            workoutHistory.setDate(cursor.getString(2));
+            workoutHistory.setExercise(cursor.getString(3));
+            workoutHistory.setSetNumber(cursor.getInt(4));
+            workoutHistory.setReps(cursor.getInt(5));
+            workoutHistory.setWeight(cursor.getDouble(6));
+            workoutHistory.setProgramTableName(cursor.getString(7));
+            workoutHistory.setCycle(cursor.getInt(8));
+            workoutHistory.setWeek(cursor.getInt(9));
+            workoutHistory.setDay(cursor.getInt(10));
+            workoutHistory.setExerciseNumber(cursor.getInt(11));
+            workoutHistory.setPersist(cursor.getInt(12));
+        }
+
+        cursor.close();
+        Log.i("LastWorkoutHistoryRow", "Got last workout history row: " + workoutHistory);
+        return workoutHistory;
+    }
+
     public UserMaxEntry getLastUserMaxEntry() {
         // 1. Get reference to readable db
         SQLiteDatabase db = this.getReadableDatabase();
@@ -421,7 +665,7 @@ public class MySQLiteHelper extends SQLiteAssetHelper {
             userMaxEntry.setDeadliftMax(cursor.getDouble(4));
             userMaxEntry.setWilks(cursor.getDouble(5));
             userMaxEntry.setDate(cursor.getString(6));
-            Log.d("getLastUserMaxEntry()", userMaxEntry.toString());
+            Log.d("DbTransaction", userMaxEntry.toString());
         }
         cursor.close();
         return userMaxEntry;

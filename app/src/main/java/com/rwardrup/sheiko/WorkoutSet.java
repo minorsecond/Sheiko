@@ -21,7 +21,7 @@ public class WorkoutSet {
     public WorkoutSet() {
     }
 
-    public WorkoutSet(String workoutId, String programName, int cycleNumber, int weekNumber,
+    public WorkoutSet(int _id, String workoutId, String programName, int cycleNumber, int weekNumber,
                       int dayNumber, String exerciseName, int exerciseCategory,
                       int dayExerciseNumber, int reps, Double weightPercentage, int enabled) {
         super();
@@ -52,6 +52,14 @@ public class WorkoutSet {
 
     // Setters & getters
 
+
+    public int get_id() {
+        return _id;
+    }
+
+    public void set_id(int _id) {
+        this._id = _id;
+    }
 
     public String getWorkoutId() {
         return workoutId;

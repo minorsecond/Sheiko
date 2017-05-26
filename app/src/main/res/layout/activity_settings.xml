@@ -315,15 +315,16 @@
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:gravity="center"
                             android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/timerSettingsLabel"
-                                android:layout_width="match_parent"
+                                android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
                                 android:gravity="bottom"
-                                android:text="Rest Timer"
+                                android:text="Timer Length"
                                 android:textColor="@color/primary_text" />
 
                             <Button
@@ -338,8 +339,64 @@
 
                         <Space
                             android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
+
+                        <RadioGroup
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="1" />
+                            android:layout_weight="0"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/textView2"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:text="Weight Rounding"
+                                android:textColor="@color/primary_text" />
+
+                            <RadioGroup
+                                android:id="@+id/WeightRoundingSelection"
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent" />
+
+                                <RadioButton
+                                    android:id="@+id/noRoundingSelected"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:checked="false"
+                                    android:gravity="top"
+                                    android:text="No Rounding"
+                                    android:textColor="@color/primary_text" />
+
+                                <RadioButton
+                                    android:id="@+id/two_half_rounding"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:checked="false"
+                                    android:gravity="top"
+                                    android:text="2.5 units"
+                                    android:textColor="@color/primary_text" />
+
+                                <RadioButton
+                                    android:id="@+id/five_unit_rounding"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:checked="true"
+                                    android:gravity="top"
+                                    android:text="5 units"
+                                    android:textColor="@color/primary_text"/>
+
+                        </RadioGroup>
+
+                        <Space
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1"/>
 
                         <LinearLayout
                             android:layout_width="wrap_content"

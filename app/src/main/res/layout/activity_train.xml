@@ -153,7 +153,7 @@
                             android:adjustViewBounds="true"
                             android:background="?attr/selectableItemBackgroundBorderless"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/bench_press" />
+                            android:src="@drawable/bench_press_inactive" />
 
                         <Space
                             android:layout_width="wrap_content"
@@ -182,7 +182,7 @@
                             android:layout_gravity="center"
                             android:layout_marginEnd="-10dp"
                             android:layout_marginStart="-10dp"
-                            android:background="@drawable/dumbell_curls"
+                            android:background="@drawable/dumbell_curl_inactive"
                             android:entries="@array/accessories"
                             android:gravity="center" />
 
@@ -426,6 +426,7 @@
                                 android:layout_weight="1" />
 
                             <android.support.design.widget.FloatingActionButton
+                                android:id="@+id/saveAllSets"
                                 android:layout_width="56dp"
                                 android:layout_height="56dp"
                                 android:layout_marginBottom="5dp"

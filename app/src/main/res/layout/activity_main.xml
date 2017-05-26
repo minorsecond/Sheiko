@@ -14,9 +14,9 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
+        android:orientation="vertical"
         android:layout_alignParentTop="true"
-        android:orientation="vertical">
+        android:layout_alignParentStart="true">
 
         <LinearLayout
             android:id="@+id/titleBar"
@@ -71,7 +71,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="TextView"
+                android:text=""
                 android:textAppearance="@android:style/TextAppearance.Material.Medium"
                 android:textColor="?android:attr/textColorPrimary"
                 android:textSize="16sp" />
@@ -111,38 +111,24 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_gravity="center"
                 android:orientation="vertical">
 
-                <Space
-                    android:layout_width="match_parent"
-                    android:layout_height="5dp" />
-
-                <LinearLayout
+                <TextView
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:text="Program History"
                     android:gravity="center"
-                    android:orientation="horizontal">
+                    android:textAppearance="@android:style/TextAppearance.Material.Medium"
+                    android:textColor="@color/primary_text"
+                    android:layout_marginBottom="-10dp" />
 
-                    <android.support.v4.widget.Space
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                    <com.jjoe64.graphview.GraphView
-                        android:id="@+id/graph"
-                        android:layout_width="match_parent"
-                        android:layout_height="200dip"
-                        android:layout_gravity="center"
-                        android:layout_marginEnd="-10dp"
-                        android:layout_marginStart="10dp"
-                        android:layout_weight="0" />
-
-                    <android.support.v4.widget.Space
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" />
-
-                </LinearLayout>
+                <com.jjoe64.graphview.GraphView
+                    android:id="@+id/graph"
+                    android:layout_width="match_parent"
+                    android:layout_marginEnd="-35dp"
+                    android:layout_height="190dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -195,7 +181,7 @@
 
                         <Space
                             android:layout_width="match_parent"
-                            android:layout_height="20dp" />
+                            android:layout_height="5dp" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -353,6 +339,10 @@
                         android:alpha="0.12"
                         android:background="@android:color/black" />
 
+                    <Space
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp" />
+
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -370,6 +360,19 @@
                             android:layout_width="100dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1.01" />
+
+                        <Button
+                            android:id="@+id/calendarButton"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
+                            android:background="@drawable/calendar"
+                            android:elevation="2dp"
+                            android:textColor="@color/primary_text"/>
+
+                        <Space
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1.01"/>
 
                         <Button
                             android:id="@+id/selectProgramButton"
